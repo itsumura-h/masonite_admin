@@ -17,8 +17,9 @@ from app.models.Post import Post
 ADMIN_ROUTES = [
     Get().route('/', AdminController.root),
     Get().route('/@table', AdminController.root),
+    Get().route('/api/tables',AdminController.tables),
     #UserResource('/api/users').routes(),
     #PostResource('/api/posts').routes(),
-    AdminResource(User, 'users').routes(),
+    AdminResource(User, 'users', without=['password']).routes(),
     AdminResource(Post, 'posts').routes(),
 ]

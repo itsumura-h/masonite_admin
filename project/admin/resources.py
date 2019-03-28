@@ -1,10 +1,27 @@
 from masonite.controllers import Controller
 from config.database import DB
 
+import pprint
+from masonite import env
+import sqlite3
+
 class AdminController:
     def root(self):
         with open('admin/templates/index.html', 'r') as f:
             return f.read()
+
+    def tables(self):
+        tables = None
+        if env('DB_CONNECTION') == 'sqlite':
+            db = sqlite3.connect(env('DB_DATABASE'))
+            cursor = db.cursor()
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+            tables = [table[0] for table in tables]
+            tables.remove('migrations')
+            tables.remove('sqlite_sequence')
+
+        return tables
 
 
 from masonite.routes import BaseHttpRoute
@@ -15,16 +32,17 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             RateLimitReached)
 class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'show', 'update', 'delete']
-    without = []
+    #without = []
     prefix = ''
 
-    def __init__(self, model, url, method_type='GET'):
+    def __init__(self, model, url, without=[], method_type='GET'):
         self.base_url = url
         self.route_url = '/api/' + url
         self.method_type = method_type
         self.named_route = None
         self.model = model
-        self.model.__hidden__ = self.without
+        #self.model.__hidden__ = self.without
+        self.model.__hidden__ = without
 
     def routes(self):
         routes = []

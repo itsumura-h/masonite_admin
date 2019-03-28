@@ -37,9 +37,40 @@
     }
 
     class Root extends React.Component {
+      constructor(props){
+        super(props);
+        this.state = {
+          tables: [],
+        }
+        this.tables = this.tables.bind(this);
+      }
+
+      tables(){
+        const self = this;
+        axios.get('/admin/api/tables')
+        .then(function(response){
+          self.setState({tables: response.data});
+        })
+      }
+
+      componentDidMount(){
+        this.tables();
+      }
+
       render(){
+        let tables = [];
+        for(let table of this.state.tables){
+          tables.push(
+            <li><Link to={"admin/"+table}>{table}</Link></li>
+          );
+        }
         return(
-          <h1>Masonite Admin</h1>
+          <div>
+            <h1>Masonite Admin</h1>
+            <ui>
+              {tables}
+            </ui>
+          </div>
         );
       }
     }
@@ -88,14 +119,17 @@
         }
 
         return(
-          <table>
-            <thead>
-              <tr>{html_headers}</tr>
-            </thead>
-            <tbody>
-              {multi}
-            </tbody>
-          </table>
+          <div>
+            <Link to="/admin">toppage</Link>
+            <table>
+              <thead>
+                <tr>{html_headers}</tr>
+              </thead>
+              <tbody>
+                {multi}
+              </tbody>
+            </table>
+          </div>
         );
       }
     }
