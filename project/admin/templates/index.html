@@ -66,15 +66,31 @@
         this.multi(table);
       }
 
-      render(){
+      render(){;
+        let html_headers = [];
         let multi = [];
-        for(let single of this.state.multi){
-          multi.push(<tr key={single.id}><td>{single.name}</td><td>{single.email}</td></tr>);
+
+        if(this.state.multi[0]){
+          let headers = Object.keys(this.state.multi[0]);
+
+          for(let header of headers){
+            html_headers.push(<th>{header}</th>);
+          }
+
+          for(let row of this.state.multi){
+            let row_html = [];
+            for(let key in row){
+              row_html.push(<td>{row[key]}</td>)
+            }
+
+            multi.push(<tr>{row_html}</tr>);
+          }
         }
+
         return(
           <table>
             <thead>
-              <tr><th>名前</th><th>メール</th></tr>
+              <tr>{html_headers}</tr>
             </thead>
             <tbody>
               {multi}

@@ -5,4 +5,4 @@ from config.database import Model
 
 class Post(Model):
     """Post Model"""
-    __table = 'posts'
+    __table__ = 'posts'

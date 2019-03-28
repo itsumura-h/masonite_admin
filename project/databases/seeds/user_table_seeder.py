@@ -9,9 +9,10 @@ You can run this seeder in order to generate users.
 
 from orator.orm import Factory
 from orator.seeds import Seeder
+from faker import Faker
+from masonite.helpers import password as bcrypt_password
 
 from app.User import User
-
 
 class UserTableSeeder(Seeder):
 
@@ -20,12 +21,15 @@ class UserTableSeeder(Seeder):
         Run the database seeds.
         """
         self.factory.register(User, self.users_factory)
+        self.faker = Faker('ja')
 
         self.factory(User, 50).create()
 
     def users_factory(self, faker):
+        name = self.faker.name()
         return {
-            'name': faker.name(),
-            'email': faker.email(),
-            'password': '$2b$12$WMgb5Re1NqUr.uSRfQmPQeeGWudk/8/aNbVMpD1dR.Et83vfL8WAu',  # == 'secret'
+            'name': name,
+            'email': self.faker.email(),
+            #'password': '$2b$12$WMgb5Re1NqUr.uSRfQmPQeeGWudk/8/aNbVMpD1dR.Et83vfL8WAu',  # == 'secret'
+            'password': bcrypt_password(name) # == name
         }
