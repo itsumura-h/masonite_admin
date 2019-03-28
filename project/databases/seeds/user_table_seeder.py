@@ -21,8 +21,7 @@ class UserTableSeeder(Seeder):
         Run the database seeds.
         """
         self.factory.register(User, self.users_factory)
-        self.faker = Faker('ja')
-
+        self.faker = Faker('en')
         self.factory(User, 50).create()
 
     def users_factory(self, faker):

@@ -14,7 +14,7 @@ class PostsTableSeeder(Seeder):
         Run the database seeds.
         """
         self.factory.register(Post, self.posts_factory)
-        self.faker = Faker('ja')
+        self.faker = Faker('en')
         self.factory(Post, 100).create()
 
     def posts_factory(self, faker):
