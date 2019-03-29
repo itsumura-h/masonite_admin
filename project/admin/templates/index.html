@@ -51,7 +51,9 @@
         const self = this;
         axios.get('/admin/api/tables')
         .then(function(response){
-          self.setState({tables: response.data});
+          if(response.headers['content-type'] == 'application/json; charset=utf-8'){
+            self.setState({tables: response.data});
+          }
         })
       }
 
@@ -92,7 +94,9 @@
         const self = this;
         axios.get('/admin/api/'+table)
         .then(function(response){
-          self.setState({multi: response.data});
+          if(response.headers['content-type'] == 'application/json; charset=utf-8'){
+            self.setState({multi: response.data});
+          }
         })
       }
 
@@ -157,7 +161,9 @@
         const self = this;
         axios.get('/admin/api/'+table+'/'+id)
         .then(function(response){
-          self.setState({single: response.data});
+          if(response.headers['content-type'] == 'application/json; charset=utf-8'){
+            self.setState({single: response.data});
+          }
         })
       }
 
@@ -220,7 +226,9 @@
         const self = this;
         axios.get('/admin/api/'+table+'/'+id)
         .then(function(response){
-          self.setState({single: response.data});
+          if(response.headers['content-type'] == 'application/json; charset=utf-8'){
+            self.setState({single: response.data});
+          }
         })
       }
 
