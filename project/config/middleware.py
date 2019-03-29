@@ -7,6 +7,7 @@ from app.http.middleware.AuthenticationMiddleware import \
 from app.http.middleware.CsrfMiddleware import CsrfMiddleware
 from app.http.middleware.LoadUserMiddleware import LoadUserMiddleware
 from app.http.middleware.VerifyEmailMiddleware import VerifyEmailMiddleware
+from masonite.middleware import CorsMiddleware
 
 """HTTP Middleware
 HTTP middleware is middleware that will be ran on every request. Middleware
@@ -19,7 +20,16 @@ HTTP_MIDDLEWARE = [
     CsrfMiddleware,
     ResponseMiddleware,
     MaintenanceModeMiddleware,
+    CorsMiddleware,
 ]
+
+CORS = {
+    'Access-Control-Allow-Origin': "*",
+    "Access-Control-Allow-Methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With",
+    "Access-Control-Max-Age": "3600",
+    "Access-Control-Allow-Credentials": "true"
+}
 
 """Route Middleware
 Specify a dictionary of middleware to be used on a per route basis here. The key will 
