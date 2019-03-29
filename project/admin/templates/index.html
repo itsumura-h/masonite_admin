@@ -102,6 +102,7 @@
       }
 
       render(){;
+        const table = this.props.match.params.table;
         let html_headers = [];
         let multi = [];
 
@@ -119,7 +120,7 @@
             let row_html = [];
             let j = 0;
             for(let key in row){
-              row_html.push(<td key={j}>{row[key]}</td>);
+              row_html.push(<td key={j}><Link to={'/admin/'+table+'/'+row.id}>{row[key]}</Link></td>);
               j++;
             }
             multi.push(<tr key={i}>{row_html}</tr>);
@@ -167,6 +168,9 @@
       }
 
       render(){
+        const table = this.props.match.params.table;
+        const id = this.props.match.params.id;
+
         let html_headers = [];
         let single = [];
 
@@ -188,7 +192,8 @@
 
         return(
           <div>
-            <Link to="/admin">toppage</Link>
+            <Link to="/admin">toppage</Link><br/>
+            <Link to={'/admin/'+table+'/'+id+'/edit'}>edit</Link>
             <table border="1">
               <thead>
                 <tr>{html_headers}</tr>
@@ -240,7 +245,7 @@
 
           i = 0;
           for(let key in this.state.single){
-            single.push(<td key={i}><input type="text" value={this.state.single[key]}></input></td>);
+            single.push(<td key={i}><input type="text" value={this.state.single[key]? this.state.single[key]: ''}></input></td>);
             i++;
           }
         }

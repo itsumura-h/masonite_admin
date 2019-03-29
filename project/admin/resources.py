@@ -21,6 +21,7 @@ class AdminController:
             tables.remove('migrations')
             tables.remove('sqlite_sequence')
 
+        print(tables)
         return tables
 
 
