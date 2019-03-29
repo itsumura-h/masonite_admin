@@ -29,7 +29,9 @@
           <BrowserRouter history={browserHistory} >
             <Switch>
               <Route exact path='/admin' component={Root}/>
-              <Route path='/admin/:table' component={List}/>
+              <Route exact path='/admin/:table' component={Index}/>
+              <Route exact path='/admin/:table/:id' component={Show}/>
+              <Route exact path='/admin/:table/:id/edit' component={Edit}/>
             </Switch>
           </BrowserRouter>
         );
@@ -59,23 +61,25 @@
 
       render(){
         let tables = [];
+        let i = 0;
         for(let table of this.state.tables){
           tables.push(
-            <li><Link to={"admin/"+table}>{table}</Link></li>
+            <li key={i}><Link to={"admin/"+table}>{table}</Link></li>
           );
+          i++;
         }
         return(
           <div>
             <h1>Masonite Admin</h1>
-            <ui>
+            <ul>
               {tables}
-            </ui>
+            </ul>
           </div>
         );
       }
     }
 
-    class List extends React.Component{
+    class Index extends React.Component{
       constructor(props){
         super(props);
         this.state = {
@@ -104,29 +108,152 @@
         if(this.state.multi[0]){
           let headers = Object.keys(this.state.multi[0]);
 
+          let i = 0;
           for(let header of headers){
-            html_headers.push(<th>{header}</th>);
+            html_headers.push(<th key={i}>{header}</th>);
+            i++;
           }
 
+          i = 0;
           for(let row of this.state.multi){
             let row_html = [];
+            let j = 0;
             for(let key in row){
-              row_html.push(<td>{row[key]}</td>)
+              row_html.push(<td key={j}>{row[key]}</td>);
+              j++;
             }
-
-            multi.push(<tr>{row_html}</tr>);
+            multi.push(<tr key={i}>{row_html}</tr>);
+            i++;
           }
         }
 
         return(
           <div>
             <Link to="/admin">toppage</Link>
-            <table>
+            <table border="1">
               <thead>
                 <tr>{html_headers}</tr>
               </thead>
               <tbody>
                 {multi}
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+    }
+
+    class Show extends React.Component{
+      constructor(props){
+        super(props);
+        this.state = {
+            single: null,
+        }
+        this.single = this.single.bind(this);
+      }
+
+      single(table, id){
+        const self = this;
+        axios.get('/admin/api/'+table+'/'+id)
+        .then(function(response){
+          self.setState({single: response.data});
+        })
+      }
+
+      componentDidMount(){
+        const table = this.props.match.params.table;
+        const id = this.props.match.params.id;
+        this.single(table, id);
+      }
+
+      render(){
+        let html_headers = [];
+        let single = [];
+
+        if(this.state.single){
+          let headers = Object.keys(this.state.single);
+
+          let i = 0;
+          for(let header of headers){
+            html_headers.push(<th key={i}>{header}</th>);
+            i++;
+          }
+
+          i = 0;
+          for(let key in this.state.single){
+            single.push(<td key={i}>{this.state.single[key]}</td>);
+            i++;
+          }
+        }
+
+        return(
+          <div>
+            <Link to="/admin">toppage</Link>
+            <table border="1">
+              <thead>
+                <tr>{html_headers}</tr>
+              </thead>
+              <tbody>
+                <tr>{single}</tr>
+              </tbody>
+            </table>
+          </div>
+        );
+      }
+    }
+
+    class Edit extends React.Component{
+      constructor(props){
+        super(props);
+        this.state = {
+            single: null,
+        }
+        this.single = this.single.bind(this);
+      }
+
+      single(table, id){
+        const self = this;
+        axios.get('/admin/api/'+table+'/'+id)
+        .then(function(response){
+          self.setState({single: response.data});
+        })
+      }
+
+      componentDidMount(){
+        const table = this.props.match.params.table;
+        const id = this.props.match.params.id;
+        this.single(table, id);
+      }
+
+      render(){
+        let html_headers = [];
+        let single = [];
+
+        if(this.state.single){
+          let headers = Object.keys(this.state.single);
+
+          let i = 0;
+          for(let header of headers){
+            html_headers.push(<th key={i}>{header}</th>);
+            i++;
+          }
+
+          i = 0;
+          for(let key in this.state.single){
+            single.push(<td key={i}><input type="text" value={this.state.single[key]}></input></td>);
+            i++;
+          }
+        }
+
+        return(
+          <div>
+            <Link to="/admin">toppage</Link>
+            <table border="1">
+              <thead>
+                <tr>{html_headers}</tr>
+              </thead>
+              <tbody>
+                <tr>{single}</tr>
               </tbody>
             </table>
           </div>
