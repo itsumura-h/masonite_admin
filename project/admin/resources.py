@@ -4,7 +4,7 @@ from config.database import DB
 import pprint
 from masonite import env
 import sqlite3
-from 
+from api.resources import Resource
 
 class AdminController:
     def root(self):
@@ -34,7 +34,6 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             RateLimitReached)
 class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'show', 'update', 'delete']
-    #without = []
     prefix = ''
 
     def __init__(self, model, url, without=[], method_type='GET'):
@@ -42,22 +41,22 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         self.route_url = '/api/' + url
         self.method_type = method_type
         self.named_route = None
+        self.list_middleware = []
         self.model = model
-        #self.model.__hidden__ = self.without
         self.model.__hidden__ = without
 
     def routes(self):
         routes = []
         if 'create' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url, 'POST'))
+            routes.append(self.__class__(self.model, self.base_url, method_type='POST'))
         if 'index' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url, 'GET'))
+            routes.append(self.__class__(self.model, self.base_url, method_type='GET'))
         if 'show' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id', 'GET'))
+            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type='GET'))
         if 'update' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id', 'PUT'))
+            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type='PUT'))
         if 'delete' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id', 'DELETE'))
+            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type='DELETE'))
 
         return routes
 
