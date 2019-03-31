@@ -20,6 +20,8 @@ class AdminController:
     def schema(self, request: Request):
         table = request.param('table')
         if env('DB_CONNECTION') == 'sqlite':
+            # Get Schema in SQLite with Python
+            # https://www.tomordonez.com/get-schema-sqlite-python.html
             db = sqlite3.connect(env('DB_DATABASE'))
             cursor = db.cursor()
             cursor.execute(f"PRAGMA table_info('{table}')")
