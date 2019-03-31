@@ -5,8 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import {Link, NavLink} from 'react-router-dom';
 
 import { withStore } from '../common/store'
 
@@ -24,13 +23,6 @@ const styles = {
 };
 
 class AdminAppBar extends React.Component {
-  drawerOpen=()=>{
-    const store = this.props.store;
-    const newState = store.get('drawerOpen')? false: true;
-    store.set('drawerOpen')(newState);
-    const newWidth = store.get('drawerWidth') == 240? 0: 240;
-    store.set('drawerWidth')(newWidth);
-  }
 
   render(){
     const { classes } = this.props;
@@ -38,13 +30,26 @@ class AdminAppBar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
-            <IconButton onClick={this.drawerOpen} className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              Masonite Admin
-            </Typography>
-            <Button color="inherit">Login</Button>
+              <Typography variant="h6" color="inherit" className={classes.grow}>
+              <NavLink to="/admin" style={{color: "yellow"}}>
+                Masonite 管理サイト
+                </NavLink>
+              </Typography>
+            <div>
+              <span>ようこそname</span>
+              <span> / </span>
+              <NavLink to="/" style={{color: "white"}}>
+                サイトを表示
+              </NavLink>
+              <span> / </span>
+              <NavLink to="/admin" style={{color: "white"}}>
+                パスワードの変更
+              </NavLink>
+              <span> / </span>
+              <NavLink to="/admin" style={{color: "white"}}>
+                ログアウト
+              </NavLink>
+            </div>
           </Toolbar>
         </AppBar>
       </div>

@@ -5,6 +5,7 @@ import pprint
 from masonite import env
 import sqlite3
 from api.resources import Resource
+from config.admin import CONFIG
 
 class AdminController:
     def root(self):
@@ -12,17 +13,7 @@ class AdminController:
             return f.read()
 
     def tables(self):
-        tables = None
-        if env('DB_CONNECTION') == 'sqlite':
-            db = sqlite3.connect(env('DB_DATABASE'))
-            cursor = db.cursor()
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-            tables = cursor.fetchall()
-            tables = [table[0] for table in tables]
-            tables.remove('migrations')
-            tables.remove('sqlite_sequence')
-
-        print(tables)
+        tables = [model['table'] for model in CONFIG]
         return tables
 
 
