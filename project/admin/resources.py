@@ -1,4 +1,5 @@
 from masonite.controllers import Controller
+from masonite.request import Request
 from config.database import DB
 
 import pprint
@@ -15,6 +16,16 @@ class AdminController:
     def tables(self):
         tables = [model['table'] for model in CONFIG]
         return tables
+
+    def schema(self, request: Request):
+        table = request.param('table')
+        if env('DB_CONNECTION') == 'sqlite':
+            db = sqlite3.connect(env('DB_DATABASE'))
+            cursor = db.cursor()
+            cursor.execute(f"PRAGMA table_info('{table}')")
+            schema = cursor.fetchall()
+
+        return schema
 
 
 from masonite.routes import BaseHttpRoute
