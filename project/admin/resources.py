@@ -14,7 +14,7 @@ class AdminController:
             return f.read()
 
     def tables(self):
-        tables = [model['table'] for model in CONFIG]
+        tables = [model['model'].__name__ for model in CONFIG]
         return tables
 
     def schema(self, request: Request):

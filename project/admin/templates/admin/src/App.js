@@ -5,6 +5,7 @@ import './App.css';
 import Const from './common/const';
 import AdminAppBar from './components/AdminAppBar';
 import AdminMain from './components/AdminMain';
+import AdminDrawer from './components/AdminDrawer';
 
 import {withStore} from './common/store';
 
@@ -13,10 +14,11 @@ class App extends Component {
   render() {
     return (
       <BrowserRouter>
-        <div className="App">
-          <AdminAppBar/>
-          <AdminMain/>
-        </div>
+        <AdminDrawer/>
+          <div className='rightContents' style={{marginLeft: this.props.store.state.drawerWidth}}>
+            <AdminAppBar/>
+            <AdminMain/>
+          </div>
       </BrowserRouter>
     );
   }
