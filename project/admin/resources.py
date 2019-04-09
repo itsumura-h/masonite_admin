@@ -1,35 +1,3 @@
-from masonite.controllers import Controller
-from masonite.request import Request
-from config.database import DB
-
-import pprint
-from masonite import env
-import sqlite3
-from api.resources import Resource
-from config.admin import CONFIG
-
-class AdminController:
-    def root(self):
-        with open('admin/templates/index.html', 'r') as f:
-            return f.read()
-
-    def tables(self):
-        tables = [model['model'].__name__ for model in CONFIG]
-        return tables
-
-    def schema(self, request: Request):
-        table = request.param('table')
-        if env('DB_CONNECTION') == 'sqlite':
-            # Get Schema in SQLite with Python
-            # https://www.tomordonez.com/get-schema-sqlite-python.html
-            db = sqlite3.connect(env('DB_DATABASE'))
-            cursor = db.cursor()
-            cursor.execute(f"PRAGMA table_info('{table}')")
-            schema = cursor.fetchall()
-
-        return schema
-
-
 from masonite.routes import BaseHttpRoute
 from api.serializers import JSONSerializer
 from masonite.request import Request

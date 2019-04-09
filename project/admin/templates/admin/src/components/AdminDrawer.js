@@ -51,8 +51,7 @@ class AdminDrawer extends React.Component {
     axios.get('http://localhost:8000/admin/api/tables')
     .then(function(response){
       if(response.headers['content-type'] == 'application/json; charset=utf-8'){
-        console.log(response);
-        self.setState({tables: response.data});
+        self.setState({tables: response.data.tables});
       }
     })
   }

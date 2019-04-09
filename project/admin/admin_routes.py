@@ -1,6 +1,8 @@
 from masonite.routes import Get, Post, Patch, Delete
-from .resources import AdminController
+from .admin_controller import AdminController
 from admin.resources import AdminResource
+from config.admin import CONFIG
+from config.storage import STATICFILES
 # from api.resources import Resource
 # from api.serializers import JSONSerializer
 
@@ -11,9 +13,9 @@ from admin.resources import AdminResource
 # class PostResource(Resource, JSONSerializer):
 #     model = Post
 
-ADMIN_ROUTES = []
+STATICFILES['admin/templates/admin/build/static'] = 'static/'
 
-from config.admin import CONFIG
+ADMIN_ROUTES = []
 for model in CONFIG:
     ADMIN_ROUTES.append(AdminResource(model['model'], model['table']).routes())
 

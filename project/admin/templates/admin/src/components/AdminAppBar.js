@@ -22,6 +22,9 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
+  link: {
+    color: 'white'
+  }
 };
 
 class AdminAppBar extends React.Component {
@@ -44,7 +47,9 @@ class AdminAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Masonite Admin
+              <NavLink to="/admin" className={classes.link}>
+                Masonite Admin
+              </NavLink>
             </Typography>
             <Button color="inherit">Login</Button>
           </Toolbar>
