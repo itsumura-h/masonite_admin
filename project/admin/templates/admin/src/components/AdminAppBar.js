@@ -33,7 +33,7 @@ class AdminAppBar extends React.Component {
     const store = this.props.store;
     const newIsOpen = store.get('drawerOpen')? false: true;
     store.set('drawerOpen')(newIsOpen);
-    const newWidth = store.get('drawerWidth') == 240? 0: 240;
+    const newWidth = store.get('drawerWidth') === 240? 0: 240;
     store.set('drawerWidth')(newWidth);
   }
 

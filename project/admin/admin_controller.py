@@ -19,12 +19,13 @@ class AdminController:
             return f.read()
 
     def tables(self, request: Request):
-        tables = [model['model'].__name__ for model in CONFIG]
-        pprint.pprint(vars(platform))
+        tables = {}
+        for model in CONFIG:
+            tables[model['model'].__name__] = model['table']
+
         env = {
             'Python_version': platform.python_version(),
             'APP_NAME': request.environ['APP_NAME'],
-            'CGI': request.environ['SERVER_SOFTWARE'],
             'Uname': request.environ['HTTP_USER_AGENT'],
             'Server': request.environ['SERVER_SOFTWARE'],
             'Locale': request.environ['LANGUAGE'],

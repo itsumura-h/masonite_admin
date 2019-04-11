@@ -4,7 +4,7 @@ from app.models.Post import Post
 CONFIG = [
     {
         'model': User,
-        'table': 'user'
+        'table': 'users'
     },
     {
         'model': Post,

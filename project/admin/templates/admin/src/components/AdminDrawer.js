@@ -43,56 +43,44 @@ const styles = theme => ({
 
 class AdminDrawer extends React.Component {
   state = {
-    tables: [],
+    tables: null,
   }
 
   componentDidMount(){
-    const self = this;
+    const store = this.props.store;
     axios.get('http://localhost:8000/admin/api/tables')
     .then(function(response){
-      if(response.headers['content-type'] == 'application/json; charset=utf-8'){
-        self.setState({tables: response.data.tables});
+      if(response.headers['content-type'] === 'application/json; charset=utf-8'){
+        store.set('models')(response.data.tables)
       }
     })
   }
 
   render() {
     const { classes, theme } = this.props;
-    let store = this.props.store;
+    const state = this.props.store.state;
 
     let tables = [];
     let i = 0;
-    for(let table of this.state.tables){
-      tables.push(
-        <Link to={"/admin/"+table}>
-          <ListItem button key={i}>
-            <ListItemText primary={table} />
-          </ListItem>
-        </Link>
-      );
-      i++;
-    }
-
-    const drawer = (
-      <div>
-        <div className={classes.toolbar} />
-        <List>
-          {this.state.tables.map((table) => (
-            <ListItem button key={table}>
-              <ListItemIcon>{table % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={table} />
+    if(state.models){
+      for(let model in state.models){
+        tables.push(
+          <Link to={"/admin/"+model}>
+            <ListItem button key={i}>
+              <ListItemText primary={model} />
             </ListItem>
-          ))}
-        </List>
-      </div>
-    );
+          </Link>
+        );
+        i++;
+      }
+    }
 
     return (
       <Drawer
         container={this.props.container}
         variant="persistent"
         anchor="left"
-        open={store.state.drawerOpen}
+        open={state.drawerOpen}
         onClose={this.handleDrawerToggle}
         classes={{
           paper: classes.drawerPaper,
@@ -114,4 +102,4 @@ AdminDrawer.propTypes = {
   theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(withStore(AdminDrawer)); 
+export default withStyles(styles, { withTheme: true })(withStore(AdminDrawer));

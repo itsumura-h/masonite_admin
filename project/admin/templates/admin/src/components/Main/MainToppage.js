@@ -26,7 +26,7 @@ class MainToppage extends React.Component {
     const self = this;
     axios.get('http://localhost:8000/admin/api/tables')
     .then(response=>{
-      if(response.headers['content-type'] == 'application/json; charset=utf-8'){
+      if(response.headers['content-type'] === 'application/json; charset=utf-8'){
         self.setState({toppageData: response.data});
       }
     })
@@ -38,10 +38,24 @@ class MainToppage extends React.Component {
   render() {
     const { classes } = this.props;
 
-    let pkg = []
+    let env = [];
+    for(let key in this.state.toppageData.env){
+      let value = this.state.toppageData.env[key];
+      env.push(
+        <TableRow>
+          <TableCell>
+            {key}
+          </TableCell>
+          <TableCell>
+            {this.state.toppageData.env? value: ''}
+          </TableCell>
+        </TableRow>
+      );
+    }
+
+    let pkg = [];
     for(let key in this.state.toppageData.pkg){
       let value = this.state.toppageData.pkg[key];
-
       pkg.push(
         <TableRow>
           <TableCell>
@@ -64,62 +78,7 @@ class MainToppage extends React.Component {
                 Environment
                 <Table>
                   <TableBody>
-                    <TableRow>
-                      <TableCell>
-                        Python version
-                      </TableCell>
-                      <TableCell>
-                        {this.state.toppageData.env? this.state.toppageData.env.Python_version: ''}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        App name
-                      </TableCell>
-                      <TableCell>
-                        {this.state.toppageData.env? this.state.toppageData.env.APP_NAME: ''}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        CGI
-                      </TableCell>
-                      <TableCell>
-                        {this.state.toppageData.env? this.state.toppageData.env.CGI: ''}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        Uname
-                      </TableCell>
-                      <TableCell>
-                        {this.state.toppageData.env? this.state.toppageData.env.Uname: ''}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        Server
-                      </TableCell>
-                      <TableCell>
-                        {this.state.toppageData.env? this.state.toppageData.env.Server: ''}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                       Locale
-                      </TableCell>
-                      <TableCell>
-                        {this.state.toppageData.env? this.state.toppageData.env.Locale: ''}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell>
-                        Env
-                      </TableCell>
-                      <TableCell>
-                        {this.state.toppageData.env? this.state.toppageData.env.Env: ''}
-                      </TableCell>
-                    </TableRow>
+                    {env}
                   </TableBody>
                 </Table>
               </CardContent>
