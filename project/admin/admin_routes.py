@@ -17,7 +17,14 @@ STATICFILES['admin/templates/admin/build/static'] = 'static/'
 
 ADMIN_ROUTES = []
 for model in CONFIG:
-    ADMIN_ROUTES.append(AdminResource(model['model'], model['table']).routes())
+    if model.get('list_display'):
+        ADMIN_ROUTES.append(AdminResource(
+            model['model'],
+            model['table'],
+            list_display=model['list_display']
+        ).routes())
+    else:
+        ADMIN_ROUTES.append(AdminResource(model['model'], model['table']).routes())
 
 ADMIN_ROUTES += [
     Get().route('/', AdminController.root),

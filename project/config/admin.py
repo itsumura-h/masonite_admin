@@ -4,10 +4,12 @@ from app.models.Post import Post
 CONFIG = [
     {
         'model': User,
-        'table': 'users'
+        'table': 'users',
+        'list_display': ['name', 'email']
     },
     {
         'model': Post,
-        'table': 'posts'
+        'table': 'posts',
+        'list_display': ['title', 'posts']
     }
 ]

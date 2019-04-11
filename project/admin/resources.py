@@ -8,7 +8,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'show', 'update', 'delete']
     prefix = ''
 
-    def __init__(self, model, url, without=[], method_type='GET'):
+    def __init__(self, model, url, list_display=[] , without=[], method_type='GET'):
         self.base_url = url
         self.route_url = '/api/' + url
         self.method_type = method_type
@@ -16,13 +16,14 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         self.list_middleware = []
         self.model = model
         self.model.__hidden__ = without
+        self.list_display = list_display
 
     def routes(self):
         routes = []
         if 'create' in self.methods:
             routes.append(self.__class__(self.model, self.base_url, method_type='POST'))
         if 'index' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url, method_type='GET'))
+            routes.append(self.__class__(self.model, self.base_url, list_display=self.list_display, method_type='GET'))
         if 'show' in self.methods:
             routes.append(self.__class__(self.model, self.base_url + '/@id', method_type='GET'))
         if 'update' in self.methods:
@@ -131,7 +132,10 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def index(self):
         """Logic to read data from several models
         """
-        return self.model.all()
+        if self.list_display:
+            return self.model.select('id', *self.list_display).get()
+        else:
+            return self.model.all()
 
     def show(self, request: Request):
         """Logic to read data from 1 model
