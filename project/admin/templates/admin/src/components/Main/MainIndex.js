@@ -11,7 +11,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import Link from 'react-router-dom/Link';
 
-import axios from 'axios';
+import Util from '../../common/util';
 
 class MainIndex extends React.Component {
   state = {
@@ -25,11 +25,9 @@ class MainIndex extends React.Component {
     const table = this.props.store.state.models[model];
 
     const self = this;
-    axios.get('http://localhost:8000/admin/api/'+ table)
+    Util.getAPI('/admin/api/' + table)
     .then(response=>{
-      if(response.headers['content-type'] === 'application/json; charset=utf-8'){
-        self.setState({index: response.data});
-      }
+      self.setState({index: response.data});
     })
   }
 
@@ -52,7 +50,7 @@ class MainIndex extends React.Component {
 
     let html_headers = [];
     let html_table = [];
-    if(this.state.index[0]){
+    if(this.state.index && this.state.index[0]){
       const headers = Object.keys(this.state.index[0]);
 
       for(let i in headers){

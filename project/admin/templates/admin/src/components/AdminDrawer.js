@@ -17,7 +17,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
 import Link from 'react-router-dom/Link';
-import axios from 'axios';
+
+import Util from '../common/util';
+
 import { withStyles } from '@material-ui/core/styles';
 
 import { withStore } from '../common/store'
@@ -48,10 +50,10 @@ class AdminDrawer extends React.Component {
 
   componentDidMount(){
     const store = this.props.store;
-    axios.get('http://localhost:8000/admin/api/tables')
-    .then(function(response){
-      if(response.headers['content-type'] === 'application/json; charset=utf-8'){
-        store.set('models')(response.data.tables)
+    Util.getAPI('/admin/api/tables')
+    .then(response=>{
+      if(response.data){
+        store.set('models')(response.data.tables);
       }
     })
   }

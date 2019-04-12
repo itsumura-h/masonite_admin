@@ -15,7 +15,7 @@ import Create from '@material-ui/icons/Create';
 
 import {Link, NavLink} from 'react-router-dom';
 
-import axios from 'axios';
+import Util from '../../common/util';
 
 class MainToppage extends React.Component {
   state = {
@@ -24,11 +24,9 @@ class MainToppage extends React.Component {
 
   tables=()=>{
     const self = this;
-    axios.get('http://localhost:8000/admin/api/tables')
+    Util.getAPI('/admin/api/tables')
     .then(response=>{
-      if(response.headers['content-type'] === 'application/json; charset=utf-8'){
-        self.setState({toppageData: response.data});
-      }
+      self.setState({toppageData: response.data});
     })
   }
 
@@ -37,36 +35,40 @@ class MainToppage extends React.Component {
   }
   render() {
     const { classes } = this.props;
-
     let env = [];
-    for(let key in this.state.toppageData.env){
-      let value = this.state.toppageData.env[key];
-      env.push(
-        <TableRow>
-          <TableCell>
-            {key}
-          </TableCell>
-          <TableCell>
-            {this.state.toppageData.env? value: ''}
-          </TableCell>
-        </TableRow>
-      );
+    let pkg = [];
+
+    if(this.state.toppageData){
+
+      for(let key in this.state.toppageData.env){
+        let value = this.state.toppageData.env[key];
+        env.push(
+          <TableRow>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              {this.state.toppageData.env? value: ''}
+            </TableCell>
+          </TableRow>
+        );
+      }
+
+      for(let key in this.state.toppageData.pkg){
+        let value = this.state.toppageData.pkg[key];
+        pkg.push(
+          <TableRow>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              {this.state.toppageData.env? value: ''}
+            </TableCell>
+          </TableRow>
+        );
+      }
     }
 
-    let pkg = [];
-    for(let key in this.state.toppageData.pkg){
-      let value = this.state.toppageData.pkg[key];
-      pkg.push(
-        <TableRow>
-          <TableCell>
-            {key}
-          </TableCell>
-          <TableCell>
-            {this.state.toppageData.env? value: ''}
-          </TableCell>
-        </TableRow>
-      );
-    }
 
     return (
       <div>
