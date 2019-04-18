@@ -17,7 +17,7 @@ should contain a simple aggregate of middleware classes.
 
 HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
-    CsrfMiddleware,
+    #CsrfMiddleware,
     ResponseMiddleware,
     MaintenanceModeMiddleware,
     CorsMiddleware,
@@ -26,7 +26,7 @@ HTTP_MIDDLEWARE = [
 CORS = {
     'Access-Control-Allow-Origin': "*",
     "Access-Control-Allow-Methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
-    "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With",
+    "Access-Control-Allow-Headers": "Content-Type, X-Auth-Token, Origin, Accept, Authorization",
     "Access-Control-Max-Age": "3600",
     "Access-Control-Allow-Credentials": "true"
 }

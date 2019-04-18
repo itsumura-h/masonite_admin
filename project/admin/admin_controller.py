@@ -25,6 +25,7 @@ class AdminController:
 
         env = {
             'Python_version': platform.python_version(),
+            'Masonite_version': str(pkg_resources.working_set.by_key['masonite']),
             'APP_NAME': request.environ['APP_NAME'],
             'Uname': request.environ['HTTP_USER_AGENT'],
             'Server': request.environ['SERVER_SOFTWARE'],

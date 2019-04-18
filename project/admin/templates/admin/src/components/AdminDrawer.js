@@ -16,32 +16,13 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
-import Link from 'react-router-dom/Link';
+import {Link} from 'react-router-dom';
 
 import Util from '../common/util';
 
 import { withStyles } from '@material-ui/core/styles';
 
 import { withStore } from '../common/store'
-
-const styles = theme => ({
-  // root: {
-  //   display: 'flex',
-  // },
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: 240,
-      flexShrink: 0,
-    },
-  },
-  drawerPaper: {
-    width: 240,
-  },
-  // content: {
-  //   flexGrow: 1,
-  //   padding: theme.spacing.unit * 3,
-  // },
-});
 
 class AdminDrawer extends React.Component {
   state = {
@@ -63,13 +44,13 @@ class AdminDrawer extends React.Component {
     const state = this.props.store.state;
 
     let tables = [];
-    let i = 0;
     if(state.models){
+      let i = 0;
       for(let model in state.models){
         tables.push(
-          <Link to={"/admin/"+model}>
-            <ListItem button key={i}>
-              <ListItemText primary={model} />
+          <Link to={"/admin/"+model} key={i}>
+            <ListItem button>
+              <ListItemText primary={model + ' Management'} />
             </ListItem>
           </Link>
         );
@@ -96,12 +77,16 @@ class AdminDrawer extends React.Component {
   }
 }
 
-AdminDrawer.propTypes = {
-  classes: PropTypes.object.isRequired,
-  // Injected by the documentation to work in an iframe.
-  // You won't need it on your project.
-  container: PropTypes.object,
-  theme: PropTypes.object.isRequired,
-};
+const styles = theme => ({
+  drawer: {
+    [theme.breakpoints.up('sm')]: {
+      width: 240,
+      flexShrink: 0,
+    },
+  },
+  drawerPaper: {
+    width: 240,
+  },
+});
 
 export default withStyles(styles, { withTheme: true })(withStore(AdminDrawer));

@@ -13,3 +13,7 @@ CONFIG = [
         'list_display': ['title', 'posts']
     }
 ]
+
+# import pprint
+# pprint.pprint(vars(Post))
+# pprint.pprint(Post.__table__)

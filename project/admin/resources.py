@@ -5,10 +5,10 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             NoApiTokenFound, PermissionScopeDenied,
                             RateLimitReached)
 class AdminResource(BaseHttpRoute, JSONSerializer):
-    methods = ['create', 'index', 'show', 'update', 'delete']
+    methods = ['create', 'index', 'show', 'update', 'delete', 'options']
     prefix = ''
 
-    def __init__(self, model, url, list_display=[] , without=[], method_type='GET'):
+    def __init__(self, model, url, list_display=[] , without=[], method_type=['GET']):
         self.base_url = url
         self.route_url = '/api/' + url
         self.method_type = method_type
@@ -20,16 +20,26 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
     def routes(self):
         routes = []
+        # if 'create' in self.methods:
+        #     routes.append(self.__class__(self.model, self.base_url, method_type=['POST']))
+        # if 'index' in self.methods:
+        #     routes.append(self.__class__(self.model, self.base_url, list_display=self.list_display, method_type=['GET']))
+        # if 'show' in self.methods:
+        #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['GET']))
+        # if 'update' in self.methods:
+        #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['PUT']))
+        # if 'delete' in self.methods:
+        #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['DELETE']))
         if 'create' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url, method_type='POST'))
+            routes.append(self.__class__(self.model, self.base_url, method_type=['POST']))
         if 'index' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url, list_display=self.list_display, method_type='GET'))
+            routes.append(self.__class__(self.model, self.base_url, list_display=self.list_display, method_type=['GET']))
         if 'show' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type='GET'))
+            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['GET']))
         if 'update' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type='PUT'))
+            routes.append(self.__class__(self.model, self.base_url + '/@id/patch', method_type=['POST']))
         if 'delete' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type='DELETE'))
+            routes.append(self.__class__(self.model, self.base_url + '/@id/delete', method_type=['POST']))
 
         return routes
 
@@ -51,16 +61,28 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
         # If the authenticate method did not return a response, continue on to one of the CRUD responses
         if not response:
-            if 'POST' in self.method_type:
+            # if 'POST' in self.method_type:
+            #     response = self.request.app().resolve(getattr(self, 'create'))
+            # elif 'GET' in self.method_type and '@' in self.route_url:
+            #     response = self.request.app().resolve(getattr(self, 'show'))
+            # elif 'GET' in self.method_type:
+            #     response = self.request.app().resolve(getattr(self, 'index'))
+            # elif 'PUT' in self.method_type or 'PATCH' in self.method_type:
+            #     response = self.request.app().resolve(getattr(self, 'update'))
+            # elif 'DELETE' in self.method_type:
+            #     response = self.request.app().resolve(getattr(self, 'delete'))
+
+            if 'POST' in self.method_type and 'patch' in self.route_url:
+                response = self.request.app().resolve(getattr(self, 'update'))
+            elif 'POST' in self.method_type and 'delete' in self.route_url:
+                response = self.request.app().resolve(getattr(self, 'delete'))
+            elif 'POST' in self.method_type:
                 response = self.request.app().resolve(getattr(self, 'create'))
             elif 'GET' in self.method_type and '@' in self.route_url:
                 response = self.request.app().resolve(getattr(self, 'show'))
             elif 'GET' in self.method_type:
                 response = self.request.app().resolve(getattr(self, 'index'))
-            elif 'PUT' in self.method_type or 'PATCH' in self.method_type:
-                response = self.request.app().resolve(getattr(self, 'update'))
-            elif 'DELETE' in self.method_type:
-                response = self.request.app().resolve(getattr(self, 'delete'))
+
 
         # If the resource needs it's own serializer method
         if hasattr(self, 'serialize'):

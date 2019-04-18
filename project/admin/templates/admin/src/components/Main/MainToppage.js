@@ -43,7 +43,7 @@ class MainToppage extends React.Component {
       for(let key in this.state.toppageData.env){
         let value = this.state.toppageData.env[key];
         env.push(
-          <TableRow>
+          <TableRow key={key}>
             <TableCell>
               {key}
             </TableCell>
@@ -57,7 +57,7 @@ class MainToppage extends React.Component {
       for(let key in this.state.toppageData.pkg){
         let value = this.state.toppageData.pkg[key];
         pkg.push(
-          <TableRow>
+          <TableRow key={key}>
             <TableCell>
               {key}
             </TableCell>
