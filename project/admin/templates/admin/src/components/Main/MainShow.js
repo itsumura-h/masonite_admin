@@ -4,29 +4,56 @@ import { withStore } from '../../common/store';
 
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+
+import { withRouter } from 'react-router';
+import {NavLink} from 'react-router-dom';
+
+import List from '@material-ui/icons/List';
+import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
 
 import Util from '../../common/util';
 
 class MainShow extends React.PureComponent{
   state = {
-    //schema: [],
-    show: [],
+    schema: [],
+    showData: [],
+    editUrl: window.location.href + '/edit',
   }
 
-  // getSchema=(table)=>{
-  //   const self = this;
-  //   Util.getAPI('/admin/api/schema/'+table)
-  //   .then(response=>{
-  //     self.setState({schema: response.data});
-  //   });
-  // }
+  getSchema=(table)=>{
+    const self = this;
+    Util.getAPI('/admin/api/schema/'+table)
+    .then(response=>{
+      self.setState({schema: response.data});
+    });
+  }
 
   getShow=(table, id)=>{
     const self = this;
     Util.getAPI('/admin/api/'+table+'/'+id)
     .then(response=>{
-      self.setState({show: response.data});
+      self.setState({showData: response.data});
     });
+  }
+
+  delete=(event)=>{
+    // URLパラメーター取得
+    const model = this.props.match.params.model;
+    // storeからtableを取得
+    const table = this.props.store.state.models[model];
+
+    const id = event.currentTarget.dataset.id;
+    const url = '/admin/api/'+table+'/'+id+'/delete';
+
+    Util.deleteAPI(url)
+    .then(response=>{
+      this.props.history.push('./');
+    })
+    .catch(err=>{
+      console.error(err);
+    })
   }
 
   componentDidMount(){
@@ -37,7 +64,7 @@ class MainShow extends React.PureComponent{
     const table = this.props.store.state.models[model];
 
     if(table){
-      //this.getSchema(table);
+      this.getSchema(table);
       this.getShow(table, id);
     }
   }
@@ -50,25 +77,25 @@ class MainShow extends React.PureComponent{
     const table = this.props.store.state.models[model];
 
     if(this.props !== nextProps && table){
-      //this.getSchema(table);
+      this.getSchema(table);
       this.getShow(table, id);
     }
   }
 
   render(){
-    console.log(this.state.show);
     const { classes } = this.props;
     // URLパラメーター取得
     const model = this.props.match.params.model;
+    const id = this.props.match.params.id;
 
     let i = 0;
-    let shows = [];
-    for(let key in this.state.show){
-      let show = this.state.show[key];
-      shows.push(
+    let html_shows = [];
+    for(let key in this.state.showData){
+      let show = this.state.showData[key];
+      html_shows.push(
         <div key={i}>
           <Grid container>
-            <Grid item xs='2'><label>{key}</label></Grid>
+            <Grid item xs={2}><label>{key}</label></Grid>
             <Grid item xs><textarea type='text' readOnly value={show} className={classes.textarea} /></Grid>
           </Grid>
           <Divider/>
@@ -80,9 +107,26 @@ class MainShow extends React.PureComponent{
     return(
       <div>
         <h1>{model}</h1>
-        <p>show</p>
+        <div className={classes.flex}>
+          <p>show</p>
+          <div className={classes.buttons}>
+            <NavLink to='./'>
+              <Button color="primary">
+                <List/>list
+              </Button>
+            </NavLink>
+            <NavLink to={`./${id}/edit`}>
+              <Button color="primary">
+                <Edit/>edit
+              </Button>
+            </NavLink>
+            <Button color="primary" data-id={this.props.match.params.id} onClick={this.delete}>
+              <Delete/>delete
+            </Button>
+            </div>
+        </div>
         <div className={classes.scroll}>
-          {shows}
+          {html_shows}
         </div>
       </div>
     );
@@ -95,7 +139,13 @@ const styles = {
   },
   textarea: {
     width: '90%'
+  },
+  flex: {
+    display: 'flex'
+  },
+  buttons: {
+    margin: '0 0 0 auto'
   }
 }
 
-export default withStyles(styles)(withStore(MainShow));
+export default withStyles(styles)(withRouter(withStore(MainShow)));
