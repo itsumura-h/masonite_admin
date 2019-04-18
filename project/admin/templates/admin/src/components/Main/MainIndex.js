@@ -41,6 +41,7 @@ class MainIndex extends React.PureComponent {
 
     const id = event.currentTarget.dataset.id;
     const url = '/admin/api/'+table+'/'+id+'/delete';
+
     Util.deleteAPI(url)
     .then(response=>{
       this.getIndex(table);

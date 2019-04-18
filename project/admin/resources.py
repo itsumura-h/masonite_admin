@@ -5,7 +5,7 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             NoApiTokenFound, PermissionScopeDenied,
                             RateLimitReached)
 class AdminResource(BaseHttpRoute, JSONSerializer):
-    methods = ['create', 'index', 'show', 'update', 'delete', 'options']
+    methods = ['create', 'index', 'show', 'update', 'delete']
     prefix = ''
 
     def __init__(self, model, url, list_display=[] , without=[], method_type=['GET']):

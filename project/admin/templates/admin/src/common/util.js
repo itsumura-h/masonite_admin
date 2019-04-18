@@ -22,11 +22,9 @@ export default class Util extends React.Component{
 
   static deleteAPI=(url)=>{
     url = CONST.APIHOST + url;
-    console.log(url);
 
     return axios.post(url)
       .then(response=>{
-        console.log(response);
         return response;
       })
       .catch(err=>{
