@@ -4,19 +4,21 @@ from masonite.request import Request
 from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             NoApiTokenFound, PermissionScopeDenied,
                             RateLimitReached)
+
 class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'show', 'update', 'delete']
     prefix = ''
 
-    def __init__(self, model, url, list_display=[] , without=[], method_type=['GET']):
-        self.base_url = url
-        self.route_url = '/api/' + url
+    def __init__(self, model, url='', list_display=[] , without=[], method_type=['GET']):
+        self.base_url = model.__doc__.split(' ')[0] # Model name
+        self.route_url = '/api/' + url # /api/model_name/ /api/model_name/@id
         self.method_type = method_type
         self.named_route = None
         self.list_middleware = []
         self.model = model
         self.model.__hidden__ = without
         self.list_display = list_display
+
 
     def routes(self):
         routes = []
@@ -30,16 +32,17 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['PUT']))
         # if 'delete' in self.methods:
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['DELETE']))
+        
         if 'create' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url, method_type=['POST']))
+            routes.append(self.__class__(self.model, url=self.base_url, method_type=['POST']))
         if 'index' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url, list_display=self.list_display, method_type=['GET']))
+            routes.append(self.__class__(self.model, url=self.base_url, list_display=self.list_display, method_type=['GET']))
         if 'show' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['GET']))
+            routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['GET']))
         if 'update' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id/patch', method_type=['POST']))
+            routes.append(self.__class__(self.model, url=self.base_url + '/@id/patch', method_type=['POST']))
         if 'delete' in self.methods:
-            routes.append(self.__class__(self.model, self.base_url + '/@id/delete', method_type=['POST']))
+            routes.append(self.__class__(self.model, url=self.base_url + '/@id/delete', method_type=['POST']))
 
         return routes
 

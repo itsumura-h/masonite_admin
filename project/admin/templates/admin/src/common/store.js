@@ -5,6 +5,7 @@ const store = createStore({
   drawerOpen: true,
   drawerWidth: Const.drawerWidth,
   models: [],
+  topppageData: {},
 })
 
 export const withStore = connect(store)

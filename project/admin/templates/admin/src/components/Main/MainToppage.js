@@ -24,7 +24,7 @@ class MainToppage extends React.Component {
 
   tables=()=>{
     const self = this;
-    Util.getAPI('/admin/api/tables')
+    Util.getAPI('/admin/api/models')
     .then(response=>{
       self.setState({toppageData: response.data});
     })
@@ -38,6 +38,7 @@ class MainToppage extends React.Component {
     let env = [];
     let pkg = [];
 
+    console.log(this.state.toppageData);
     if(this.state.toppageData){
 
       for(let key in this.state.toppageData.env){

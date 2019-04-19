@@ -8,8 +8,21 @@ import AdminMain from './components/AdminMain';
 import AdminDrawer from './components/AdminDrawer';
 
 import {withStore} from './common/store';
+import Util from './common/util';
 
 class App extends Component {
+
+  // componentDidMount(){
+  //   const store = this.props.store;
+  //   Util.getAPI('/admin/api/models')
+  //   .then(response=>{
+  //     if(response.data){
+  //       console.log(response.data);
+  //       store.set('models')(response.data.models);
+  //       store.set('toppageData')(response.data);
+  //     }
+  //   })
+  // }
 
   render() {
     return (

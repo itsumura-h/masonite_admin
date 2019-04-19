@@ -31,10 +31,10 @@ class AdminDrawer extends React.Component {
 
   componentDidMount(){
     const store = this.props.store;
-    Util.getAPI('/admin/api/tables')
+    Util.getAPI('/admin/api/models')
     .then(response=>{
       if(response.data){
-        store.set('models')(response.data.tables);
+        store.set('models')(response.data.models);
       }
     })
   }
@@ -45,8 +45,8 @@ class AdminDrawer extends React.Component {
 
     let tables = [];
     if(state.models){
-      let i = 0;
-      for(let model in state.models){
+      for(let i in state.models){
+        let model = state.models[i]
         tables.push(
           <Link to={"/admin/"+model} key={i}>
             <ListItem button>

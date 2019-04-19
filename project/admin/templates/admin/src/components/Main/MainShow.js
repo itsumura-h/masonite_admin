@@ -22,17 +22,17 @@ class MainShow extends React.PureComponent{
     editUrl: window.location.href + '/edit',
   }
 
-  getSchema=(table)=>{
+  getSchema=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/schema/'+table)
+    Util.getAPI('/admin/api/schema/'+model)
     .then(response=>{
       self.setState({schema: response.data});
     });
   }
 
-  getShow=(table, id)=>{
+  getShow=(model, id)=>{
     const self = this;
-    Util.getAPI('/admin/api/'+table+'/'+id)
+    Util.getAPI('/admin/api/'+model+'/'+id)
     .then(response=>{
       self.setState({showData: response.data});
     });
@@ -45,7 +45,7 @@ class MainShow extends React.PureComponent{
     const table = this.props.store.state.models[model];
 
     const id = event.currentTarget.dataset.id;
-    const url = '/admin/api/'+table+'/'+id+'/delete';
+    const url = '/admin/api/'+model+'/'+id+'/delete';
 
     Util.deleteAPI(url)
     .then(response=>{
@@ -63,9 +63,9 @@ class MainShow extends React.PureComponent{
     // storeからtableを取得
     const table = this.props.store.state.models[model];
 
-    if(table){
-      this.getSchema(table);
-      this.getShow(table, id);
+    if(model){
+      this.getSchema(model);
+      this.getShow(model, id);
     }
   }
 
@@ -77,8 +77,8 @@ class MainShow extends React.PureComponent{
     const table = this.props.store.state.models[model];
 
     if(this.props !== nextProps && table){
-      this.getSchema(table);
-      this.getShow(table, id);
+      this.getSchema(model);
+      this.getShow(model, id);
     }
   }
 

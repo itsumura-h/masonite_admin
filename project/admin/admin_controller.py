@@ -18,10 +18,10 @@ class AdminController:
         with open('admin/templates/admin/build/index.html', 'r') as f:
             return f.read()
 
-    def tables(self, request: Request):
-        tables = {}
+    def models(self, request: Request):
+        models = []
         for model in CONFIG:
-            tables[model['model'].__name__] = model['table']
+            models.append(model['model'].__doc__.split(' ')[0])
 
         env = {
             'Python_version': platform.python_version(),
@@ -37,7 +37,7 @@ class AdminController:
         for dist in pkg_resources.working_set:
             pkg[dist.project_name] = dist.version
         pkg = OrderedDict(sorted(pkg.items()))
-        return {'tables': tables, 'env': env, 'pkg': pkg}
+        return {'models': models, 'env': env, 'pkg': pkg}
 
     def schema(self, request: Request):
         table = request.param('table')

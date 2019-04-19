@@ -4,16 +4,17 @@ from app.models.Post import Post
 CONFIG = [
     {
         'model': User,
-        'table': 'users',
         'list_display': ['name', 'email']
     },
     {
         'model': Post,
-        'table': 'posts',
         'list_display': ['title', 'posts']
     }
 ]
 
-# import pprint
-# pprint.pprint(vars(Post))
+
+# import pprint, inspect
+# pprint.pprint(inspect.getmembers(User))
+# print(User.__doc__.split(' ')[0])
+# print(Post.__doc__.split(' ')[0])
 # pprint.pprint(Post.__table__)

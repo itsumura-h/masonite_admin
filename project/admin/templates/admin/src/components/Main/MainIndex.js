@@ -25,9 +25,9 @@ class MainIndex extends React.PureComponent {
     indexData: []
   }
 
-  getIndex=(table)=>{
+  getIndex=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/' + table)
+    Util.getAPI('/admin/api/' + model)
     .then(response=>{
       self.setState({indexData: response.data});
     })
@@ -40,11 +40,11 @@ class MainIndex extends React.PureComponent {
     const table = this.props.store.state.models[model];
 
     const id = event.currentTarget.dataset.id;
-    const url = '/admin/api/'+table+'/'+id+'/delete';
+    const url = '/admin/api/'+model+'/'+id+'/delete';
 
     Util.deleteAPI(url)
     .then(response=>{
-      this.getIndex(table);
+      this.getIndex(model);
     })
     .catch(err=>{
       console.error(err);
@@ -57,8 +57,8 @@ class MainIndex extends React.PureComponent {
     // storeからtableを取得
     const table = this.props.store.state.models[model];
 
-    if(table){
-      this.getIndex(table);
+    if(model){
+      this.getIndex(model);
     }
   }
 
@@ -68,8 +68,8 @@ class MainIndex extends React.PureComponent {
     // storeからtableを取得
     const table = this.props.store.state.models[model];
 
-    if(this.props !== nextProps && table){
-      this.getIndex(table);
+    if(this.props !== nextProps && model){
+      this.getIndex(model);
     }
   }
 
