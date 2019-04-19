@@ -18,7 +18,7 @@ class AdminController:
         with open('admin/templates/admin/build/index.html', 'r') as f:
             return f.read()
 
-    def models(self, request: Request):
+    def info(self, request: Request):
         models = []
         for model in CONFIG:
             models.append(model['model'].__doc__.split(' ')[0])

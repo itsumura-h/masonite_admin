@@ -13,7 +13,7 @@ class MainEdit extends React.Component{
   }
 
   getSchema=()=>{
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
     // storeからtableを取得
     const table = this.props.store.state.models[model];
@@ -33,7 +33,7 @@ class MainEdit extends React.Component{
 
   render(){
     const { classes } = this.props;
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
 
     return(

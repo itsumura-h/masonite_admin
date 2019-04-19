@@ -18,8 +18,6 @@ class AdminMain extends React.Component {
           <Route exact path="/admin/:model" component={MainIndex} />
           <Route exact path="/admin/:model/:id" component={MainShow} />
           <Route exact path="/admin/:model/:id/edit" component={MainEdit} />
-          
-          
         </Switch>
       </div>
     );
@@ -28,7 +26,9 @@ class AdminMain extends React.Component {
 
 const styles = {
   main: {
-    padding: '20px 30px 30px'
+    padding: '20px 30px 30px',
+    backgroundColor: '#ECF0F5',
+    minHeight: '80vh'
   }
 }
 

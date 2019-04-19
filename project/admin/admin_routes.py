@@ -27,7 +27,7 @@ for model in CONFIG:
 
 ADMIN_ROUTES += [
     Get().route('/', AdminController.root),
-    Get().route('/api/models',AdminController.models),
+    Get().route('/api/info',AdminController.info),
     Get().route('/api/schema/@table',AdminController.schema),
     Get().route('/@table', AdminController.root),
     Get().route('/@table/@id/edit', AdminController.root),

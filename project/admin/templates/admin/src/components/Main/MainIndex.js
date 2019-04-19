@@ -34,7 +34,7 @@ class MainIndex extends React.PureComponent {
   }
 
   delete=(event)=>{
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
     // storeからtableを取得
     const table = this.props.store.state.models[model];
@@ -52,10 +52,8 @@ class MainIndex extends React.PureComponent {
   }
 
   componentDidMount(){
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
-    // storeからtableを取得
-    const table = this.props.store.state.models[model];
 
     if(model){
       this.getIndex(model);
@@ -63,10 +61,8 @@ class MainIndex extends React.PureComponent {
   }
 
   componentDidUpdate(nextProps){
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
-    // storeからtableを取得
-    const table = this.props.store.state.models[model];
 
     if(this.props !== nextProps && model){
       this.getIndex(model);
@@ -75,7 +71,7 @@ class MainIndex extends React.PureComponent {
 
   render() {
     const { classes } = this.props;
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
 
     let html_headers = [];
@@ -113,7 +109,7 @@ class MainIndex extends React.PureComponent {
             </Link>
           </TableCell>,
           <TableCell key={td_key+3}>
-            <Fab color="secondary" aria-label="edit" data-id={row.id} onClick={this.delete}>
+            <Fab color="secondary" aria-label="delete" data-id={row.id} onClick={this.delete}>
                 <Delete />
               </Fab>
           </TableCell>,

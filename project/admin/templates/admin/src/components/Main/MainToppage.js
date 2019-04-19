@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { withStore } from '../../common/store';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -18,52 +19,38 @@ import {Link, NavLink} from 'react-router-dom';
 import Util from '../../common/util';
 
 class MainToppage extends React.Component {
-  state = {
-    toppageData: []
-  }
 
-  tables=()=>{
-    const self = this;
-    Util.getAPI('/admin/api/models')
-    .then(response=>{
-      self.setState({toppageData: response.data});
-    })
-  }
-
-  componentDidMount(){
-    this.tables();
-  }
   render() {
     const { classes } = this.props;
+    const state = this.props.store.state;
     let env = [];
     let pkg = [];
 
-    console.log(this.state.toppageData);
-    if(this.state.toppageData){
+    if(state.info){
 
-      for(let key in this.state.toppageData.env){
-        let value = this.state.toppageData.env[key];
+      for(let key in state.info.env){
+        let value = state.info.env[key];
         env.push(
           <TableRow key={key}>
             <TableCell>
               {key}
             </TableCell>
             <TableCell>
-              {this.state.toppageData.env? value: ''}
+              {state.info.env? value: ''}
             </TableCell>
           </TableRow>
         );
       }
 
-      for(let key in this.state.toppageData.pkg){
-        let value = this.state.toppageData.pkg[key];
+      for(let key in state.info.pkg){
+        let value = state.info.pkg[key];
         pkg.push(
           <TableRow key={key}>
             <TableCell>
               {key}
             </TableCell>
             <TableCell>
-              {this.state.toppageData.env? value: ''}
+              {state.info.env? value: ''}
             </TableCell>
           </TableRow>
         );
@@ -118,4 +105,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(MainToppage);
+export default withStyles(styles)(withStore(MainToppage));

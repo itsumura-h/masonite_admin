@@ -1,5 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { withStore } from '../common/store'
+
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
@@ -20,23 +23,11 @@ import {Link} from 'react-router-dom';
 
 import Util from '../common/util';
 
-import { withStyles } from '@material-ui/core/styles';
 
-import { withStore } from '../common/store'
 
 class AdminDrawer extends React.Component {
   state = {
     tables: null,
-  }
-
-  componentDidMount(){
-    const store = this.props.store;
-    Util.getAPI('/admin/api/models')
-    .then(response=>{
-      if(response.data){
-        store.set('models')(response.data.models);
-      }
-    })
   }
 
   render() {
@@ -44,9 +35,9 @@ class AdminDrawer extends React.Component {
     const state = this.props.store.state;
 
     let tables = [];
-    if(state.models){
-      for(let i in state.models){
-        let model = state.models[i]
+    if(state.info.models){
+      for(let i in state.info.models){
+        let model = state.info.models[i]
         tables.push(
           <Link to={"/admin/"+model} key={i}>
             <ListItem button>

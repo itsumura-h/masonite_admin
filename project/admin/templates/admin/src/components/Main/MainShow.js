@@ -2,9 +2,14 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
-import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 
 import { withRouter } from 'react-router';
 import {NavLink} from 'react-router-dom';
@@ -39,10 +44,8 @@ class MainShow extends React.PureComponent{
   }
 
   delete=(event)=>{
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
-    // storeからtableを取得
-    const table = this.props.store.state.models[model];
 
     const id = event.currentTarget.dataset.id;
     const url = '/admin/api/'+model+'/'+id+'/delete';
@@ -57,11 +60,9 @@ class MainShow extends React.PureComponent{
   }
 
   componentDidMount(){
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
     const id = this.props.match.params.id;
-    // storeからtableを取得
-    const table = this.props.store.state.models[model];
 
     if(model){
       this.getSchema(model);
@@ -70,13 +71,11 @@ class MainShow extends React.PureComponent{
   }
 
   componentDidUpdate(nextProps){
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
     const id = this.props.match.params.id;
-    // storeからtableを取得
-    const table = this.props.store.state.models[model];
 
-    if(this.props !== nextProps && table){
+    if(this.props !== nextProps && model){
       this.getSchema(model);
       this.getShow(model, id);
     }
@@ -84,22 +83,23 @@ class MainShow extends React.PureComponent{
 
   render(){
     const { classes } = this.props;
-    // URLパラメーター取得
+    // get URL param
     const model = this.props.match.params.model;
     const id = this.props.match.params.id;
 
     let i = 0;
-    let html_shows = [];
+    let html_row = [];
     for(let key in this.state.showData){
-      let show = this.state.showData[key];
-      html_shows.push(
-        <div key={i}>
-          <Grid container>
-            <Grid item xs={2}><label>{key}</label></Grid>
-            <Grid item xs><textarea type='text' readOnly value={show} className={classes.textarea} /></Grid>
-          </Grid>
-          <Divider/>
-        </div>
+      let show = this.state.showData[key]? this.state.showData[key]: '';
+      html_row.push(
+        <TableRow key={key}>
+          <TableCell>
+            {key}
+          </TableCell>
+          <TableCell>
+            <textarea type='text' readOnly value={show} className={classes.textarea} />
+          </TableCell>
+        </TableRow>
       );
       i++;
     }
@@ -107,27 +107,36 @@ class MainShow extends React.PureComponent{
     return(
       <div>
         <h1>{model}</h1>
-        <div className={classes.flex}>
-          <p>show</p>
-          <div className={classes.buttons}>
-            <NavLink to='./'>
-              <Button color="primary">
-                <List/>list
+        <Card>
+          <CardContent>
+          <div className={classes.flex}>
+            <p>Detail</p>
+            <div className={classes.buttons}>
+              <NavLink to='./'>
+                <Button variant="contained" className={classes.listButton}>
+                  <List/>list
+                </Button>
+              </NavLink>
+              <NavLink to={`./${id}/edit`}>
+                <Button variant="contained" className={classes.editButton}>
+                  <Edit/>edit
+                </Button>
+              </NavLink>
+              <Button variant="contained" className={classes.deleteButton} data-id={this.props.match.params.id} onClick={this.delete}>
+                <Delete/>delete
               </Button>
-            </NavLink>
-            <NavLink to={`./${id}/edit`}>
-              <Button color="primary">
-                <Edit/>edit
-              </Button>
-            </NavLink>
-            <Button color="primary" data-id={this.props.match.params.id} onClick={this.delete}>
-              <Delete/>delete
-            </Button>
+              </div>
             </div>
-        </div>
-        <div className={classes.scroll}>
-          {html_shows}
-        </div>
+            <Divider />
+            <div className={classes.scroll}>
+              <Table>
+                <TableBody>
+                  {html_row}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -145,6 +154,24 @@ const styles = {
   },
   buttons: {
     margin: '0 0 0 auto'
+  },
+  listButton: {
+    color: 'black',
+    backgroundColor: '#ECF0F5'
+  },
+  editButton: {
+    color: 'white',
+    backgroundColor: '#3C8DBC',
+    '&:hover': {
+      backgroundColor: '#2C7DAC',
+    },
+  },
+  deleteButton: {
+    color: 'white',
+    backgroundColor: '#DD4B39',
+    '&:hover': {
+      backgroundColor: '#CD3B29',
+    },
   }
 }
 

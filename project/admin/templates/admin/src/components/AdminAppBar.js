@@ -24,6 +24,9 @@ const styles = {
   },
   link: {
     color: 'white'
+  },
+  appbar: {
+    backgroundColor: '#3C8DBC'
   }
 };
 
@@ -41,7 +44,7 @@ class AdminAppBar extends React.Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="static" className={classes.appbar}>
           <Toolbar>
             <IconButton onClick={this.drawerOpen} className={classes.menuButton} color="inherit" aria-label="Menu">
               <MenuIcon />
