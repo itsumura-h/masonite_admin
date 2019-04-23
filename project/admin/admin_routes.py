@@ -28,10 +28,11 @@ for model in CONFIG:
 ADMIN_ROUTES += [
     Get().route('/', AdminController.root),
     Get().route('/api/info',AdminController.info),
-    Get().route('/api/schema/@table',AdminController.schema),
-    Get().route('/@table', AdminController.root),
-    Get().route('/@table/@id/edit', AdminController.root),
-    Get().route('/@table/@id', AdminController.root),
+    Get().route('/api/schema/@model',AdminController.schema),
+    Get().route('/api/foreign/@table',AdminController.foreign),
+    Get().route('/@model', AdminController.root),
+    Get().route('/@model/@id/edit', AdminController.root),
+    Get().route('/@model/@id', AdminController.root),
     
     
     #UserResource('/api/users').routes(),

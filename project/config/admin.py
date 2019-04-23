@@ -4,7 +4,8 @@ from app.models.Post import Post
 CONFIG = [
     {
         'model': User,
-        'list_display': ['name', 'email']
+        'list_display': ['name', 'email'],
+        'foreign_display': 'name',
     },
     {
         'model': Post,

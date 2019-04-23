@@ -8,6 +8,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
@@ -36,8 +38,6 @@ class MainIndex extends React.PureComponent {
   delete=(event)=>{
     // get URL param
     const model = this.props.match.params.model;
-    // storeからtableを取得
-    const table = this.props.store.state.models[model];
 
     const id = event.currentTarget.dataset.id;
     const url = '/admin/api/'+model+'/'+id+'/delete';
@@ -103,13 +103,13 @@ class MainIndex extends React.PureComponent {
           </TableCell>,
           <TableCell key={td_key+2}>
             <Link to={'/admin/'+model+'/'+row.id+'/edit'}>
-              <Fab color="primary" aria-label="edit">
+              <Fab aria-label="edit" className={classes.editButton}>
                 <Edit />
               </Fab>
             </Link>
           </TableCell>,
           <TableCell key={td_key+3}>
-            <Fab color="secondary" aria-label="delete" data-id={row.id} onClick={this.delete}>
+            <Fab aria-label="delete" data-id={row.id} onClick={this.delete} className={classes.deleteButton}>
                 <Delete />
               </Fab>
           </TableCell>,
@@ -121,19 +121,23 @@ class MainIndex extends React.PureComponent {
     return (
       <div>
         <h1>{model}</h1>
-        <p>index</p>
-        <div className={classes.scroll}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {html_headers}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {html_table}
-            </TableBody>
-          </Table>
-        </div>
+        <Card>
+          <CardContent>
+            <p>index</p>
+            <div className={classes.scroll}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    {html_headers}
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {html_table}
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -142,6 +146,20 @@ class MainIndex extends React.PureComponent {
 const styles = {
   scroll: {
     overflow: 'auto'
+  },
+  editButton: {
+    color: 'white',
+    backgroundColor: '#3C8DBC',
+    '&:hover': {
+      backgroundColor: '#2C7DAC',
+    },
+  },
+  deleteButton: {
+    color: 'white',
+    backgroundColor: '#DD4B39',
+    '&:hover': {
+      backgroundColor: '#CD3B29',
+    },
   }
 }
 

@@ -55,12 +55,11 @@ class AdminDrawer extends React.Component {
         variant="persistent"
         anchor="left"
         open={state.drawerOpen}
-        onClose={this.handleDrawerToggle}
         classes={{
           paper: classes.drawerPaper,
         }}
       >
-        <List>
+        <List className={classes.modelList}>
           {tables}
         </List>
       </Drawer>
@@ -68,16 +67,14 @@ class AdminDrawer extends React.Component {
   }
 }
 
-const styles = theme => ({
-  drawer: {
-    [theme.breakpoints.up('sm')]: {
-      width: 240,
-      flexShrink: 0,
-    },
-  },
+const styles = {
   drawerPaper: {
     width: 240,
+    backgroundColor: '#F9FAFC'
   },
-});
+  modelList: {
+    backgroundColor: '#F4F4F5'
+  }
+}
 
-export default withStyles(styles, { withTheme: true })(withStore(AdminDrawer));
+export default withStyles(styles)(withStore(AdminDrawer));
