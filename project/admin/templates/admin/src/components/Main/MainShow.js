@@ -74,7 +74,6 @@ class MainShow extends React.PureComponent{
   }
 
   render(){
-    console.log(this.state.foreignKeys);
     const { classes } = this.props;
     // get URL param
     const model = this.props.match.params.model;
@@ -103,7 +102,7 @@ class MainShow extends React.PureComponent{
               {key}
             </TableCell>
             <TableCell>
-              <textarea type='text' value={foreignValue} data-id={foreignId} className={classes.textarea} ></textarea>
+              <textarea type='text' value={foreignValue} data-id={foreignId} className={classes.textarea} readOnly ></textarea>
             </TableCell>
           </TableRow>
         );
@@ -115,7 +114,7 @@ class MainShow extends React.PureComponent{
               {key}
             </TableCell>
             <TableCell>
-              <textarea type='text' value={show} className={classes.textarea} ></textarea>
+              <textarea type='text' value={show} className={classes.textarea} readOnly ></textarea>
             </TableCell>
           </TableRow>
         );

@@ -87,17 +87,16 @@ class MainEdit extends React.PureComponent{
 
       if(keys.includes(key)){
         const options = []
+        let selectedId;
         for(let i in this.state.foreignKeys[key]){
           const foreignData = this.state.foreignKeys[key][i];
+
           if(foreignData.id == show){
-            options.push(
-              <option value={foreignData.id} selected>{foreignData.name}</option>
-            );
-          }else{
-            options.push(
-              <option value={foreignData.id}>{foreignData.name}</option>
-            );
+            selectedId = foreignData.id;
           }
+          options.push(
+            <option key={i} value={foreignData.id} >{foreignData.name}</option>
+          );
         }
 
         html_row.push(
@@ -106,7 +105,7 @@ class MainEdit extends React.PureComponent{
               {key}
             </TableCell>
             <TableCell>
-              <select>
+              <select defaultValue={selectedId}>
                 {options}
               </select>
             </TableCell>
@@ -120,7 +119,7 @@ class MainEdit extends React.PureComponent{
               {key}
             </TableCell>
             <TableCell>
-              <textarea type='text' value={show} className={classes.textarea} ></textarea>
+              <textarea type='text' defaultValue={show} className={classes.textarea} ></textarea>
             </TableCell>
           </TableRow>
         );
