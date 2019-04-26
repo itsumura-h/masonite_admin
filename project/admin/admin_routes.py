@@ -29,7 +29,6 @@ ADMIN_ROUTES += [
     Get().route('/', AdminController.root),
     Get().route('/api/info',AdminController.info),
     Get().route('/api/schema/@model',AdminController.schema),
-    Get().route('/api/foreign/@table',AdminController.foreign),
     Get().route('/@model', AdminController.root),
     Get().route('/@model/@id/edit', AdminController.root),
     Get().route('/@model/@id', AdminController.root),

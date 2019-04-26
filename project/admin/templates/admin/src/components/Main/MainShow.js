@@ -23,15 +23,18 @@ import Util from '../../common/util';
 class MainShow extends React.PureComponent{
   state = {
     schema: [],
+    foreignKeys: [],
     showData: [],
-    editUrl: window.location.href + '/edit',
   }
 
   getSchema=(model)=>{
     const self = this;
     Util.getAPI('/admin/api/schema/'+model)
     .then(response=>{
-      self.setState({schema: response.data});
+      self.setState({
+        schema: response.data.schema,
+        foreignKeys: response.data.foreign_keys
+      });
     });
   }
 
@@ -70,18 +73,8 @@ class MainShow extends React.PureComponent{
     }
   }
 
-  componentDidUpdate(nextProps){
-    // get URL param
-    const model = this.props.match.params.model;
-    const id = this.props.match.params.id;
-
-    if(this.props !== nextProps && model){
-      this.getSchema(model);
-      this.getShow(model, id);
-    }
-  }
-
   render(){
+    console.log(this.state.foreignKeys);
     const { classes } = this.props;
     // get URL param
     const model = this.props.match.params.model;
@@ -89,19 +82,45 @@ class MainShow extends React.PureComponent{
 
     let i = 0;
     let html_row = [];
+    const keys = Object.keys(this.state.foreignKeys);
     for(let key in this.state.showData){
       let show = this.state.showData[key]? this.state.showData[key]: '';
-      html_row.push(
-        <TableRow key={key}>
-          <TableCell>
-            {key}
-          </TableCell>
-          <TableCell>
-            <textarea type='text' readOnly value={show} className={classes.textarea} />
-          </TableCell>
-        </TableRow>
-      );
-      i++;
+
+      // when column is forwign key
+      if(keys.includes(key)){
+        let foreignValue, foreignId;
+        for(let i in this.state.foreignKeys[key]){
+          const foreignData = this.state.foreignKeys[key][i];
+          if(foreignData.id == show){
+            foreignValue = foreignData.name;
+            foreignId = foreignData.id;
+            break;
+          }
+        }
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              <textarea type='text' value={foreignValue} data-id={foreignId} className={classes.textarea} ></textarea>
+            </TableCell>
+          </TableRow>
+        );
+        i++;
+      }else{
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              <textarea type='text' value={show} className={classes.textarea} ></textarea>
+            </TableCell>
+          </TableRow>
+        );
+        i++;
+      }
     }
 
     return(

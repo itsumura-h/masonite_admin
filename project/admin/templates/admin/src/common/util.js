@@ -20,6 +20,19 @@ export default class Util extends React.Component{
       })
   }
 
+  static postAPI=(url, params)=>{
+    url = CONST.APIHOST + url;
+
+    return axios.post(url, params)
+      .then(response=>{
+        return response;
+      })
+      .catch(err=>{
+        console.error(err);
+        return [];
+      })
+  }
+
   static deleteAPI=(url)=>{
     url = CONST.APIHOST + url;
 

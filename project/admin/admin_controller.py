@@ -42,12 +42,11 @@ class AdminController:
     def schema(self, request: Request):
         model_name = request.param('model')
         table_name = inflection.tableize(model_name)
-        model_c = self.get_model_by_name(model_name)
+        model_c = self.get_model_by_model_name(model_name)
 
-        pprint.pprint(inspect.getmembers(model_c['model']))
+        #pprint.pprint(inspect.getmembers(model_c['model']))
         model_i = model_c['model']()
         table = model_i.get_table()
-        pprint.pprint(table)
 
         if env('DB_CONNECTION') == 'sqlite':
             # Get Schema in SQLite with Python
@@ -59,15 +58,24 @@ class AdminController:
             schema = cursor.fetchall()
 
             cursor.execute(f"PRAGMA foreign_key_list('{table_name}')")
-            foreign = cursor.fetchall()
+            foreign_list = cursor.fetchall()
 
-        return {'schema': schema, 'foreign_key_lists': foreign}
+        # foreign key
+        foreign = {}
+        print(foreign_list)
+        for row in foreign_list:
+            data = self.foreign_data(self, row[2])
+            foreign[row[3]] = data
 
-    def foreign(self, request: Request):
-        table_name = request.param('table')
+        pprint.pprint(foreign)
+
+        return {'schema': schema, 'foreign_keys': foreign}
+
+    @staticmethod
+    def foreign_data(self, table_name):
         model = self.get_model_by_table_name(table_name)
         try:
-            return DB.table(table_name).select('id', model['foreign_display']).get()
+            return DB.table(table_name).select('id', model['foreign_display']).get().serialize()
         except:
             return []
 

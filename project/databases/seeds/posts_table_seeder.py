@@ -20,7 +20,7 @@ class PostsTableSeeder(Seeder):
     def posts_factory(self, faker):
         user_id = random.randint(1, 20)
         return {
-            'title':  User.find(user_id).name + '---' + self.faker.sentences(nb=1, ext_word_list=None)[0],
+            'title':  'Name:' + User.find(user_id).name + '--- id:'+ str(user_id) + '///' + self.faker.sentences(nb=1, ext_word_list=None)[0],
             'posts': self.faker.text(max_nb_chars=200, ext_word_list=None),
             'user_id': user_id
         }
