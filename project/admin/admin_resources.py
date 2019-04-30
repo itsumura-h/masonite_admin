@@ -32,7 +32,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['PUT']))
         # if 'delete' in self.methods:
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['DELETE']))
-        
+
         if 'create' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url, method_type=['POST']))
         if 'index' in self.methods:
@@ -102,7 +102,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         Arguments:
             middleware_type {string} -- Either 'before' or 'after'
         """
-        pass   
+        pass
 
     def load_request(self, request):
         self.request = request
@@ -170,9 +170,11 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def update(self, request: Request):
         """Logic to update data from a given model
         """
-        record = self.model.find(request.param('id'))
+        #record = self.model.find(request.param('id'))
+        record = self.model.where('id', request.param('id'))
+        print(request.all())
         record.update(request.all())
-        return record
+        return self.model.where('id', request.param('id')).get().serialize()
 
     def delete(self, request: Request):
         """Logic to delete data from a given model

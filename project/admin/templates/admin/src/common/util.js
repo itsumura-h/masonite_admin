@@ -23,7 +23,13 @@ export default class Util extends React.Component{
   static postAPI=(url, params)=>{
     url = CONST.APIHOST + url;
 
-    return axios.post(url, params)
+    const newParams = new URLSearchParams();
+    for(let key in params){
+      const param = params[key];
+      newParams.append(key, param);
+    }
+
+    return axios.post(url, newParams)
       .then(response=>{
         return response;
       })

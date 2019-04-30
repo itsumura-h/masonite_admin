@@ -32,8 +32,7 @@ ADMIN_ROUTES += [
     Get().route('/@model', AdminController.root),
     Get().route('/@model/@id/edit', AdminController.root),
     Get().route('/@model/@id', AdminController.root),
-    
-    
+
     #UserResource('/api/users').routes(),
     #PostResource('/api/posts').routes(),
 ]

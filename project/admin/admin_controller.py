@@ -62,12 +62,9 @@ class AdminController:
 
         # foreign key
         foreign = {}
-        print(foreign_list)
         for row in foreign_list:
             data = self.foreign_data(self, row[2])
             foreign[row[3]] = data
-
-        pprint.pprint(foreign)
 
         return {'schema': schema, 'foreign_keys': foreign}
 
