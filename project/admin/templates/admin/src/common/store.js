@@ -5,6 +5,7 @@ const store = createStore({
   drawerOpen: true,
   drawerWidth: Const.drawerWidth,
   info: {},
+  targetId: 0,
 })
 
 export const withStore = connect(store)

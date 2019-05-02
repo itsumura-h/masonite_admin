@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
@@ -11,17 +10,10 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-import Add from '@material-ui/icons/Add';
-import Create from '@material-ui/icons/Create';
-
-import {Link, NavLink} from 'react-router-dom';
-
-import Util from '../../common/util';
 
 class MainToppage extends React.Component {
 
   render() {
-    const { classes } = this.props;
     const state = this.props.store.state;
     let env = [];
     let pkg = [];

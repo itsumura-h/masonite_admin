@@ -1,11 +1,12 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import {Switch, Route, Redirect} from 'react-router-dom';
+import {Switch, Route} from 'react-router-dom';
 import MainToppage from './Main/MainToppage';
 import MainIndex from './Main/MainIndex';
 import MainEdit from './Main/MainEdit';
 import MainShow from './Main/MainShow';
+
+import NotFound from '../common/404';
 
 class AdminMain extends React.Component {
   render(){
@@ -18,6 +19,7 @@ class AdminMain extends React.Component {
           <Route exact path="/admin/:model" component={MainIndex} />
           <Route exact path="/admin/:model/:id" component={MainShow} />
           <Route exact path="/admin/:model/:id/edit" component={MainEdit} />
+          <Route component={NotFound} />
         </Switch>
       </div>
     );

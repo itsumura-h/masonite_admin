@@ -2,6 +2,9 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
+import { withRouter } from 'react-router';
+import {NavLink} from 'react-router-dom';
+
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -10,14 +13,13 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-
-import { withRouter } from 'react-router';
-import {NavLink} from 'react-router-dom';
+import TextField from '@material-ui/core/TextField';
 
 import List from '@material-ui/icons/List';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
 
+import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 import Util from '../../common/util';
 
 class MainShow extends React.PureComponent{
@@ -25,6 +27,7 @@ class MainShow extends React.PureComponent{
     schema: [],
     foreignKeys: [],
     showData: [],
+    isOpenDelete: false
   }
 
   getSchema=(model)=>{
@@ -46,11 +49,21 @@ class MainShow extends React.PureComponent{
     });
   }
 
+  openDelete=(event)=>{
+    if(event){
+      const store = this.props.store;
+      store.set('targetId')(event.currentTarget.dataset.id);
+    }
+
+    const newIsOpenDelete = this.state.isOpenDelete? false: true;
+    this.setState({isOpenDelete: newIsOpenDelete});
+  }
+
   delete=(event)=>{
     // get URL param
     const model = this.props.match.params.model;
 
-    const id = event.currentTarget.dataset.id;
+    const id = this.props.store.state.targetId;
     const url = '/admin/api/'+model+'/'+id+'/delete';
 
     Util.deleteAPI(url)
@@ -90,7 +103,7 @@ class MainShow extends React.PureComponent{
         let foreignValue, foreignId;
         for(let i in this.state.foreignKeys[key]){
           const foreignData = this.state.foreignKeys[key][i];
-          if(foreignData.id == show){
+          if(foreignData.id === show){
             foreignValue = foreignData.name;
             foreignId = foreignData.id;
             break;
@@ -102,8 +115,37 @@ class MainShow extends React.PureComponent{
               {key}
             </TableCell>
             <TableCell>
-              <textarea type='text' value={foreignValue} data-id={foreignId} className={classes.textarea} readOnly ></textarea>
+              <TextField
+                value={foreignValue}
+                data-id={foreignId}
+                InputProps={{
+                  readOnly: true,
+                }}
+                multiline
+                className={classes.textarea}
+              />
             </TableCell>
+          </TableRow>
+        );
+        i++;
+      }else if(this.state.schema[i][2] === 'DATETIME'){
+        //datetime型の時
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <TextField
+                  value={new Date(show).toString()}
+                  data-id={key}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  multiline
+                  className={classes.textarea}
+                />
+              </TableCell>
           </TableRow>
         );
         i++;
@@ -114,7 +156,14 @@ class MainShow extends React.PureComponent{
               {key}
             </TableCell>
             <TableCell>
-              <textarea type='text' value={show} className={classes.textarea} readOnly ></textarea>
+              <TextField
+                value={show}
+                InputProps={{
+                  readOnly: true,
+                }}
+                multiline
+                className={classes.textarea}
+              />
             </TableCell>
           </TableRow>
         );
@@ -140,7 +189,12 @@ class MainShow extends React.PureComponent{
                   <Edit/>edit
                 </Button>
               </NavLink>
-              <Button variant="contained" className={classes.deleteButton} data-id={this.props.match.params.id} onClick={this.delete}>
+              <Button
+                onClick={this.openDelete}
+                data-id={this.props.match.params.id}
+                variant="contained"
+                className={classes.deleteButton}
+              >
                 <Delete/>delete
               </Button>
               </div>
@@ -155,6 +209,11 @@ class MainShow extends React.PureComponent{
             </div>
           </CardContent>
         </Card>
+        <DeleteConfirmDialog
+          isOpen={this.state.isOpenDelete}
+          openDelete={this.openDelete}
+          handleOkMethod={this.delete}
+        />
       </div>
     );
   }

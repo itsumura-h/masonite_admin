@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
@@ -10,9 +9,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
 import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import Details from '@material-ui/icons/Details';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
@@ -21,10 +18,12 @@ import Delete from '@material-ui/icons/Delete';
 import {Link} from 'react-router-dom';
 
 import Util from '../../common/util';
+import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
 class MainIndex extends React.PureComponent {
   state = {
-    indexData: []
+    indexData: [],
+    isOpenDelete: false
   }
 
   getIndex=(model)=>{
@@ -35,11 +34,21 @@ class MainIndex extends React.PureComponent {
     })
   }
 
+  openDelete=(event)=>{
+    if(event){
+      const store = this.props.store;
+      store.set('targetId')(event.currentTarget.dataset.id);
+    }
+
+    const newIsOpenDelete = this.state.isOpenDelete? false: true;
+    this.setState({isOpenDelete: newIsOpenDelete});
+  }
+
   delete=(event)=>{
     // get URL param
     const model = this.props.match.params.model;
 
-    const id = event.currentTarget.dataset.id;
+    const id = this.props.store.state.targetId;
     const url = '/admin/api/'+model+'/'+id+'/delete';
 
     Util.deleteAPI(url)
@@ -109,10 +118,15 @@ class MainIndex extends React.PureComponent {
             </Link>
           </TableCell>,
           <TableCell key={td_key+3}>
-            <Fab aria-label="delete" data-id={row.id} onClick={this.delete} className={classes.deleteButton}>
-                <Delete />
+            <Fab
+              aria-label="delete"
+              data-id={row.id}
+              onClick={this.openDelete}
+              className={classes.deleteButton}
+            >
+              <Delete />
               </Fab>
-          </TableCell>,
+          </TableCell>
         );
         html_table.push(<TableRow key={i}>{row_html}</TableRow>);
       }
@@ -138,6 +152,11 @@ class MainIndex extends React.PureComponent {
             </div>
           </CardContent>
         </Card>
+        <DeleteConfirmDialog
+          isOpen={this.state.isOpenDelete}
+          openDelete={this.openDelete}
+          handleOkMethod={this.delete}
+        />
       </div>
     );
   }
