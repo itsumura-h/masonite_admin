@@ -185,7 +185,7 @@ class MainEdit extends React.PureComponent{
               <FormControl fullWidth className={classes.formControl}>
                 <Select
                   defaultValue={selectedId}
-                  onChange={this.setPrams}
+                  onChange={this.setParam}
                   name={key}
                   className='params'
                   autoWidth
