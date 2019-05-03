@@ -85,7 +85,14 @@ class MainEdit extends React.PureComponent{
   }
 
   //============ Save ============
-  setPrams=(key, value)=>{
+  setParam=(event)=>{
+    let new_params = this.state.showData;
+    const key = event.currentTarget.name;
+    new_params[key] = event.currentTarget.value;
+    this.setState({showData: new_params});
+  }
+
+  setPramDateTime=(key, value)=>{
     let new_params = this.state.showData;
     try{
       new_params[key] = value.toISOString();
@@ -134,8 +141,28 @@ class MainEdit extends React.PureComponent{
     for(let key in this.state.showData){
       let show = this.state.showData[key]? this.state.showData[key]: '';
 
-      //外部キーの問
-      if(keys.includes(key)){
+      if(key === 'id'){
+        //IDの時
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              <TextField
+                defaultValue={show}
+                name={key}
+                multiline
+                className={classes.textarea + ' params'}
+                InputProps={{
+                  readOnly: true,
+                }}
+              />
+            </TableCell>
+          </TableRow>
+        );
+      }else if(keys.includes(key)){
+        //外部キーの問
         const options = []
         let selectedId;
         for(let i in this.state.foreignKeys[key]){
@@ -184,7 +211,7 @@ class MainEdit extends React.PureComponent{
                     ampm={false}
                     format="yyyy-MM-dd HH:mm:ss"
                     value={show}
-                    onChange={this.setPrams.bind(this, key)}
+                    onChange={this.setPramDateTime.bind(this, key)}
                     name={key}
                     label="24h clock"
                   />
@@ -202,7 +229,7 @@ class MainEdit extends React.PureComponent{
             <TableCell>
               <TextField
                 defaultValue={show}
-                onChange={this.setPrams}
+                onChange={this.setParam}
                 name={key}
                 multiline
                 className={classes.textarea + ' params'}

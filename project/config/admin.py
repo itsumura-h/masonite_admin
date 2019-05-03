@@ -9,7 +9,8 @@ CONFIG = [
     },
     {
         'model': Post,
-        'list_display': ['title', 'posts']
+        'list_display': ['title', 'posts'],
+        'detail_display': ['title', 'posts', 'user_id']
     }
 ]
 

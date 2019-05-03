@@ -9,7 +9,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'show', 'update', 'delete']
     prefix = ''
 
-    def __init__(self, model, url='', list_display=[] , without=[], method_type=['GET']):
+    def __init__(self, model, url='', list_display=[], detail_display=[], without=[], method_type=['GET']):
         self.base_url = model.__doc__.split(' ')[0] # Model name
         self.route_url = '/api/' + url # /api/model_name/ /api/model_name/@id
         self.method_type = method_type
@@ -18,6 +18,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         self.model = model
         self.model.__hidden__ = without
         self.list_display = list_display
+        self.detail_display = detail_display
 
 
     def routes(self):
@@ -25,7 +26,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         # if 'create' in self.methods:
         #     routes.append(self.__class__(self.model, self.base_url, method_type=['POST']))
         # if 'index' in self.methods:
-        #     routes.append(self.__class__(self.model, self.base_url, list_display=self.list_display, method_type=['GET']))
+        #     routes.append(self.__class__(self.model, self.base_url, method_type=['GET']))
         # if 'show' in self.methods:
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['GET']))
         # if 'update' in self.methods:
@@ -38,7 +39,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         if 'index' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url, list_display=self.list_display, method_type=['GET']))
         if 'show' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['GET']))
+            routes.append(self.__class__(self.model, url=self.base_url + '/@id', detail_display=self.detail_display, method_type=['GET']))
         if 'update' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url + '/@id/patch', method_type=['POST']))
         if 'delete' in self.methods:
@@ -165,6 +166,9 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def show(self, request: Request):
         """Logic to read data from 1 model
         """
+        print(self.detail_display)
+        if self.detail_display:
+            return self.model.select('id', *self.detail_display).find(request.param('id'))
         return self.model.find(request.param('id'))
 
     def update(self, request: Request):

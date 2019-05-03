@@ -17,10 +17,21 @@ STATICFILES['admin/templates/admin/build/static'] = 'static/'
 
 ADMIN_ROUTES = []
 for model in CONFIG:
-    if model.get('list_display'):
+    if model.get('list_display') and model.get('detail_display'):
+        ADMIN_ROUTES.append(AdminResource(
+            model['model'],
+            list_display=model['list_display'],
+            detail_display=model['detail_display']
+        ).routes())
+    elif model.get('list_display'):
         ADMIN_ROUTES.append(AdminResource(
             model['model'],
             list_display=model['list_display']
+        ).routes())
+    elif model.get('detail_display'):
+        ADMIN_ROUTES.append(AdminResource(
+            model['model'],
+            detail_display=model['detail_display']
         ).routes())
     else:
         ADMIN_ROUTES.append(AdminResource(model['model']).routes())
