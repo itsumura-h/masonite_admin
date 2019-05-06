@@ -4,11 +4,13 @@ from app.models.Post import Post
 CONFIG = [
     {
         'model': User,
+        'create_display': ['name', 'email', 'password'],
         'list_display': ['name', 'email'],
         'foreign_display': 'name',
     },
     {
         'model': Post,
+        'create_display': ['title', 'posts', 'user_id'],
         'list_display': ['title', 'posts'],
         'detail_display': ['title', 'posts', 'user_id']
     }

@@ -2,6 +2,12 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
+import { withRouter } from 'react-router';
+import {NavLink} from 'react-router-dom';
+import {Link} from 'react-router-dom';
+
+import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,12 +16,11 @@ import TableRow from '@material-ui/core/TableRow';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Fab from '@material-ui/core/Fab';
+
+import Add from '@material-ui/icons/Add';
 import Details from '@material-ui/icons/Details';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
-
-
-import {Link} from 'react-router-dom';
 
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
@@ -137,7 +142,17 @@ class MainIndex extends React.PureComponent {
         <h1>{model}</h1>
         <Card>
           <CardContent>
-            <p>index</p>
+            <div className={classes.flex}>
+              <p>index</p>
+              <div className={classes.buttons}>
+                <NavLink to={'/admin/'+model+'/create'}>
+                  <Button variant="contained" className={classes.newButton}>
+                    <Add/>New
+                  </Button>
+                </NavLink>
+              </div>
+            </div>
+            <Divider />
             <div className={classes.scroll}>
               <Table>
                 <TableHead>
@@ -165,6 +180,19 @@ class MainIndex extends React.PureComponent {
 const styles = {
   scroll: {
     overflow: 'auto'
+  },
+  flex: {
+    display: 'flex'
+  },
+  buttons: {
+    margin: '0 0 0 auto'
+  },
+  newButton: {
+    color: 'white',
+    backgroundColor: '#00A65A',
+    '&:hover': {
+      backgroundColor: '#00964A',
+    },
   },
   editButton: {
     color: 'white',

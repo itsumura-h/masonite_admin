@@ -68,6 +68,16 @@ class AdminController:
 
         return {'schema': schema, 'foreign_keys': foreign}
 
+    def create_display(self, request: Request):
+        try:
+            model = request.param('model')
+            model = self.get_model_by_model_name(model)
+            create_display = model['create_display']
+            return create_display
+        except:
+            return []
+
+
     @staticmethod
     def foreign_data(self, table_name):
         model = self.get_model_by_table_name(table_name)

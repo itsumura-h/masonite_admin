@@ -9,7 +9,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'show', 'update', 'delete']
     prefix = ''
 
-    def __init__(self, model, url='', list_display=[], detail_display=[], without=[], method_type=['GET']):
+    def __init__(self, model, url='', create_display=[], list_display=[], detail_display=[], without=[], method_type=['GET']):
         self.base_url = model.__doc__.split(' ')[0] # Model name
         self.route_url = '/api/' + url # /api/model_name/ /api/model_name/@id
         self.method_type = method_type
@@ -17,6 +17,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         self.list_middleware = []
         self.model = model
         self.model.__hidden__ = without
+        self.create_display = create_display
         self.list_display = list_display
         self.detail_display = detail_display
 
@@ -150,10 +151,19 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         """Logic to create data from a given model
         """
         try:
-            record = self.model.create(self.request.all())
+            new_model = self.model()
+            for key, value in self.request.all().items():
+                setattr(new_model, key, value)
+            new_model.save()
         except Exception as e:
             return {'error': str(e)}
-        return record
+        return new_model
+
+        # try:
+        #     record = self.model.create(self.request.all())
+        # except Exception as e:
+        #     return {'error': str(e)}
+        # return record
 
     def index(self):
         """Logic to read data from several models
@@ -166,7 +176,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def show(self, request: Request):
         """Logic to read data from 1 model
         """
-        print(self.detail_display)
         if self.detail_display:
             return self.model.select('id', *self.detail_display).find(request.param('id'))
         return self.model.find(request.param('id'))
@@ -176,7 +185,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         """
         #record = self.model.find(request.param('id'))
         record = self.model.where('id', request.param('id'))
-        print(request.all())
         record.update(request.all())
         return self.model.where('id', request.param('id')).get().serialize()
 
