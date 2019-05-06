@@ -20,7 +20,6 @@ import Select from '@material-ui/core/Select';
 
 import List from '@material-ui/icons/List';
 import Save from '@material-ui/icons/Save';
-import Clear from '@material-ui/icons/Clear';
 
 import DateFnsUtils from '@date-io/date-fns';
 import { DateTimePicker, MuiPickersUtilsProvider } from "material-ui-pickers";

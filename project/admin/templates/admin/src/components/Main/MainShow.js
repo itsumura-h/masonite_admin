@@ -104,7 +104,7 @@ class MainShow extends React.PureComponent{
         for(let i in this.state.foreignKeys[key]){
           const foreignData = this.state.foreignKeys[key][i];
           if(foreignData.id === show){
-            foreignValue = foreignData.name;
+            foreignValue = foreignData.data;
             foreignId = foreignData.id;
             break;
           }

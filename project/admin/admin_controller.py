@@ -82,7 +82,7 @@ class AdminController:
     def foreign_data(self, table_name):
         model = self.get_model_by_table_name(table_name)
         try:
-            return DB.table(table_name).select('id', model['foreign_display']).get().serialize()
+            return DB.table(table_name).select('id', model['foreign_display']+' as data').get().serialize()
         except:
             return []
 

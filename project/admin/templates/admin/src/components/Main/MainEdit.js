@@ -172,7 +172,7 @@ class MainEdit extends React.PureComponent{
             selectedId = foreignData.id;
           }
           options.push(
-            <option key={i} value={foreignData.id}>{foreignData.name}</option>
+            <option key={i} value={foreignData.id}>{foreignData.data}</option>
           );
         }
 
