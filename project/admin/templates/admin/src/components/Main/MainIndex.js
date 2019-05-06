@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
-import { withRouter } from 'react-router';
 import {NavLink} from 'react-router-dom';
 import {Link} from 'react-router-dom';
 

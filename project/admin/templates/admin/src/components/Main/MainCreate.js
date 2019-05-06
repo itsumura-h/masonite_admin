@@ -88,8 +88,6 @@ class MainCreate extends React.Component {
   save=(event)=>{
     // get URL param
     const model = this.props.match.params.model;
-
-    const id = event.currentTarget.dataset.id;
     const url = '/admin/api/'+model;
 
     Util.postAPI(url, this.state.params)
@@ -124,7 +122,7 @@ class MainCreate extends React.Component {
       if(this.state.createDisplay.length > 0 && !this.state.createDisplay.includes(key)){
         continue;
       }else{
-        if(column[2] == 'DATETIME'){
+        if(column[2] === 'DATETIME'){
           // DateTime
           html_row.push(
             <TableRow key={key}>
@@ -152,7 +150,7 @@ class MainCreate extends React.Component {
             const foreignData = this.state.foreignKeys[key][i];
 
             options.push(
-              <option key={i} value={foreignData.id}>{foreignData.name}</option>
+              <option key={i} value={foreignData.id}>{foreignData.data}</option>
             );
           }
 
