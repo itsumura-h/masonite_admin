@@ -6,6 +6,7 @@ const store = createStore({
   drawerWidth: Const.drawerWidth,
   info: {},
   targetId: 0,
+  rowsPerPage: 10,
 })
 
 export const withStore = connect(store)

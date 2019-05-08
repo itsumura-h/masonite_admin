@@ -12,9 +12,12 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import TableFooter from '@material-ui/core/TableFooter';
+import TablePagination from '@material-ui/core/TablePagination';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Fab from '@material-ui/core/Fab';
+import Select from '@material-ui/core/Select';
 
 import Add from '@material-ui/icons/Add';
 import Details from '@material-ui/icons/Details';
@@ -27,9 +30,11 @@ import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 class MainIndex extends React.PureComponent {
   state = {
     indexData: [],
-    isOpenDelete: false
+    isOpenDelete: false,
+    page: 0,
   }
 
+  //========================== API Access ==========================
   getIndex=(model)=>{
     const self = this;
     Util.getAPI('/admin/api/' + model)
@@ -64,6 +69,19 @@ class MainIndex extends React.PureComponent {
     })
   }
 
+  //========================== Pagenation ==========================
+  handleChangePage=(event, page)=>{
+    this.setState({ page });
+    window.scrollTo(0,0);
+  };
+
+  handleChangeRowsPerPage=(event)=>{
+    this.setState({page: 0});
+    this.props.store.set('rowsPerPage')(Number(event.target.value));
+  };
+
+
+  //========================== React ==========================
   componentDidMount(){
     // get URL param
     const model = this.props.match.params.model;
@@ -84,6 +102,7 @@ class MainIndex extends React.PureComponent {
 
   render() {
     const { classes } = this.props;
+    const { rowsPerPage } = this.props.store.state;
     // get URL param
     const model = this.props.match.params.model;
 
@@ -99,8 +118,17 @@ class MainIndex extends React.PureComponent {
         html_headers.push(<TableCell key={i}>{header}</TableCell>);
       }
 
-      for(let i in this.state.indexData){
-        const row = this.state.indexData[i];
+      // pagenation
+      // set range of array
+      const { page } = this.state;
+
+      const paged_indexData = this.state.indexData.slice(
+        page * rowsPerPage, // from
+        page * rowsPerPage + rowsPerPage //to
+      );
+
+      for(let i in paged_indexData){
+        const row = paged_indexData[i];
         let row_html = [];
         for(let key in row){
           row_html.push(<TableCell key={key}>{row[key]}</TableCell>);
@@ -155,6 +183,21 @@ class MainIndex extends React.PureComponent {
             <div className={classes.scroll}>
               <Table>
                 <TableHead>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[10, 20, 30, 50, 100]}
+                      colSpan={4}
+                      count={this.state.indexData.length}
+                      rowsPerPage={Number(rowsPerPage)}
+                      page={this.state.page}
+                      SelectProps={{
+                        native: true,
+                      }}
+                      onChangePage={this.handleChangePage}
+                      onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                      // ActionsComponent={TablePaginationActionsWrapped}
+                    />
+                  </TableRow>
                   <TableRow>
                     {html_headers}
                   </TableRow>
