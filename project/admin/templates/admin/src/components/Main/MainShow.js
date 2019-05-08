@@ -32,7 +32,7 @@ class MainShow extends React.PureComponent{
 
   getSchema=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/schema/'+model)
+    Util.getAPI('/admin/api/schema/'+model+'/detail')
     .then(response=>{
       self.setState({
         schema: response.data.schema,
@@ -127,7 +127,6 @@ class MainShow extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
-        i++;
       }else if(this.state.schema[i][2] === 'DATETIME'){
         //datetime型の時
         html_row.push(
@@ -148,7 +147,6 @@ class MainShow extends React.PureComponent{
               </TableCell>
           </TableRow>
         );
-        i++;
       }else{
         html_row.push(
           <TableRow key={key}>
@@ -167,8 +165,8 @@ class MainShow extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
-        i++;
       }
+      i++;
     }
 
     return(

@@ -6,6 +6,7 @@ CONFIG = [
         'model': User,
         'create_display': ['name', 'email', 'password'],
         'list_display': ['name', 'email'],
+        'detail_display': ['name', 'email', 'updated_at'],
         'foreign_display': 'name',
     },
     {

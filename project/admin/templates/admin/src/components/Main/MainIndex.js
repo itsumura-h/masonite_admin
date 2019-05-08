@@ -94,8 +94,8 @@ class MainIndex extends React.PureComponent {
     const model = this.props.match.params.model;
 
     if(this.props !== nextProps && model){
-      this.getIndex(model);
       this.setState({page: 0});
+      this.getIndex(model);
     }
   }
 

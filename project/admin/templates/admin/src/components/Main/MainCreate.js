@@ -37,7 +37,7 @@ class MainCreate extends React.Component {
 
   getSchema=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/schema/'+model)
+    Util.getAPI('/admin/api/schema/'+model+'/create')
     .then(response=>{
       self.setState({
         schema: response.data.schema,
@@ -52,6 +52,7 @@ class MainCreate extends React.Component {
     .then(response=>{
       self.setState({createDisplay: response.data});
 
+      // set default value in foreign key
       const keys = Object.keys(this.state.foreignKeys);
       let new_params = [];
       for(let i in response.data){

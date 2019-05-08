@@ -40,12 +40,16 @@ class AdminController:
         return {'models': models, 'env': env, 'pkg': pkg}
 
     def schema(self, request: Request):
+        return self._schema(self, request)
+
+    @staticmethod
+    def _schema(self, request: Request):
         model_name = request.param('model')
         table_name = inflection.tableize(model_name)
-        model_c = self.get_model_by_model_name(model_name)
+        row = self.get_model_row_by_model_name(model_name)
 
-        #pprint.pprint(inspect.getmembers(model_c['model']))
-        model_i = model_c['model']()
+        #pprint.pprint(inspect.getmembers(row['model']))
+        model_i = row['model']()
         table = model_i.get_table()
 
         if env('DB_CONNECTION') == 'sqlite':
@@ -71,23 +75,61 @@ class AdminController:
     def create_display(self, request: Request):
         try:
             model = request.param('model')
-            model = self.get_model_by_model_name(model)
-            create_display = model['create_display']
+            row = self.get_model_row_by_model_name(model)
+            create_display = row['create_display']
             return create_display
         except:
             return []
 
+    def create(self, request: Request):
+        schema = self._schema(self, request)
+        model_name = request.param('model')
+        config_model = self.get_model_row_by_model_name(model_name)
+        if 'create_display' in config_model and 'id' not in config_model['create_display']:
+            config_model['create_display'].insert(0, 'id')
+
+        new_schema = []
+        for row in schema['schema']:
+            if 'create_display' not in config_model:
+                new_schema.append(row)
+            elif row[1] in config_model['create_display']:
+                new_schema.append(row)
+
+        return {
+            'schema': new_schema,
+            'foreign_keys': schema['foreign_keys']
+        }
+
+    def detail(self, request: Request):
+        schema = self._schema(self, request)
+        model_name = request.param('model')
+        config_model = self.get_model_row_by_model_name(model_name)
+        if 'detail_display' in config_model and 'id' not in config_model['detail_display']:
+            config_model['detail_display'].insert(0, 'id')
+
+        new_schema = []
+        for row in schema['schema']:
+            if not 'detail_display' in config_model:
+                new_schema.append(row)
+            elif row[1] in config_model['detail_display']:
+                new_schema.append(row)
+
+        return {
+            'schema': new_schema,
+            'foreign_keys': schema['foreign_keys']
+        }
+
 
     @staticmethod
     def foreign_data(self, table_name):
-        model = self.get_model_by_table_name(table_name)
+        row = self.get_model_row_by_table_name(table_name)
         try:
-            return DB.table(table_name).select('id', model['foreign_display']+' as data').get().serialize()
+            return DB.table(table_name).select('id', row['foreign_display']+' as data').get().serialize()
         except:
             return []
 
     @staticmethod
-    def get_model_by_model_name(model_name):
+    def get_model_row_by_model_name(model_name):
         model = None
         for row in CONFIG:
             if row['model'].__doc__.split(' ')[0] == model_name:
@@ -97,7 +139,7 @@ class AdminController:
         return model
 
     @staticmethod
-    def get_model_by_table_name(table_name):
+    def get_model_row_by_table_name(table_name):
         i = inflection
         model = None
         for row in CONFIG:

@@ -39,7 +39,7 @@ class MainEdit extends React.PureComponent{
 
   getSchema=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/schema/'+model)
+    Util.getAPI('/admin/api/schema/'+model+'/detail')
     .then(response=>{
       self.setState({
         schema: response.data.schema,
@@ -196,7 +196,7 @@ class MainEdit extends React.PureComponent{
               </FormControl>
             </TableCell>
           </TableRow>
-        )
+        );
       }else if(this.state.schema[i][2] === 'DATETIME'){
         //datetime型の時
         html_row.push(
