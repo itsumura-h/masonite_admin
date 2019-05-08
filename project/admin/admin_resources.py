@@ -6,7 +6,7 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             RateLimitReached)
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
-    methods = ['create', 'index', 'show', 'update', 'delete']
+    methods = ['create', 'index', 'count', 'show', 'update', 'delete']
     prefix = ''
 
     def __init__(self, model, url='', create_display=[], list_display=[], detail_display=[], without=[], method_type=['GET']):
@@ -39,6 +39,8 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             routes.append(self.__class__(self.model, url=self.base_url, method_type=['POST']))
         if 'index' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url, list_display=self.list_display, method_type=['GET']))
+        if 'count' in self.methods:
+            routes.append(self.__class__(self.model, url=self.base_url + '/count', list_display=self.list_display, method_type=['GET']))
         if 'show' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url + '/@id', detail_display=self.detail_display, method_type=['GET']))
         if 'update' in self.methods:
@@ -85,6 +87,8 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
                 response = self.request.app().resolve(getattr(self, 'create'))
             elif 'GET' in self.method_type and '@' in self.route_url:
                 response = self.request.app().resolve(getattr(self, 'show'))
+            elif 'GET' in self.method_type and 'count' in self.route_url:
+                response = self.request.app().resolve(getattr(self, 'count'))
             elif 'GET' in self.method_type:
                 response = self.request.app().resolve(getattr(self, 'index'))
 
@@ -165,13 +169,25 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         #     return {'error': str(e)}
         # return record
 
-    def index(self):
+    def index(self, request: Request):
         """Logic to read data from several models
         """
+        # if self.list_display:
+        #     return self.model.select('id', *self.list_display).get()
+        # else:
+        #     return self.model.all()
+
+        # pagenagion
+        items = request.input('i') if request.input('i') else 100
+        page = request.input('p') if request.input('p') else 1
+
         if self.list_display:
-            return self.model.select('id', *self.list_display).get()
+            return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
-            return self.model.all()
+            return self.model.paginate(items, page).serialize()
+
+    def count(self):
+        return {'count': self.model.count()}
 
     def show(self, request: Request):
         """Logic to read data from 1 model

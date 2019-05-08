@@ -42,36 +42,6 @@ class AdminController:
     def schema(self, request: Request):
         return self._schema(self, request)
 
-    @staticmethod
-    def _schema(self, request: Request):
-        model_name = request.param('model')
-        table_name = inflection.tableize(model_name)
-        row = self.get_model_row_by_model_name(model_name)
-
-        #pprint.pprint(inspect.getmembers(row['model']))
-        model_i = row['model']()
-        table = model_i.get_table()
-
-        if env('DB_CONNECTION') == 'sqlite':
-            # Get Schema in SQLite with Python
-            # https://www.tomordonez.com/get-schema-sqlite-python.html
-            db = sqlite3.connect(env('DB_DATABASE'))
-            cursor = db.cursor()
-
-            cursor.execute(f"PRAGMA table_info('{table_name}')")
-            schema = cursor.fetchall()
-
-            cursor.execute(f"PRAGMA foreign_key_list('{table_name}')")
-            foreign_list = cursor.fetchall()
-
-        # foreign key
-        foreign = {}
-        for row in foreign_list:
-            data = self.foreign_data(self, row[2])
-            foreign[row[3]] = data
-
-        return {'schema': schema, 'foreign_keys': foreign}
-
     def create_display(self, request: Request):
         try:
             model = request.param('model')
@@ -119,6 +89,35 @@ class AdminController:
             'foreign_keys': schema['foreign_keys']
         }
 
+    @staticmethod
+    def _schema(self, request: Request):
+        model_name = request.param('model')
+        table_name = inflection.tableize(model_name)
+        row = self.get_model_row_by_model_name(model_name)
+
+        #pprint.pprint(inspect.getmembers(row['model']))
+        model_i = row['model']()
+        table = model_i.get_table()
+
+        if env('DB_CONNECTION') == 'sqlite':
+            # Get Schema in SQLite with Python
+            # https://www.tomordonez.com/get-schema-sqlite-python.html
+            db = sqlite3.connect(env('DB_DATABASE'))
+            cursor = db.cursor()
+
+            cursor.execute(f"PRAGMA table_info('{table_name}')")
+            schema = cursor.fetchall()
+
+            cursor.execute(f"PRAGMA foreign_key_list('{table_name}')")
+            foreign_list = cursor.fetchall()
+
+        # foreign key
+        foreign = {}
+        for row in foreign_list:
+            data = self.foreign_data(self, row[2])
+            foreign[row[3]] = data
+
+        return {'schema': schema, 'foreign_keys': foreign}
 
     @staticmethod
     def foreign_data(self, table_name):

@@ -30,14 +30,23 @@ class MainIndex extends React.PureComponent {
     indexData: [],
     isOpenDelete: false,
     page: 0,
+    count: 0,
   }
 
   //========================== API Access ==========================
-  getIndex=(model)=>{
+  getIndex=(model, page=this.state.page)=>{
     const self = this;
-    Util.getAPI('/admin/api/' + model)
+    Util.getAPI('/admin/api/'+model+'?p='+(page+1)+'&i='+this.props.store.state.rowsPerPage)
     .then(response=>{
       self.setState({indexData: response.data});
+    });
+  }
+
+  getPages=(model)=>{
+    const self = this;
+    Util.getAPI('/admin/api/'+model+'/count')
+    .then(response=>{
+      self.setState({count: Number(response.data.count)});
     })
   }
 
@@ -69,7 +78,9 @@ class MainIndex extends React.PureComponent {
 
   //========================== Pagenation ==========================
   handleChangePage=(event, page)=>{
-    this.setState({ page });
+    this.setState({page: Number(page)});
+    const model = this.props.match.params.model;
+    this.getIndex(model, page);
     window.scrollTo(0,0);
   };
 
@@ -86,6 +97,7 @@ class MainIndex extends React.PureComponent {
 
     if(model){
       this.getIndex(model);
+      this.getPages(model);
     }
   }
 
@@ -95,15 +107,18 @@ class MainIndex extends React.PureComponent {
 
     if(this.props !== nextProps && model){
       this.setState({page: 0});
-      this.getIndex(model);
+      this.getIndex(model, 0);
+      this.getPages(model);
     }
   }
 
   render() {
     const { classes } = this.props;
-    const { rowsPerPage } = this.props.store.state;
     // get URL param
     const model = this.props.match.params.model;
+    // pagenation
+    // set range of array
+    const { rowsPerPage } = this.props.store.state;
 
     let html_headers = [];
     let html_table = [];
@@ -117,17 +132,8 @@ class MainIndex extends React.PureComponent {
         html_headers.push(<TableCell key={i}>{header}</TableCell>);
       }
 
-      // pagenation
-      // set range of array
-      const { page } = this.state;
-
-      const paged_indexData = this.state.indexData.slice(
-        page * rowsPerPage, // from
-        page * rowsPerPage + rowsPerPage //to
-      );
-
-      for(let i in paged_indexData){
-        const row = paged_indexData[i];
+      for(let i in this.state.indexData){
+        const row = this.state.indexData[i];
         let row_html = [];
         for(let key in row){
           row_html.push(<TableCell key={key}>{row[key]}</TableCell>);
@@ -186,8 +192,8 @@ class MainIndex extends React.PureComponent {
                     <TablePagination
                       rowsPerPageOptions={[10, 20, 30, 50, 100]}
                       colSpan={4}
-                      count={this.state.indexData.length}
-                      rowsPerPage={Number(rowsPerPage)}
+                      count={this.state.count}
+                      rowsPerPage={rowsPerPage}
                       page={this.state.page}
                       SelectProps={{
                         native: true,
@@ -252,3 +258,14 @@ const styles = {
 }
 
 export default withStyles(styles)(withStore(MainIndex));
+
+/*
+
+pagenitaion
+
+
+
+
+
+
+*/
