@@ -12,12 +12,10 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Fab from '@material-ui/core/Fab';
-import Select from '@material-ui/core/Select';
 
 import Add from '@material-ui/icons/Add';
 import Details from '@material-ui/icons/Details';
@@ -97,6 +95,7 @@ class MainIndex extends React.PureComponent {
 
     if(this.props !== nextProps && model){
       this.getIndex(model);
+      this.setState({page: 0});
     }
   }
 
