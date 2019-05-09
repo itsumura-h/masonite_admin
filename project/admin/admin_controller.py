@@ -55,8 +55,8 @@ class AdminController:
         schema = self._schema(self, request)
         model_name = request.param('model')
         config_model = self.get_model_row_by_model_name(model_name)
-        if 'create_display' in config_model and 'id' not in config_model['create_display']:
-            config_model['create_display'].insert(0, 'id')
+        if 'create_display' in config_model and 'id' in config_model['create_display']:
+            config_model['create_display'].remove('id')
 
         new_schema = []
         for row in schema['schema']:

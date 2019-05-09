@@ -32,42 +32,39 @@ class MainCreate extends React.Component {
     schema: [],
     foreignKeys: [],
     params: [],
-    createDisplay: [],
   }
 
   getSchema=(model)=>{
     const self = this;
     Util.getAPI('/admin/api/schema/'+model+'/create')
     .then(response=>{
+      const schema = response.data.schema;
+      const foreignKeys = response.data.foreign_keys;
       self.setState({
-        schema: response.data.schema,
-        foreignKeys: response.data.foreign_keys
+        schema: schema,
+        foreignKeys: foreignKeys
       });
-    });
-  }
 
-  getCreateDisplay=(model)=>{
-    const self = this;
-    Util.getAPI('/admin/api/create_display/'+model)
-    .then(response=>{
-      self.setState({createDisplay: response.data});
-
-      // set default value in foreign key
-      const keys = Object.keys(this.state.foreignKeys);
-      let new_params = [];
-      for(let i in response.data){
-        const column = response.data[i];
-        if(keys.includes(column)){
-          new_params[column] = '1';
-        }else{
-          new_params[column] = '';
-        }
-      }
-      this.setState({params: new_params});
+      this.setDefaultParam(schema, foreignKeys);
     });
   }
 
   //============ Save ============
+  setDefaultParam=(schema, foreignKeys)=>{
+    const keys = Object.keys(foreignKeys);
+    let new_params = {};
+
+    for(let i in schema){
+      const row = schema[i];
+      if(keys.includes(row[1])){
+        new_params[row[1]] = 1;
+      }else{
+        new_params[row[1]] = '';
+      }
+    }
+    this.setState({params: new_params});
+  }
+
   setParam=(event)=>{
     let new_params = this.state.params;
     const key = event.currentTarget.name;
@@ -106,7 +103,6 @@ class MainCreate extends React.Component {
 
     if(model){
       this.getSchema(model);
-      this.getCreateDisplay(model);
     }
   }
 
@@ -120,81 +116,75 @@ class MainCreate extends React.Component {
       const column = this.state.schema[i];
 
       const key = column[1];
-      if(this.state.createDisplay.length > 0 && !this.state.createDisplay.includes(key)){
-        continue;
-      }else{
-        if(column[2] === 'DATETIME'){
-          // DateTime
-          html_row.push(
-            <TableRow key={key}>
+      if(column[2] === 'DATETIME'){
+        // DateTime
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
               <TableCell>
-                {key}
-              </TableCell>
-                <TableCell>
-                  <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <DateTimePicker
-                      autoOk
-                      ampm={false}
-                      format="yyyy-MM-dd HH:mm:ss"
-                      onChange={this.setPramDateTime.bind(this, key)}
-                      name={key}
-                      label="24h clock"
-                    />
-                  </MuiPickersUtilsProvider>
-                </TableCell>
-            </TableRow>
-          );
-        }else if(keys.includes(key)){
-          //Foreign Key
-          const options = []
-          for(let i in this.state.foreignKeys[key]){
-            const foreignData = this.state.foreignKeys[key][i];
-
-            options.push(
-              <option key={i} value={foreignData.id}>{foreignData.data}</option>
-            );
-          }
-
-          html_row.push(
-            <TableRow key={key}>
-              <TableCell>
-                {key}
-              </TableCell>
-              <TableCell>
-                <FormControl fullWidth className={classes.formControl}>
-                  <Select
-                    onChange={this.setParam}
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DateTimePicker
+                    autoOk
+                    ampm={false}
+                    format="yyyy-MM-dd HH:mm:ss"
+                    onChange={this.setPramDateTime.bind(this, key)}
                     name={key}
-                    className='params'
-                    autoWidth
-                    native
-                  >
-                    {options}
-                  </Select>
-                </FormControl>
+                    label="24h clock"
+                  />
+                </MuiPickersUtilsProvider>
               </TableCell>
-            </TableRow>
-          );
-        }else if(key === 'id'){
-          continue;
-        }else{
-          //文字列の時
-          html_row.push(
-            <TableRow key={key}>
-              <TableCell>
-                {key}
-              </TableCell>
-              <TableCell>
-                <TextField
-                  onChange={this.setParam}
-                  name={key}
-                  multiline
-                  className={classes.textarea + ' params'}
-                />
-              </TableCell>
-            </TableRow>
+          </TableRow>
+        );
+      }else if(keys.includes(key)){
+        //Foreign Key
+        const options = []
+        for(let i in this.state.foreignKeys[key]){
+          const foreignData = this.state.foreignKeys[key][i];
+
+          options.push(
+            <option key={i} value={foreignData.id}>{foreignData.data}</option>
           );
         }
+
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              <FormControl fullWidth className={classes.formControl}>
+                <Select
+                  onChange={this.setParam}
+                  name={key}
+                  className='params'
+                  autoWidth
+                  native
+                >
+                  {options}
+                </Select>
+              </FormControl>
+            </TableCell>
+          </TableRow>
+        );
+      }else{
+        //文字列の時
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              <TextField
+                onChange={this.setParam}
+                name={key}
+                multiline
+                className={classes.textarea + ' params'}
+              />
+            </TableCell>
+          </TableRow>
+        );
       }
     }
 

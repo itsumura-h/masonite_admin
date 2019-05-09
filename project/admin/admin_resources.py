@@ -172,11 +172,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def index(self, request: Request):
         """Logic to read data from several models
         """
-        # if self.list_display:
-        #     return self.model.select('id', *self.list_display).get()
-        # else:
-        #     return self.model.all()
-
         # pagenagion
         items = request.input('i') if request.input('i') else 100
         page = request.input('p') if request.input('p') else 1
@@ -185,6 +180,11 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
             return self.model.paginate(items, page).serialize()
+
+        # if self.list_display:
+        #     return self.model.select('id', *self.list_display).get()
+        # else:
+        #     return self.model.all()
 
     def count(self):
         return {'count': self.model.count()}

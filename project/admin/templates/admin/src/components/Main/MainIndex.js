@@ -36,7 +36,8 @@ class MainIndex extends React.PureComponent {
   //========================== API Access ==========================
   getIndex=(model, page=this.state.page)=>{
     const self = this;
-    Util.getAPI('/admin/api/'+model+'?p='+(page+1)+'&i='+this.props.store.state.rowsPerPage)
+    const params = {p: page+1, i: this.props.store.state.rowsPerPage};
+    Util.getAPI('/admin/api/'+model, params)
     .then(response=>{
       self.setState({indexData: response.data});
     });
@@ -81,7 +82,7 @@ class MainIndex extends React.PureComponent {
     this.setState({page: Number(page)});
     const model = this.props.match.params.model;
     this.getIndex(model, page);
-    window.scrollTo(0,0);
+    window.scrollTo(0,0); // scroll to the top
   };
 
   handleChangeRowsPerPage=(event)=>{
@@ -108,6 +109,9 @@ class MainIndex extends React.PureComponent {
     if(this.props !== nextProps && model){
       this.setState({page: 0});
       this.getIndex(model, 0);
+    }
+
+    if(this.props.match.params.model !== nextProps.match.params.model){
       this.getPages(model);
     }
   }
@@ -258,14 +262,3 @@ const styles = {
 }
 
 export default withStyles(styles)(withStore(MainIndex));
-
-/*
-
-pagenitaion
-
-
-
-
-
-
-*/

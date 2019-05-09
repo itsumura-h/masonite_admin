@@ -3,10 +3,10 @@ import axios from 'axios';
 import CONST from './const';
 
 export default class Util extends React.Component{
-  static getAPI=(url)=>{
+  static getAPI=(url, params={})=>{
     url = CONST.APIHOST + url;
 
-    return axios.get(url)
+    return axios.get(url, {params: params})
       .then(response=>{
         if(response.headers['content-type'] === 'application/json; charset=utf-8'){
           return response;
