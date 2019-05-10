@@ -4,6 +4,8 @@ from masonite.request import Request
 from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             NoApiTokenFound, PermissionScopeDenied,
                             RateLimitReached)
+from .admin_controller import AdminController
+import bcrypt
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'count', 'show', 'update', 'delete']
@@ -156,7 +158,21 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         """
         try:
             new_model = self.model()
-            for key, value in self.request.all().items():
+
+            params = request.all()
+            config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
+            hash = None
+            if 'hash' in config_model:
+                hash = config_model['hash']
+
+            if hash:
+                for key, value in params.items():
+                    for hash_row in hash:
+                        if key == hash_row:
+                            params[key] = bcrypt.hashpw(value.encode(), bcrypt.gensalt(12)).decode()
+
+
+            for key, value in params.items():
                 setattr(new_model, key, value)
             new_model.save()
         except Exception as e:
@@ -199,9 +215,20 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def update(self, request: Request):
         """Logic to update data from a given model
         """
-        #record = self.model.find(request.param('id'))
         record = self.model.where('id', request.param('id'))
-        record.update(request.all())
+        params = request.all()
+        config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
+        hash = None
+        if 'hash' in config_model:
+            hash = config_model['hash']
+
+        if hash:
+            for key, value in params.items():
+                for hash_row in hash:
+                    if key == hash_row:
+                        params[key] = bcrypt.hashpw(value.encode(), bcrypt.gensalt(12)).decode()
+
+        record.update(params)
         return self.model.where('id', request.param('id')).get().serialize()
 
     def delete(self, request: Request):

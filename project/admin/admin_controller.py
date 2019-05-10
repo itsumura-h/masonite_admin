@@ -6,7 +6,7 @@ import pprint
 from masonite import env
 import sqlite3
 from api.resources import Resource
-from config.admin import CONFIG
+from config.admin import MODELS
 import platform
 import pkg_resources
 from collections import OrderedDict
@@ -20,7 +20,7 @@ class AdminController:
 
     def info(self, request: Request):
         models = []
-        for model in CONFIG:
+        for model in MODELS:
             models.append(model['model'].__doc__.split(' ')[0])
 
         env = {
@@ -130,7 +130,7 @@ class AdminController:
     @staticmethod
     def get_model_row_by_model_name(model_name):
         model = None
-        for row in CONFIG:
+        for row in MODELS:
             if row['model'].__doc__.split(' ')[0] == model_name:
                 model = row
                 break
@@ -141,7 +141,7 @@ class AdminController:
     def get_model_row_by_table_name(table_name):
         i = inflection
         model = None
-        for row in CONFIG:
+        for row in MODELS:
             # posts→Post
             if row['model'].__doc__.split(' ')[0] == i.camelize(i.singularize(table_name)):
                 model = row

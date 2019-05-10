@@ -1,7 +1,7 @@
 from masonite.routes import Get, Post, Patch, Delete
 from .admin_controller import AdminController
 from admin.admin_resources import AdminResource
-from config.admin import CONFIG
+from config.admin import MODELS
 from config.storage import STATICFILES
 # from api.resources import Resource
 # from api.serializers import JSONSerializer
@@ -16,7 +16,7 @@ from config.storage import STATICFILES
 STATICFILES['admin/templates/admin/build/static'] = 'static/'
 
 ADMIN_ROUTES = []
-for model in CONFIG:
+for model in MODELS:
     args = {}
     if model.get('list_display'):
         args['list_display'] = model['list_display']

@@ -51,6 +51,7 @@ class MainIndex extends React.PureComponent {
     })
   }
 
+  //========================== Delete ==========================
   openDelete=(event)=>{
     if(event){
       const store = this.props.store;
@@ -70,7 +71,9 @@ class MainIndex extends React.PureComponent {
 
     Util.deleteAPI(url)
     .then(response=>{
-      this.getIndex(model);
+      this.setState({page: 0});
+      this.getPages(model);
+      this.getIndex(model, 0);
     })
     .catch(err=>{
       console.error(err);
@@ -106,12 +109,10 @@ class MainIndex extends React.PureComponent {
     // get URL param
     const model = this.props.match.params.model;
 
-    if(this.props !== nextProps && model){
+    if(this.props.match.params.model !== nextProps.match.params.model ||
+      this.props.store.state.rowsPerPage !== nextProps.store.state.rowsPerPage){
       this.setState({page: 0});
       this.getIndex(model, 0);
-    }
-
-    if(this.props.match.params.model !== nextProps.match.params.model){
       this.getPages(model);
     }
   }

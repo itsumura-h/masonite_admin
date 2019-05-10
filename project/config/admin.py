@@ -1,13 +1,14 @@
 from app.User import User
 from app.models.Post import Post
 
-CONFIG = [
+MODELS = [
     {
         'model': User,
         'create_display': ['name', 'email', 'password'],
         'list_display': ['name', 'email'],
-        'detail_display': ['name', 'email', 'updated_at'],
+        'detail_display': ['name', 'email', 'password'],
         'foreign_display': 'name',
+        'hash': ['password']
     },
     {
         'model': Post,
@@ -16,6 +17,10 @@ CONFIG = [
         'detail_display': ['title', 'posts', 'user_id']
     }
 ]
+
+CONFIG = {
+    'DB': 'pickle', # 'sqlite', 'mysql', 'pgsql'
+}
 
 
 # import pprint, inspect

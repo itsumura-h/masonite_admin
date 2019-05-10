@@ -1,37 +1,20 @@
-import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import './App.css';
-import AdminAppBar from './components/AdminAppBar';
-import AdminMain from './components/AdminMain';
-import AdminDrawer from './components/AdminDrawer';
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import {withStore} from './common/store';
-import Util from './common/util';
 
-class App extends Component {
+import SignIn from './components/Login/SignIn';
+import Admin from './components/Admin';
 
-  getInfo=()=>{
-    const store = this.props.store;
-    Util.getAPI('/admin/api/info')
-    .then(response=>{
-      if(response.data){
-        store.set('info')(response.data);
-      }
-    })
-  }
+class App extends React.Component {
 
-  componentDidMount(){
-    this.getInfo();
-  }
-
-  render() {
-    return (
+  render(){
+    return(
       <BrowserRouter>
-        <AdminDrawer/>
-          <div className='rightContents' style={{marginLeft: this.props.store.state.drawerWidth}}>
-            <AdminAppBar/>
-            <AdminMain/>
-          </div>
+        <Switch>
+          <Route exact path="/admin/login" component={SignIn}/>
+          <Route component={Admin} />
+        </Switch>
       </BrowserRouter>
     );
   }

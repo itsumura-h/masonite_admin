@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../common/store'
 
@@ -10,27 +9,6 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {NavLink} from 'react-router-dom';
-
-
-
-const styles = {
-  root: {
-    flexGrow: 1,
-  },
-  grow: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-  },
-  link: {
-    color: 'white'
-  },
-  appbar: {
-    backgroundColor: '#3C8DBC'
-  }
-};
 
 class AdminAppBar extends React.Component {
 
@@ -56,7 +34,9 @@ class AdminAppBar extends React.Component {
                 Masonite Admin
               </NavLink>
             </Typography>
-            <Button color="inherit">Login</Button>
+            <NavLink to='/admin/login' className={classes.link}>
+              <Button color="inherit">Log Out</Button>
+            </NavLink>
           </Toolbar>
         </AppBar>
       </div>
@@ -64,8 +44,23 @@ class AdminAppBar extends React.Component {
   }
 }
 
-AdminAppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
+const styles = {
+  root: {
+    flexGrow: 1,
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginLeft: -12,
+    marginRight: 20,
+  },
+  link: {
+    color: 'white'
+  },
+  appbar: {
+    backgroundColor: '#3C8DBC'
+  }
 };
 
 export default withStyles(styles)(withStore(AdminAppBar));
