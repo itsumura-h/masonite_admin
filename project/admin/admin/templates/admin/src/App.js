@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import {withStore} from './common/store';
 
-import SignIn from './components/Login/SignIn';
+import Login from './components/Auth/Login';
 import Admin from './components/Admin';
 
 class App extends React.Component {
@@ -12,7 +12,7 @@ class App extends React.Component {
     return(
       <BrowserRouter>
         <Switch>
-          <Route exact path="/admin/login" component={SignIn}/>
+          <Route exact path="/admin/auth/login" component={Login}/>
           <Route component={Admin} />
         </Switch>
       </BrowserRouter>

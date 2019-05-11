@@ -1,6 +1,6 @@
 from masonite.routes import Get, Post, Patch, Delete
 from .admin_controller import AdminController
-from admin.admin_resources import AdminResource
+from .admin_resources import AdminResource
 from config.admin import MODELS
 from config.storage import STATICFILES
 # from api.resources import Resource
