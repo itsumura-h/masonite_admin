@@ -2,7 +2,7 @@
 
 from masonite.provider import ServiceProvider
 from app.commands.AdminCommand import AdminCommand
-
+from app.commands.MigrateCommand import MigrateCommand
 
 class AdminProvider(ServiceProvider):
     """Provides Services To The Service Container
