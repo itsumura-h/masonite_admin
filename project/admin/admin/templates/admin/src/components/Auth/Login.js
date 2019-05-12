@@ -14,9 +14,33 @@ import Button from '@material-ui/core/Button';
 import Email from '@material-ui/icons/Email';
 import Lock from '@material-ui/icons/Lock';
 
+import Util from '../../common/util';
+
 class Login extends React.Component {
   state = {
+    params: [],
+  }
 
+  setParam=(event)=>{
+    let new_params = this.state.params;
+    const key = event.currentTarget.name;
+    new_params[key] = event.currentTarget.value;
+    console.log(new_params);
+    this.setState({showData: new_params});
+  }
+
+  submit=()=>{
+    const url = '/admin/api/login'
+    Util.postAPI(url, this.state.params)
+    .then(response=>{
+      console.log(response);
+      if(response.data.login === true){
+        this.props.history.push('/admin');
+      }
+    })
+    .catch(err=>{
+      console.error(err);
+    })
   }
 
   render(){
@@ -29,9 +53,9 @@ class Login extends React.Component {
           <Card>
             <CardContent>
               <TextField
-                //onChange={this.setParam}
-                label="Username"
-                name="name"
+                onChange={this.setParam}
+                label="email"
+                name="email"
                 className={classes.textField}
                 InputProps={{
                   endAdornment: (
@@ -42,9 +66,9 @@ class Login extends React.Component {
                 }}
               />
               <TextField
-                //onChange={this.setParam}
-                label="Password"
-                name="email"
+                onChange={this.setParam}
+                label="password"
+                name="password"
                 className={classes.textField}
                 InputProps={{
                   endAdornment: (
@@ -57,7 +81,12 @@ class Login extends React.Component {
               />
               <Divider />
               <div className={classes.flex}>
-                <Button variant="contained" className={classes.saveButton} data-id={this.props.match.params.id} onClick={this.save}>
+                <Button
+                  variant="contained"
+                  className={classes.saveButton}
+                  data-id={this.props.match.params.id}
+                  onClick={this.submit}
+                >
                   Login
                 </Button>
               </div>

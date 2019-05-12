@@ -161,16 +161,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
             params = request.all()
             config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
-            hash = None
-            if 'hash' in config_model:
-                hash = config_model['hash']
-
-            if hash:
-                for key, value in params.items():
-                    for hash_row in hash:
-                        if key == hash_row:
-                            params[key] = bcrypt.hashpw(value.encode(), bcrypt.gensalt(12)).decode()
-
 
             for key, value in params.items():
                 setattr(new_model, key, value)
@@ -217,17 +207,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         """
         record = self.model.where('id', request.param('id'))
         params = request.all()
-        config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
-        hash = None
-        if 'hash' in config_model:
-            hash = config_model['hash']
-
-        if hash:
-            for key, value in params.items():
-                for hash_row in hash:
-                    if key == hash_row:
-                        params[key] = bcrypt.hashpw(value.encode(), bcrypt.gensalt(12)).decode()
-
         record.update(params)
         return self.model.where('id', request.param('id')).get().serialize()
 

@@ -1,17 +1,12 @@
-from masonite.routes import Get, Post, Patch, Delete
-from .admin_controller import AdminController
-from .admin_resources import AdminResource
+
+"""Admin Routes."""
+
+from masonite.routes import Get, Post, RouteGroup
+from admin.web.admin_controller import AdminController
+from admin.web.admin_resources import AdminResource
+from admin.web.login_controller import LoginController
 from config.admin import MODELS
 from config.storage import STATICFILES
-# from api.resources import Resource
-# from api.serializers import JSONSerializer
-
-
-# class UserResource(Resource, JSONSerializer):
-#     model = User
-
-# class PostResource(Resource, JSONSerializer):
-#     model = Post
 
 STATICFILES['admin/templates/admin/build/static'] = 'static/'
 
@@ -27,6 +22,8 @@ for model in MODELS:
 
 ADMIN_ROUTES += [
     Get().route('/', AdminController.root),
+    Post().route('/api/login', LoginController.store),
+    Post().route('/api/logout', LoginController.destroy),
     Get().route('/api/info',AdminController.info),
     Get().route('/api/schema/@model',AdminController.schema),
     Get().route('/api/schema/@model/create',AdminController.create),
@@ -35,7 +32,8 @@ ADMIN_ROUTES += [
     Get().route('/@model', AdminController.root),
     Get().route('/@model/@id/edit', AdminController.root),
     Get().route('/@model/@id', AdminController.root),
-
-    #UserResource('/api/users').routes(),
-    #PostResource('/api/posts').routes(),
 ]
+
+# ROUTES += [
+#     RouteGroup(ADMIN_ROUTES, prefix='/admin')
+# ]

@@ -1,14 +1,19 @@
 from app.User import User
 from app.models.Post import Post
+#from app.models.AdminUser import AdminUser
 
 MODELS = [
+    # {
+    #     'model':AdminUser,
+    #     'list_display': ['name', 'email'],
+    #     'detail_display': ['name', 'email'],
+    # },
     {
         'model': User,
         'create_display': ['name', 'email', 'password'],
         'list_display': ['name', 'email'],
         'detail_display': ['name', 'email', 'password'],
         'foreign_display': 'name',
-        'hash': ['password']
     },
     {
         'model': Post,
@@ -17,14 +22,3 @@ MODELS = [
         'detail_display': ['title', 'posts', 'user_id']
     }
 ]
-
-CONFIG = {
-    'DB': 'pickle', # 'sqlite', 'mysql', 'pgsql'
-}
-
-
-# import pprint, inspect
-# pprint.pprint(inspect.getmembers(User))
-# print(User.__doc__.split(' ')[0])
-# print(Post.__doc__.split(' ')[0])
-# pprint.pprint(Post.__table__)

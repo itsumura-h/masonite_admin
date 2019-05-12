@@ -15,7 +15,7 @@ import inspect
 
 class AdminController:
     def root(self):
-        with open('admin/templates/admin/build/index.html', 'r') as f:
+        with open('admin/admin/templates/admin/build/index.html', 'r') as f:
             return f.read()
 
     def info(self, request: Request):

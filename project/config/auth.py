@@ -2,7 +2,7 @@
 
 from masonite import env
 
-from app.User import User
+from app.models.AdminUser import AdminUser
 
 """Authentication Model
 Put the model here that will be used to authenticate users to your site.
@@ -18,5 +18,5 @@ be authenticated.
 
 AUTH = {
     'driver': env('AUTH_DRIVER', 'cookie'),
-    'model': User,
+    'model': AdminUser,
 }

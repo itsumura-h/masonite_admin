@@ -1,13 +1,14 @@
-""" A AdminCommand Command """
+""" A CreateSuperUser Command """
 from cleo import Command
 from masonite.helpers import password as bcrypt_password
+import bcrypt
 import os
 import re
-from config.database import DB as db
+from config.auth import AUTH
 
 class CreateSuperUser(Command):
     """
-    Create Super User
+    Create admin account
 
     admin:createsuperuser
     """
@@ -59,6 +60,6 @@ class CreateSuperUser(Command):
         password = bcrypt_password(password)
         new_user = {'name': name, 'email': email, 'password': password}
 
-        db.table('admin_users').insert(new_user)
+        AUTH['model'].insert(new_user)
 
         self.line('<info>Superuser created successfully.</info>')

@@ -22,7 +22,7 @@ class UserTableSeeder(Seeder):
         """
         self.factory.register(User, self.users_factory)
         self.faker = Faker('en')
-        self.factory(User, 50).create()
+        self.factory(User, 20).create()
 
     def users_factory(self, faker):
         name = self.faker.name()

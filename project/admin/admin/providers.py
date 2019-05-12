@@ -4,6 +4,8 @@ import os
 from masonite.provider import ServiceProvider
 from .commands.TestCommand import Test
 from .commands.CreateSuperUserCommand import CreateSuperUser
+from .commands.InstallCommand import Install
+from databases.seeds.database_seeder import DatabaseSeeder
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
 
@@ -18,6 +20,7 @@ class AdminProvider(ServiceProvider):
         """
         self.app.bind('AdminCommand', Test())
         self.app.bind('CreateSuperUserCommand', CreateSuperUser())
+        self.app.bind('InstallCommand', Install())
         self.app.bind(
             'AdminUserMigrationDirectory',
             os.path.join(package_directory, 'migrations')
