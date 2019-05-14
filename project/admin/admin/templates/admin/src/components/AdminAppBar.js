@@ -34,7 +34,7 @@ class AdminAppBar extends React.Component {
                 Masonite Admin
               </NavLink>
             </Typography>
-            <NavLink to='/admin/auth/login' className={classes.link}>
+            <NavLink to='/admin/login' className={classes.link}>
               <Button color="inherit">Log Out</Button>
             </NavLink>
           </Toolbar>

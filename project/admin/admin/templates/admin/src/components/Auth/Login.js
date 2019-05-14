@@ -10,6 +10,7 @@ import TextField from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import Email from '@material-ui/icons/Email';
 import Lock from '@material-ui/icons/Lock';
@@ -19,28 +20,42 @@ import Util from '../../common/util';
 class Login extends React.Component {
   state = {
     params: [],
+    isOpenSnackbar: false,
+  }
+
+  componentDidMount(){
+    window.localStorage.removeItem('login_id');
+    window.localStorage.removeItem('login_token');
   }
 
   setParam=(event)=>{
     let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
-    console.log(new_params);
     this.setState({showData: new_params});
   }
 
   submit=()=>{
     const url = '/admin/api/login'
-    Util.postAPI(url, this.state.params)
+    Util.loginApi(url, this.state.params)
     .then(response=>{
-      console.log(response);
       if(response.data.login === true){
+        window.localStorage.setItem('login_id', response.data.id);
+        window.localStorage.setItem('login_token', response.data.token);
         this.props.history.push('/admin');
+      }else{
+        this.changeOpenSnackbar();
       }
     })
     .catch(err=>{
       console.error(err);
+      this.changeOpenSnackbar();
     })
+  }
+
+  changeOpenSnackbar=()=>{
+    const newOpen = this.state.isOpenSnackbar? false: true;
+    this.setState({isOpenSnackbar: newOpen});
   }
 
   render(){
@@ -93,6 +108,19 @@ class Login extends React.Component {
             </CardContent>
           </Card>
         </div>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'left',
+          }}
+          open={this.state.isOpenSnackbar}
+          autoHideDuration={3000}
+          onClose={this.changeOpenSnackbar}
+          ContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span id="message-id">Invalid email or password.</span>}
+        />
       </div>
     );
   }

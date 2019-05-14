@@ -8,7 +8,7 @@ from masonite.packages import append_web_routes
 
 class Install(Command):
     """
-    Install admin package, create model, seed, config
+    Install admin package: create model and config
 
     admin:install
     """
@@ -28,17 +28,26 @@ class Install(Command):
         isdir = os.path.isdir('app/models')
 
         if(isdir):
-            model_path = 'app/models/AdminUser.py'
-            output = bytes(check_output(
+            admin_user_model_path = 'app/models/AdminUser.py'
+            login_token_model_path = 'app/models/LoginToken.py'
+            admin_user_output = bytes(check_output(
                     ['craft', 'model', 'models/AdminUser']
                 )).decode('utf-8')
+            login_token_output = bytes(check_output(
+                    ['craft', 'model', 'models/LoginToken']
+                )).decode('utf-8')
         else:
-            model_path = 'app/AdminUser.py'
-            output = bytes(check_output(
+            admin_user_model_path = 'app/AdminUser.py'
+            login_token_model_path = 'app/LoginToken.py'
+            admin_user_output = bytes(check_output(
                     ['craft', 'model', 'AdminUser']
                 )).decode('utf-8')
+            login_token_output = bytes(check_output(
+                    ['craft', 'model', 'LoginToken']
+                )).decode('utf-8')
 
-        self.line('<info>'+output+'</info>')
+        self.line('<info>AdminUser '+admin_user_output+'</info>')
+        self.line('<info>LoginToken '+login_token_output+'</info>')
 
         #==================== Edit Auth ====================
         auth_path = 'config/auth.py'
@@ -61,62 +70,62 @@ class Install(Command):
             self.line('<info>'+auth_path+' Already Edited!</info>')
 
         #==================== Create seeder ====================
-        if isdir:
-            seeder = '''from orator.orm import Factory
-from orator.seeds import Seeder
-from faker import Faker
-from masonite.helpers import password as bcrypt_password
-from app.models.AdminUser import AdminUser
+#         if isdir:
+#             seeder = '''from orator.orm import Factory
+# from orator.seeds import Seeder
+# from faker import Faker
+# from masonite.helpers import password as bcrypt_password
+# from app.models.AdminUser import AdminUser
 
-class AdminUserTableSeeder(Seeder):
+# class AdminUserTableSeeder(Seeder):
 
-    def run(self):
-        """
-        Run the database seeds.
-        """
-        self.factory.register(AdminUser, self.admin_users_factory)
-        self.faker = Faker('en')
-        self.factory(AdminUser, 1).create()
+#     def run(self):
+#         """
+#         Run the database seeds.
+#         """
+#         self.factory.register(AdminUser, self.admin_users_factory)
+#         self.faker = Faker('en')
+#         self.factory(AdminUser, 1).create()
 
-    def admin_users_factory(self, faker):
-        return {
-            'name': 'admin',
-            'email': 'admin@test.com',
-            'password': bcrypt_password('admin')
-        }
-'''
-        else:
-            seeder = '''from orator.orm import Factory
-from orator.seeds import Seeder
-from faker import Faker
-from masonite.helpers import password as bcrypt_password
-from app.AdminUser import AdminUser
+#     def admin_users_factory(self, faker):
+#         return {
+#             'name': 'admin',
+#             'email': 'admin@test.com',
+#             'password': bcrypt_password('admin')
+#         }
+# '''
+#         else:
+#             seeder = '''from orator.orm import Factory
+# from orator.seeds import Seeder
+# from faker import Faker
+# from masonite.helpers import password as bcrypt_password
+# from app.AdminUser import AdminUser
 
-class AdminUserTableSeeder(Seeder):
+# class AdminUserTableSeeder(Seeder):
 
-    def run(self):
-        """
-        Run the database seeds.
-        """
-        self.factory.register(AdminUser, self.admin_users_factory)
-        self.faker = Faker('en')
-        self.factory(AdminUser, 1).create()
+#     def run(self):
+#         """
+#         Run the database seeds.
+#         """
+#         self.factory.register(AdminUser, self.admin_users_factory)
+#         self.faker = Faker('en')
+#         self.factory(AdminUser, 1).create()
 
-    def admin_users_factory(self, faker):
-        return {
-            'name': 'admin',
-            'email': 'admin@test.com',
-            'password': bcrypt_password('admin')
-        }
-'''
+#     def admin_users_factory(self, faker):
+#         return {
+#             'name': 'admin',
+#             'email': 'admin@test.com',
+#             'password': bcrypt_password('admin')
+#         }
+# '''
 
-        seed_path = 'databases/seeds/admin_users_table_seeder.py'
-        if(os.path.exists(seed_path)):
-            self.line('<info>Seeder Already Exists!</info>')
-        else:
-            with open(seed_path, 'w') as f:
-                f.write(seeder)
-            self.line('<info>Seeder Created Successfully!</info>')
+#         seed_path = 'databases/seeds/admin_users_table_seeder.py'
+#         if(os.path.exists(seed_path)):
+#             self.line('<info>Seeder Already Exists!</info>')
+#         else:
+#             with open(seed_path, 'w') as f:
+#                 f.write(seeder)
+#             self.line('<info>Seeder Created Successfully!</info>')
 
         #==================== Add routes ====================
         content = None
@@ -133,6 +142,7 @@ class AdminUserTableSeeder(Seeder):
         self.line('<info>Install Compleated for...</info>')
         self.line('    <comment>'+config_path+'</comment>')
         self.line('    <comment>'+auth_path+'</comment>')
-        self.line('    <comment>'+model_path+'</comment>')
-        self.line('    <comment>'+seed_path+'</comment>')
+        self.line('    <comment>'+admin_user_model_path+'</comment>')
+        self.line('    <comment>'+login_token_model_path+'</comment>')
+        #self.line('    <comment>'+seed_path+'</comment>')
         self.line('    <comment>'+route_path+'</comment>')

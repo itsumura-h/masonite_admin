@@ -1,7 +1,6 @@
 """ A CreateSuperUser Command """
 from cleo import Command
 from masonite.helpers import password as bcrypt_password
-import bcrypt
 import os
 import re
 from config.auth import AUTH

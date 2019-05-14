@@ -6,12 +6,14 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             RateLimitReached)
 from .admin_controller import AdminController
 import bcrypt
+from app.models.AdminUser import AdminUser
+from app.models.LoginToken import LoginToken
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'count', 'show', 'update', 'delete']
     prefix = ''
 
-    def __init__(self, model, url='', create_display=[], list_display=[], detail_display=[], without=[], method_type=['GET']):
+    def __init__(self, model, url='', create_display=[], list_display=[], detail_display=[], without=[], method_type=['GET'], request=Request):
         self.base_url = model.__doc__.split(' ')[0] # Model name
         self.route_url = '/api/' + url # /api/model_name/ /api/model_name/@id
         self.method_type = method_type
@@ -22,7 +24,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         self.create_display = create_display
         self.list_display = list_display
         self.detail_display = detail_display
-
 
     def routes(self):
         routes = []
@@ -153,17 +154,25 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         regex += '$'
         return regex
 
-    def create(self):
+    def create(self, request: Request):
         """Logic to create data from a given model
         """
+        if self.admin_middleware(request) == False:
+            return {'login': False}
+
         try:
+            print('==================================')
             new_model = self.model()
 
             params = request.all()
+            print(params)
+            del params['login_id'], params['login_token']
             config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
 
             for key, value in params.items():
                 setattr(new_model, key, value)
+
+            print(vars(new_model))
             new_model.save()
         except Exception as e:
             return {'error': str(e)}
@@ -178,6 +187,9 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def index(self, request: Request):
         """Logic to read data from several models
         """
+        if self.admin_middleware(request) == False:
+            return {'login': False}
+
         # pagenagion
         items = request.input('i') if request.input('i') else 100
         page = request.input('p') if request.input('p') else 1
@@ -192,12 +204,18 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         # else:
         #     return self.model.all()
 
-    def count(self):
+    def count(self, request: Request):
+        if self.admin_middleware(request) == False:
+            return {'login': False}
+
         return {'count': self.model.count()}
 
     def show(self, request: Request):
         """Logic to read data from 1 model
         """
+        if self.admin_middleware(request) == False:
+            return {'login': False}
+
         if self.detail_display:
             return self.model.select('id', *self.detail_display).find(request.param('id'))
         return self.model.find(request.param('id'))
@@ -205,17 +223,40 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def update(self, request: Request):
         """Logic to update data from a given model
         """
+        if self.admin_middleware(request) == False:
+            return {'login': False}
+
         record = self.model.where('id', request.param('id'))
         params = request.all()
+        del params['login_id'], params['login_token']
         record.update(params)
         return self.model.where('id', request.param('id')).get().serialize()
 
     def delete(self, request: Request):
         """Logic to delete data from a given model
         """
+        if self.admin_middleware(request) == False:
+            return {'login': False}
+
         record = self.model.find(request.param('id'))
         if record:
             record.delete()
             return record
 
         return {'error': 'Record does not exist'}
+
+    @staticmethod
+    def admin_middleware(request):
+        """Beacuse middleware to resouces not works
+        """
+        try:
+            admin_user_id = request.input('login_id')
+            input_token = request.input('login_token')
+
+            #admin_user = AdminUser.where('email', email).first()
+            db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
+            if db_token == None or input_token != db_token:
+                return False
+            return True
+        except:
+            return False

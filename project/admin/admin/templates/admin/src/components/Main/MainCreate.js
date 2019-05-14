@@ -57,11 +57,12 @@ class MainCreate extends React.Component {
     for(let i in schema){
       const row = schema[i];
       if(keys.includes(row[1])){
-        new_params[row[1]] = 1;
+        new_params[row[1]] = foreignKeys[row[1]][0].id;
       }else{
         new_params[row[1]] = '';
       }
     }
+    console.log(new_params);
     this.setState({params: new_params});
   }
 
