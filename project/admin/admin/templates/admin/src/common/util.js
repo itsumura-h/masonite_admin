@@ -1,7 +1,6 @@
 import React from 'react';
 import axios from 'axios';
 import CONST from './const';
-import {Redirect} from 'react-router-dom';
 
 export default class Util extends React.Component{
   static getAPI=(url, params={})=>{
@@ -11,7 +10,6 @@ export default class Util extends React.Component{
 
     return axios.get(url, {params: params})
       .then(response=>{
-        this.loginFale(response);
         if(response.headers['content-type'] === 'application/json; charset=utf-8'){
           return response;
         }else{
@@ -19,6 +17,7 @@ export default class Util extends React.Component{
         }
       })
       .catch(err=>{
+        this.loginFale(err);
         console.error(err);
         return [];
       })
@@ -30,8 +29,6 @@ export default class Util extends React.Component{
     params['login_id'] = window.localStorage.getItem('login_id')
     params['login_token'] = window.localStorage.getItem('login_token')
 
-    console.log(params);
-
     const newParams = new URLSearchParams();
     for(let key in params){
       const param = params[key];
@@ -40,10 +37,10 @@ export default class Util extends React.Component{
 
     return axios.post(url, newParams)
       .then(response=>{
-        this.loginFale(response);
         return response;
       })
       .catch(err=>{
+        this.loginFale(err);
         console.error(err);
         return [];
       })
@@ -82,17 +79,17 @@ export default class Util extends React.Component{
 
     return axios.post(url, newParams)
       .then(response=>{
-        this.loginFale(response);
         return response;
       })
       .catch(err=>{
+        this.loginFale(err);
         console.error(err);
         return [];
       })
   }
 
-  static loginFale=(response)=>{
-    if('login' in response.data && response.data.login == false){
+  static loginFale=(error)=>{
+    if(error.response.status === 403){
       window.location.href = '/admin/login';
     }
   }

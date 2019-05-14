@@ -19,9 +19,9 @@ class AdminMiddleware:
             #admin_user = AdminUser.where('email', email).first()
             db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
             if db_token == None or input_token != db_token:
-                return self.response.json({'login': False})
+                return self.response.json(None, status=403)
         except:
-            return self.response.json({'login': False})
+            return self.response.json(None, status=403)
 
     def after(self):
         pass

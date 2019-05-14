@@ -47,6 +47,6 @@ from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, M
 
 ROUTES += [
     RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',)),
-    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin',)), #middleware not working
+    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',)), #middleware not working
     RouteGroup(ADMIN_ROUTES, prefix='/admin'),
 ]

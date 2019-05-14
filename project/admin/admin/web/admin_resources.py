@@ -1,4 +1,5 @@
 from masonite.routes import BaseHttpRoute
+from masonite.response import Response
 from api.serializers import JSONSerializer
 from masonite.request import Request
 from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
@@ -154,25 +155,22 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         regex += '$'
         return regex
 
-    def create(self, request: Request):
+    def create(self, request: Request, response: Response):
         """Logic to create data from a given model
         """
         if self.admin_middleware(request) == False:
-            return {'login': False}
+            return response.json(None, status=403)
 
         try:
-            print('==================================')
             new_model = self.model()
 
             params = request.all()
-            print(params)
             del params['login_id'], params['login_token']
             config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
 
             for key, value in params.items():
                 setattr(new_model, key, value)
 
-            print(vars(new_model))
             new_model.save()
         except Exception as e:
             return {'error': str(e)}
@@ -184,11 +182,11 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         #     return {'error': str(e)}
         # return record
 
-    def index(self, request: Request):
+    def index(self, request: Request, response: Response):
         """Logic to read data from several models
         """
         if self.admin_middleware(request) == False:
-            return {'login': False}
+            return response.json(None, status=403)
 
         # pagenagion
         items = request.input('i') if request.input('i') else 100
@@ -204,9 +202,9 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         # else:
         #     return self.model.all()
 
-    def count(self, request: Request):
+    def count(self, request: Request, response: Response):
         if self.admin_middleware(request) == False:
-            return {'login': False}
+            return response.json(None, status=403)
 
         return {'count': self.model.count()}
 
@@ -214,17 +212,17 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         """Logic to read data from 1 model
         """
         if self.admin_middleware(request) == False:
-            return {'login': False}
+            return response.json(None, status=403)
 
         if self.detail_display:
             return self.model.select('id', *self.detail_display).find(request.param('id'))
         return self.model.find(request.param('id'))
 
-    def update(self, request: Request):
+    def update(self, request: Request, response: Response):
         """Logic to update data from a given model
         """
         if self.admin_middleware(request) == False:
-            return {'login': False}
+            return response.json(None, status=403)
 
         record = self.model.where('id', request.param('id'))
         params = request.all()
@@ -232,11 +230,11 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         record.update(params)
         return self.model.where('id', request.param('id')).get().serialize()
 
-    def delete(self, request: Request):
+    def delete(self, request: Request, response: Response):
         """Logic to delete data from a given model
         """
         if self.admin_middleware(request) == False:
-            return {'login': False}
+            return response.json(None, status=403)
 
         record = self.model.find(request.param('id'))
         if record:

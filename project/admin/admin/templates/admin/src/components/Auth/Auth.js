@@ -1,7 +1,6 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import {withStore} from '../../common/store';
-import Util from '../../common/util';
 
 class Auth extends React.Component {
 

@@ -10,9 +10,9 @@ MODELS = [
     # },
     {
         'model': User,
-        'create_display': ['name', 'email', 'password'],
+        'create_display': ['name', 'email'],
         'list_display': ['name', 'email'],
-        'detail_display': ['name', 'email', 'password'],
+        'detail_display': ['name', 'email'],
         'foreign_display': 'name',
     },
     {
