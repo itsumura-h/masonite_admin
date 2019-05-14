@@ -69,73 +69,27 @@ class Install(Command):
         else:
             self.line('<info>'+auth_path+' Already Edited!</info>')
 
-        #==================== Create seeder ====================
-#         if isdir:
-#             seeder = '''from orator.orm import Factory
-# from orator.seeds import Seeder
-# from faker import Faker
-# from masonite.helpers import password as bcrypt_password
-# from app.models.AdminUser import AdminUser
-
-# class AdminUserTableSeeder(Seeder):
-
-#     def run(self):
-#         """
-#         Run the database seeds.
-#         """
-#         self.factory.register(AdminUser, self.admin_users_factory)
-#         self.faker = Faker('en')
-#         self.factory(AdminUser, 1).create()
-
-#     def admin_users_factory(self, faker):
-#         return {
-#             'name': 'admin',
-#             'email': 'admin@test.com',
-#             'password': bcrypt_password('admin')
-#         }
-# '''
-#         else:
-#             seeder = '''from orator.orm import Factory
-# from orator.seeds import Seeder
-# from faker import Faker
-# from masonite.helpers import password as bcrypt_password
-# from app.AdminUser import AdminUser
-
-# class AdminUserTableSeeder(Seeder):
-
-#     def run(self):
-#         """
-#         Run the database seeds.
-#         """
-#         self.factory.register(AdminUser, self.admin_users_factory)
-#         self.faker = Faker('en')
-#         self.factory(AdminUser, 1).create()
-
-#     def admin_users_factory(self, faker):
-#         return {
-#             'name': 'admin',
-#             'email': 'admin@test.com',
-#             'password': bcrypt_password('admin')
-#         }
-# '''
-
-#         seed_path = 'databases/seeds/admin_users_table_seeder.py'
-#         if(os.path.exists(seed_path)):
-#             self.line('<info>Seeder Already Exists!</info>')
-#         else:
-#             with open(seed_path, 'w') as f:
-#                 f.write(seeder)
-#             self.line('<info>Seeder Created Successfully!</info>')
-
         #==================== Add routes ====================
         content = None
         route_path = 'routes/web.py'
         with open(route_path, 'r') as f:
             content = f.read()
-        if "Admin Routes" in content:
+        if "ADMIN_ROUTES" in content:
             self.line('<info>Admin Routes Already Exists!</info>')
         else:
-            append_web_routes('admin/admin/web/admin_routes.py')
+            #append_web_routes('admin/admin/web/admin_routes.py')
+            lines = [
+                "",
+                "from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, MODEL_ROUTES",
+                "",
+                "ROUTES += [",
+                "    RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',)),",
+                "    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',)), #middleware not working",
+                "    RouteGroup(ADMIN_ROUTES, prefix='/admin'),",
+                "]"
+            ]
+            with open(route_path, 'a') as f:
+                f.write('\n'.join(lines))
             self.line('<info>Admin Routes Appended Successfully!</info>')
 
         #==================== Last message ====================
@@ -144,5 +98,4 @@ class Install(Command):
         self.line('    <comment>'+auth_path+'</comment>')
         self.line('    <comment>'+admin_user_model_path+'</comment>')
         self.line('    <comment>'+login_token_model_path+'</comment>')
-        #self.line('    <comment>'+seed_path+'</comment>')
         self.line('    <comment>'+route_path+'</comment>')

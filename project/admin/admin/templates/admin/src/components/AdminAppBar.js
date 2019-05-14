@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../common/store'
+import { withRouter } from 'react-router-dom'
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {NavLink} from 'react-router-dom';
+import Util from '../common/util';
 
 class AdminAppBar extends React.Component {
 
@@ -18,6 +20,19 @@ class AdminAppBar extends React.Component {
     store.set('drawerOpen')(newIsOpen);
     const newWidth = store.get('drawerWidth') === 240? 0: 240;
     store.set('drawerWidth')(newWidth);
+  }
+
+  logout=()=>{
+    Util.logoutApi()
+    .then(response=>{
+      window.localStorage.removeItem('login_id');
+      window.localStorage.removeItem('login_token');
+      window.localStorage.removeItem('login_name');
+      this.props.history.push('/admin/login')
+    })
+    .catch(err=>{
+      console.error(err);
+    })
   }
 
   render(){
@@ -34,9 +49,10 @@ class AdminAppBar extends React.Component {
                 Masonite Admin
               </NavLink>
             </Typography>
-            <NavLink to='/admin/login' className={classes.link}>
-              <Button color="inherit">Log Out</Button>
-            </NavLink>
+            <Typography variant="h6" color="inherit">
+              Administrator: {window.localStorage.getItem('login_name')}
+            </Typography>
+            <Button color="inherit" onClick={this.logout}>Log Out</Button>
           </Toolbar>
         </AppBar>
       </div>
@@ -63,4 +79,4 @@ const styles = {
   }
 };
 
-export default withStyles(styles)(withStore(AdminAppBar));
+export default withStyles(styles)(withRouter(withStore(AdminAppBar)));

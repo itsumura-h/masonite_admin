@@ -12,6 +12,8 @@ import pkg_resources
 from collections import OrderedDict
 import inflection
 import inspect
+from datetime import datetime
+from dateutil import tz
 
 class AdminController:
     def root(self):
@@ -29,6 +31,7 @@ class AdminController:
             'APP_NAME': request.environ['APP_NAME'],
             'Uname': request.environ['HTTP_USER_AGENT'],
             'Server': request.environ['SERVER_SOFTWARE'],
+            'Timezone': datetime.now(tz.tzlocal()).tzname(),
             'Locale': request.environ['LANGUAGE'],
             'Env': request.environ['APP_ENV']
         }
@@ -95,7 +98,6 @@ class AdminController:
         table_name = inflection.tableize(model_name)
         row = self.get_model_row_by_model_name(model_name)
 
-        #pprint.pprint(inspect.getmembers(row['model']))
         model_i = row['model']()
         table = model_i.get_table()
 

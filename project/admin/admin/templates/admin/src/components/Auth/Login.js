@@ -23,11 +23,6 @@ class Login extends React.Component {
     isOpenSnackbar: false,
   }
 
-  componentDidMount(){
-    window.localStorage.removeItem('login_id');
-    window.localStorage.removeItem('login_token');
-  }
-
   setParam=(event)=>{
     let new_params = this.state.params;
     const key = event.currentTarget.name;
@@ -42,6 +37,7 @@ class Login extends React.Component {
       if(response.data.login === true){
         window.localStorage.setItem('login_id', response.data.id);
         window.localStorage.setItem('login_token', response.data.token);
+        window.localStorage.setItem('login_name', response.data.name);
         this.props.history.push('/admin');
       }else{
         this.changeOpenSnackbar();

@@ -46,6 +46,29 @@ export default class Util extends React.Component{
       })
   }
 
+  static deleteAPI=(url)=>{
+    url = CONST.APIHOST + url;
+    let params = {}
+    params['login_id'] = window.localStorage.getItem('login_id')
+    params['login_token'] = window.localStorage.getItem('login_token')
+
+    const newParams = new URLSearchParams();
+    for(let key in params){
+      const param = params[key];
+      newParams.append(key, param);
+    }
+
+    return axios.post(url, newParams)
+      .then(response=>{
+        return response;
+      })
+      .catch(err=>{
+        this.loginFale(err);
+        console.error(err);
+        return [];
+      })
+  }
+
   static loginApi=(url, params)=>{
     url = CONST.APIHOST + url;
 
@@ -65,24 +88,17 @@ export default class Util extends React.Component{
       })
   }
 
-  static deleteAPI=(url)=>{
-    url = CONST.APIHOST + url;
-    let params = {}
-    params['login_id'] = window.localStorage.getItem('login_id')
-    params['login_token'] = window.localStorage.getItem('login_token')
+  static logoutApi=()=>{
+    const url = CONST.APIHOST + '/admin/api/logout';
 
-    const newParams = new URLSearchParams();
-    for(let key in params){
-      const param = params[key];
-      newParams.append(key, param);
-    }
+    const params = new URLSearchParams();
+    params.append('login_id', window.localStorage.getItem('login_id'));
 
-    return axios.post(url, newParams)
+    return axios.post(url, params)
       .then(response=>{
         return response;
       })
       .catch(err=>{
-        this.loginFale(err);
         console.error(err);
         return [];
       })

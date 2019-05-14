@@ -10,8 +10,7 @@ from config.storage import STATICFILES
 
 STATICFILES['admin/admin/templates/admin/build/static'] = 'static/'
 
-ADMIN_ROUTES_WITH_MIDDLEWARE = []
-ADMIN_ROUTES_WITH_MIDDLEWARE += [
+ADMIN_ROUTES_WITH_MIDDLEWARE = [
     Get().route('/api/info',AdminController.info),
     Get().route('/api/schema/@model',AdminController.schema),
     Get().route('/api/schema/@model/create',AdminController.create),
@@ -29,16 +28,30 @@ for model in MODELS:
 
     MODEL_ROUTES.append(AdminResource(model['model'], **args).routes())
 
-ADMIN_ROUTES = []
-ADMIN_ROUTES += [
+ADMIN_ROUTES = [
     Post().route('/api/login', LoginController.store),
+    Post().route('/api/logout', LoginController.destroy),
     Get().route('/', AdminController.root),
-    Get().route('/auth/login', AdminController.root),
+    Get().route('/login', AdminController.root),
     Get().route('/@model', AdminController.root),
     Get().route('/@model/@id/edit', AdminController.root),
+    Get().route('/@model/@id/create', AdminController.root),
     Get().route('/@model/@id', AdminController.root),
 ]
 
 # ROUTES += [
 #     RouteGroup(ADMIN_ROUTES, prefix='/admin')
 # ]
+
+
+"""
+
+from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, MODEL_ROUTES
+
+ROUTES += [
+    RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',)),
+    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',)), #middleware not working
+    RouteGroup(ADMIN_ROUTES, prefix='/admin'),
+]
+
+"""
