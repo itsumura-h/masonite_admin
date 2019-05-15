@@ -50,7 +50,7 @@ class AdminAppBar extends React.Component {
               </NavLink>
             </Typography>
             <Typography variant="h6" color="inherit">
-              Administrator: {window.localStorage.getItem('login_name')}
+              Welcome! <span className={classes.loginName}>{window.localStorage.getItem('login_name')}</span> /
             </Typography>
             <Button color="inherit" onClick={this.logout}>Log Out</Button>
           </Toolbar>
@@ -66,6 +66,9 @@ const styles = {
   },
   grow: {
     flexGrow: 1,
+  },
+  loginName: {
+    color: 'yellow',
   },
   menuButton: {
     marginLeft: -12,

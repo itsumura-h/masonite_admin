@@ -106,6 +106,9 @@ export default class Util extends React.Component{
 
   static loginFale=(error)=>{
     if(error.response.status === 403){
+      window.localStorage.removeItem('login_id');
+      window.localStorage.removeItem('login_token');
+      window.localStorage.removeItem('login_name');
       window.location.href = '/admin/login';
     }
   }

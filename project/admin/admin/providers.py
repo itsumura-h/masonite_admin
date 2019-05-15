@@ -2,7 +2,6 @@
 
 import os
 from masonite.provider import ServiceProvider
-from .commands.TestCommand import Test
 from .commands.CreateSuperUserCommand import CreateSuperUser
 from .commands.InstallCommand import Install
 from databases.seeds.database_seeder import DatabaseSeeder
@@ -18,7 +17,6 @@ class AdminProvider(ServiceProvider):
     def register(self):
         """Register objects into the Service Container
         """
-        self.app.bind('AdminCommand', Test())
         self.app.bind('CreateSuperUserCommand', CreateSuperUser())
         self.app.bind('InstallCommand', Install())
         self.app.bind(

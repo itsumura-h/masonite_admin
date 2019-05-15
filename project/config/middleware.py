@@ -36,9 +36,12 @@ Specify a dictionary of middleware to be used on a per route basis here. The key
 be the alias to use on routes and the value can be any middleware class or a list
 of middleware (middleware stacks).
 """
-from admin.web.admin_middleware import AdminMiddleware
+
 ROUTE_MIDDLEWARE = {
     'auth': AuthenticationMiddleware,
     'verified': VerifyEmailMiddleware,
-    'admin': AdminMiddleware,
 }
+
+from admin.web.admin_middleware import AdminMiddleware
+
+ROUTE_MIDDLEWARE['admin'] = AdminMiddleware

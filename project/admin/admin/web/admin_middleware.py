@@ -1,6 +1,5 @@
 from masonite.request import Request
 from masonite.response import Response
-from app.models.AdminUser import AdminUser
 from app.models.LoginToken import LoginToken
 
 class AdminMiddleware:
@@ -16,7 +15,6 @@ class AdminMiddleware:
             admin_user_id = self.request.input('login_id')
             input_token = self.request.input('login_token')
 
-            #admin_user = AdminUser.where('email', email).first()
             db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
             if db_token == None or input_token != db_token:
                 return self.response.json(None, status=403)
