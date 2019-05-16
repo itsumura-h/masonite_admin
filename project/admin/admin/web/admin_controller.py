@@ -2,7 +2,6 @@ from masonite.controllers import Controller
 from masonite.request import Request
 from config.database import DB, Model
 
-import pprint
 from masonite import env
 import sqlite3
 from api.resources import Resource
@@ -14,6 +13,13 @@ import inflection
 import inspect
 from datetime import datetime
 from dateutil import tz
+
+if env('DB_CONNECTION') == 'mysql':
+    import pymysql
+    # pip install mysql-connector-python-rf
+    from .mysql_field_list import FIELD_TYPE
+
+from pprint import pprint
 
 class AdminController:
     def root(self):
@@ -32,7 +38,6 @@ class AdminController:
             'Uname': request.environ['HTTP_USER_AGENT'],
             'Server': request.environ['SERVER_SOFTWARE'],
             'Timezone': datetime.now(tz.tzlocal()).tzname(),
-            'Locale': request.environ['LANGUAGE'],
             'Env': request.environ['APP_ENV']
         }
 
@@ -113,7 +118,42 @@ class AdminController:
             cursor.execute(f"PRAGMA foreign_key_list('{table_name}')")
             foreign_list = cursor.fetchall()
 
-        # foreign key
+        elif env('DB_CONNECTION') == 'mysql':
+            conn = pymysql.connect(host=env('DB_HOST'),
+                    user=env('DB_USERNAME'),
+                    password=env('DB_PASSWORD'),
+                    db=env('DB_DATABASE'),
+                    charset='utf8mb4',
+                    cursorclass=pymysql.cursors.DictCursor)
+
+            with conn.cursor() as cursor:
+                sql = f"SELECT * FROM {table_name} LIMIT 1"
+                cursor.execute(sql)
+                schema = cursor.description
+                schema = list(schema)
+                i = 0
+                for row in schema:
+                    row = list(row)
+                    for k, v in FIELD_TYPE.items():
+                        if str(row[1]) == k:
+                            row[1] = v
+                    schema[i] = row
+                    i += 1
+
+            foreign_list = []
+            with conn.cursor() as cursor:
+                sql = f"SHOW CREATE TABLE {table_name}"
+                cursor.execute(sql)
+                filedata = cursor.fetchone()['Create Table']
+                filedata_arr = filedata.splitlines()
+                row_in_foreign_list = [0,0,'table','key']
+                for data in filedata_arr:
+                    if 'FOREIGN KEY' in data:
+                        row = data.split('`')
+                        row_in_foreign_list[3] = row[3]
+                        row_in_foreign_list[2] = row[5]
+                        foreign_list += [row_in_foreign_list]
+
         foreign = {}
         for row in foreign_list:
             data = self.foreign_data(self, row[2])
@@ -124,6 +164,7 @@ class AdminController:
     @staticmethod
     def foreign_data(self, table_name):
         row = self.get_model_row_by_table_name(table_name)
+        print(row)
         try:
             return DB.table(table_name).select('id', row['foreign_display']+' as data').get().serialize()
         except:

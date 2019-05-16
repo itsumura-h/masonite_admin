@@ -14,9 +14,9 @@ class CreateSuperUser(Command):
     def handle(self):
 
         name = None
-        default_name = os.environ.get("USER")
+        default_name = 'Anonymous' if os.environ.get("USER") == None else os.environ.get("USER")
         while name == None:
-            name = input('Username (leave blank to use '+ os.environ.get("USER") +'):')
+            name = input('Username (leave blank to use '+ default_name +'):')
             if name == '':
                 name = default_name
         self.line('<comment>'+name+'</comment>')

@@ -6,7 +6,6 @@ from masonite.providers import (AppProvider, BroadcastProvider, CacheProvider,
                                 SessionProvider, StatusCodeProvider,
                                 UploadProvider, ViewProvider,
                                 WhitenoiseProvider)
-from admin.providers import AdminProvider
 
 """Providers List
 Providers are a simple way to remove or add functionality for Masonite
@@ -36,8 +35,10 @@ PROVIDERS = [
     HelpersProvider,
 
     # Third Party Providers
-    AdminProvider,
 
     # Application Providers
 
 ]
+
+from admin.providers import AdminProvider
+PROVIDERS += [AdminProvider]

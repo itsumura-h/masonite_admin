@@ -1,0 +1,10 @@
+MANIFEST.in
+setup.py
+admin/__init__.py
+admin/integration.py
+admin/providers.py
+admin.egg-info/PKG-INFO
+admin.egg-info/SOURCES.txt
+admin.egg-info/dependency_links.txt
+admin.egg-info/requires.txt
+admin.egg-info/top_level.txt
