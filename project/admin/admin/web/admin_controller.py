@@ -16,10 +16,7 @@ from dateutil import tz
 
 if env('DB_CONNECTION') == 'mysql':
     import pymysql
-    # pip install mysql-connector-python-rf
     from .mysql_field_list import FIELD_TYPE
-
-from pprint import pprint
 
 class AdminController:
     def root(self):
@@ -127,9 +124,12 @@ class AdminController:
                     cursorclass=pymysql.cursors.DictCursor)
 
             with conn.cursor() as cursor:
-                sql = f"SELECT * FROM {table_name} LIMIT 1"
-                cursor.execute(sql)
+                # sql = f"SELECT * FROM {table_name} LIMIT 1"
+                # cursor.execute(sql)
+                sql = "SELECT * FROM %s LIMIT 1"
+                cursor.execute(sql, (table_name,))
                 schema = cursor.description
+                print(schema)
                 schema = list(schema)
                 i = 0
                 for row in schema:
@@ -164,7 +164,6 @@ class AdminController:
     @staticmethod
     def foreign_data(self, table_name):
         row = self.get_model_row_by_table_name(table_name)
-        print(row)
         try:
             return DB.table(table_name).select('id', row['foreign_display']+' as data').get().serialize()
         except:
