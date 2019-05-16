@@ -48,6 +48,7 @@ When foreign_display is not set, primary key will display.
 
 from app.User import User
 from app.models.Post import Post
+from app.models.Sample import Sample
 MODELS = [
     {
         'model': User,
@@ -61,5 +62,8 @@ MODELS = [
         'create_display': ['title', 'posts', 'user_id'],
         'list_display': ['title', 'posts'],
         'detail_display': ['title', 'posts', 'user_id']
+    },
+    {
+        'model': Sample,
     }
 ]

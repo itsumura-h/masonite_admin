@@ -9,7 +9,6 @@ class CreateSamplesTable(Migration):
         """
         with self.schema.create('samples') as table:
             table.increments('id')
-            table.big_increments('big_increments')
             table.big_integer('big_integer')
             table.binary('binary')
             table.boolean('boolean')
