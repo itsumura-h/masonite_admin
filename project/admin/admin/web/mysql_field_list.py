@@ -1,3 +1,4 @@
+"""
 FIELD_TYPE = {
     '0': 'DECIMAL',
     '1': 'TINY',
@@ -31,5 +32,29 @@ FIELD_TYPE = {
     #CHAR = TINY ',
     #INTERVAL = ENUM ',
 }
-
+"""
 # https://github.com/PyMySQL/PyMySQL/blob/master/pymysql/constants/FIELD_TYPE.py
+
+
+
+FIELD_TYPE = {
+    '1': 'TINYINT',
+    '2': 'INTEGER',
+    '3': 'INTEGER',
+    '5': 'FLOAT',
+    '7': 'TIMESTAMP',
+    '8': 'INTEGER',
+    '9': 'INTEGER',
+    '10': 'DATE',
+    '11': 'TIME',
+    '12': 'DATETIME',
+    '245': 'TEXT',
+    '246': 'NUMERIC',
+    '252': 'TEXT',
+    '253': 'VARCHAR',
+    '254': 'STRING',
+    '255': 'GEOMETRY',
+
+    #CHAR = TINY ',
+    #INTERVAL = ENUM ',
+}

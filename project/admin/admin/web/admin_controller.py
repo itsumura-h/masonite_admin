@@ -13,6 +13,7 @@ import inflection
 import inspect
 from datetime import datetime
 from dateutil import tz
+from pprint import pprint
 
 if env('DB_CONNECTION') == 'mysql':
     import pymysql
@@ -124,21 +125,21 @@ class AdminController:
                     cursorclass=pymysql.cursors.DictCursor)
 
             with conn.cursor() as cursor:
-                # sql = f"SELECT * FROM {table_name} LIMIT 1"
-                # cursor.execute(sql)
-                sql = "SELECT * FROM %s LIMIT 1"
-                cursor.execute(sql, (table_name,))
+                #sql = f"SELECT * FROM {table_name} LIMIT 1"
+                #cursor.execute(sql)
+                sql = 'SELECT * FROM {} LIMIT 1'.format(table_name)
+                cursor.execute(sql)
                 schema = cursor.description
-                print(schema)
                 schema = list(schema)
-                i = 0
-                for row in schema:
+
+                for i, row in enumerate(schema):
                     row = list(row)
+                    row.insert(0, i)
                     for k, v in FIELD_TYPE.items():
-                        if str(row[1]) == k:
-                            row[1] = v
+                        if str(row[2]) == k:
+                            row[2] = v
+                    del row[3:8]
                     schema[i] = row
-                    i += 1
 
             foreign_list = []
             with conn.cursor() as cursor:

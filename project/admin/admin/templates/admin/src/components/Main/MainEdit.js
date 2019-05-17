@@ -94,11 +94,14 @@ class MainEdit extends React.PureComponent{
 
   setPramDateTime=(key, value)=>{
     let new_params = this.state.showData;
-    try{
-      new_params[key] = value.toISOString();
-    }catch(err){
-      new_params[key] = value;
-    }
+    new_params[key] = value.toISOString();
+    this.setState({showData: new_params});
+    this.forceUpdate();
+  }
+
+  setParamTimeStamp=(key, value)=>{
+    let new_params = this.state.showData;
+    new_params[key] = value.getTime();
     this.setState({showData: new_params});
     this.forceUpdate();
   }
@@ -161,6 +164,47 @@ class MainEdit extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
+      }else if(this.state.schema[i][2] === 'DATETIME'){
+        //datetime型の時
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DateTimePicker
+                    ampm={false}
+                    format="yyyy-MM-dd HH:mm:ss"
+                    value={show}
+                    onChange={this.setPramDateTime.bind(this, key)}
+                    name={key}
+                    label="24h clock"
+                  />
+                </MuiPickersUtilsProvider>
+              </TableCell>
+          </TableRow>
+        );
+      }else if(this.state.schema[i][2] === 'TIMESTAMP'){
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DateTimePicker
+                    ampm={false}
+                    format="yyyy-MM-dd HH:mm:ss"
+                    onChange={this.setParamTimeStamp.bind(this, key)}
+                    name={key}
+                    label="24h clock"
+                    value={show}
+                  />
+                </MuiPickersUtilsProvider>
+              </TableCell>
+          </TableRow>
+        );
       }else if(keys.includes(key)){
         //外部キーの問
         const options = []
@@ -195,28 +239,6 @@ class MainEdit extends React.PureComponent{
                 </Select>
               </FormControl>
             </TableCell>
-          </TableRow>
-        );
-      }else if(this.state.schema[i][2] === 'DATETIME'){
-        //datetime型の時
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-              <TableCell>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DateTimePicker
-                    autoOk
-                    ampm={false}
-                    format="yyyy-MM-dd HH:mm:ss"
-                    value={show}
-                    onChange={this.setPramDateTime.bind(this, key)}
-                    name={key}
-                    label="24h clock"
-                  />
-                </MuiPickersUtilsProvider>
-              </TableCell>
           </TableRow>
         );
       }else{

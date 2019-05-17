@@ -65,5 +65,6 @@ MODELS = [
     },
     {
         'model': Sample,
+        #'create_display': ['big_integer', 'binary', 'boolean'],
     }
 ]

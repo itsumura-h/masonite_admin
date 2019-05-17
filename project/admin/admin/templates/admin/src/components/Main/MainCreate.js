@@ -32,6 +32,7 @@ class MainCreate extends React.Component {
     schema: [],
     foreignKeys: [],
     params: [],
+    error: ''
   }
 
   getSchema=(model)=>{
@@ -57,12 +58,11 @@ class MainCreate extends React.Component {
     for(let i in schema){
       const row = schema[i];
       if(keys.includes(row[1])){
-        new_params[row[1]] = foreignKeys[row[1]][0].id;
+        new_params[row[1]] = foreignKeys[row[1]][0]? foreignKeys[row[1]][0].id: null;
       }else{
-        new_params[row[1]] = '';
+        new_params[row[1]] = null;
       }
     }
-    console.log(new_params);
     this.setState({params: new_params});
   }
 
@@ -70,16 +70,20 @@ class MainCreate extends React.Component {
     let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
+    console.log(event.currentTarget.value);
     this.setState({params: new_params});
   }
 
   setPramDateTime=(key, value)=>{
     let new_params = this.state.params;
-    try{
-      new_params[key] = value.toISOString();
-    }catch(err){
-      new_params[key] = value;
-    }
+    new_params[key] = value.toISOString();
+    this.setState({params: new_params});
+    this.forceUpdate();
+  }
+
+  setParamTimeStamp=(key, value)=>{
+    let new_params = this.state.params;
+    new_params[key] = value.getTime();
     this.setState({params: new_params});
     this.forceUpdate();
   }
@@ -91,7 +95,11 @@ class MainCreate extends React.Component {
 
     Util.postAPI(url, this.state.params)
     .then(response=>{
-      this.props.history.push('./');
+      if(!response.data.error){
+        this.props.history.push('./');
+      }else{
+        this.setState({error: response.data.error});
+      }
     })
     .catch(err=>{
       console.error(err);
@@ -127,15 +135,54 @@ class MainCreate extends React.Component {
               <TableCell>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                   <DateTimePicker
-                    autoOk
                     ampm={false}
                     format="yyyy-MM-dd HH:mm:ss"
                     onChange={this.setPramDateTime.bind(this, key)}
                     name={key}
                     label="24h clock"
+                    value={this.state.params[key]? this.state.params[key]: null}
                   />
                 </MuiPickersUtilsProvider>
               </TableCell>
+          </TableRow>
+        );
+      }else if(column[2] === 'TIMESTAMP'){
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DateTimePicker
+                    ampm={false}
+                    format="yyyy-MM-dd HH:mm:ss"
+                    onChange={this.setParamTimeStamp.bind(this, key)}
+                    name={key}
+                    label="24h clock"
+                    value={this.state.params[key]? this.state.params[key]: null}
+                  />
+                </MuiPickersUtilsProvider>
+              </TableCell>
+          </TableRow>
+        );
+      }else if(column[2] === 'INTEGER'){
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              <TextField
+                onChange={this.setParam}
+                name={key}
+                type="number"
+                className={classes.textarea + ' params'}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </TableCell>
           </TableRow>
         );
       }else if(keys.includes(key)){
@@ -192,6 +239,7 @@ class MainCreate extends React.Component {
     return(
       <div>
         <h1>{model}</h1>
+        <p className={classes.error}>{this.state.error}</p>
         <Card>
           <CardContent>
             <div className={classes.flex}>
@@ -228,6 +276,9 @@ class MainCreate extends React.Component {
 const styles = {
   scroll: {
     overflow: 'auto'
+  },
+  error: {
+    backgroundColor: 'yellow'
   },
   textarea: {
     width: '90%'
