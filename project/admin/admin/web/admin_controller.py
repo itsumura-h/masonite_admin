@@ -111,7 +111,11 @@ class AdminController:
             cursor = db.cursor()
 
             cursor.execute(f"PRAGMA table_info('{table_name}')")
-            schema = cursor.fetchall()
+            schema = list(cursor.fetchall())
+            for i, row in enumerate(schema):
+                row = list(row)
+                del row[3:6]
+                schema[i] = row
 
             cursor.execute(f"PRAGMA foreign_key_list('{table_name}')")
             foreign_list = cursor.fetchall()
@@ -125,9 +129,7 @@ class AdminController:
                     cursorclass=pymysql.cursors.DictCursor)
 
             with conn.cursor() as cursor:
-                #sql = f"SELECT * FROM {table_name} LIMIT 1"
-                #cursor.execute(sql)
-                sql = 'SELECT * FROM {} LIMIT 1'.format(table_name)
+                sql = f'SELECT * FROM {table_name} LIMIT 1'
                 cursor.execute(sql)
                 schema = cursor.description
                 schema = list(schema)
@@ -143,7 +145,7 @@ class AdminController:
 
             foreign_list = []
             with conn.cursor() as cursor:
-                sql = f"SHOW CREATE TABLE {table_name}"
+                sql = f'SHOW CREATE TABLE {table_name}'
                 cursor.execute(sql)
                 filedata = cursor.fetchone()['Create Table']
                 filedata_arr = filedata.splitlines()
