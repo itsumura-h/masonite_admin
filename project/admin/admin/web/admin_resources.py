@@ -12,7 +12,7 @@ from app.models.AdminUser import AdminUser
 from app.models.LoginToken import LoginToken
 
 import json
-from datetime import datetime, date, time
+from datetime import datetime, timedelta
 from inspect import getmembers
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
@@ -206,13 +206,19 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         _offset = items * (page - 1)
 
         if self.list_display:
+            new_results = []
             results = self.model.select('id', *self.list_display).offset(_offset).limit(items).get()
-            results = self.arr_iso_format(self, results)
+            for result in results._items:
+                new_results += [result._original]
+            results = self.arr_iso_format(new_results)
             return results
             #return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
+            new_results = []
             results = self.model.offset(_offset).limit(items).get()
-            results = self.arr_iso_format(self, results)
+            for result in results._items:
+                new_results += [result._original]
+            results = self.arr_iso_format(new_results)
             return results
 
         # if self.list_display:
@@ -264,12 +270,14 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
         return {'error': 'Record does not exist'}
 
-    @staticmethod
     def arr_iso_format(self, obj_):
+        print(type(obj_))
         if isinstance(obj_, datetime):
-            return obj_.iso_format()
+            return obj_.isoformat()
+        if isinstance(obj_, timedelta):
+            return str(obj_)
         if isinstance(obj_, list):
-            return [arr_iso_format(o) for o in obj_]
+            return [self.arr_iso_format(o) for o in obj_]
         if isinstance(obj_, dict):
-            return {key: arr_iso_format(value) for key, value in obj_.items() }
+            return {key: self.arr_iso_format(value) for key, value in obj_.items() }
         return obj_

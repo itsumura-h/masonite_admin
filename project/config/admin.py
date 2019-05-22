@@ -66,7 +66,7 @@ MODELS = [
     },
     {
         'model': Sample,
-        'create_display': ['date', 'datetime', 'time', 'timestamp', 'user_id', 'post_id'],
+        # 'create_display': ['date', 'datetime', 'time', 'timestamp', 'user_id', 'post_id'],
         #'list_display': ['created_at', 'timestamp'],
     }
 ]
