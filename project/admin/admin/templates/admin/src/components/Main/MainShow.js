@@ -127,8 +127,8 @@ class MainShow extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i][2] === 'DATETIME'){
-        //datetime型の時
+      }else if(this.state.schema[i] && this.state.schema[i][2] === 'DATETIME'){
+        //datetime
         html_row.push(
           <TableRow key={key}>
             <TableCell>
@@ -137,6 +137,27 @@ class MainShow extends React.PureComponent{
               <TableCell>
                 <TextField
                   value={new Date(show).toString()}
+                  data-id={key}
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  multiline
+                  className={classes.textarea}
+                />
+              </TableCell>
+          </TableRow>
+        );
+      }else if(this.state.schema[i] && this.state.schema[i][2] === 'TIME'){
+        //time
+
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <TextField
+                  value={new Date(show).toTimeString().split(' ')[0]}
                   data-id={key}
                   InputProps={{
                     readOnly: true,

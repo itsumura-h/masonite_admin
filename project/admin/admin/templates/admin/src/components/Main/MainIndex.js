@@ -39,7 +39,9 @@ class MainIndex extends React.PureComponent {
     const params = {p: page+1, i: this.props.store.state.rowsPerPage};
     Util.getAPI('/admin/api/'+model, params)
     .then(response=>{
-      self.setState({indexData: response.data});
+      self.setState({
+        indexData: response.data
+      });
     });
   }
 

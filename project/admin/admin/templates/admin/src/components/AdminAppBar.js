@@ -50,7 +50,7 @@ class AdminAppBar extends React.Component {
               </NavLink>
             </Typography>
             <Typography variant="h6" color="inherit">
-              Welcome! <span className={classes.loginName}>{window.localStorage.getItem('login_name')}</span> /
+              Welcome! <span className={classes.loginName}>{window.localStorage.getItem('login_name')}</span>
             </Typography>
             <Button color="inherit" onClick={this.logout} className={classes.logoutButton} >Log Out</Button>
           </Toolbar>
@@ -86,6 +86,7 @@ const styles = {
     '&:hover': {
       backgroundColor: '#DDDDDD',
     },
+    marginLeft: '10px',
   }
 };
 

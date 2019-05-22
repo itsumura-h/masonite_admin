@@ -41,8 +41,8 @@ foreign_display (str): optional
 
 ---
 
-When optional setting is not set, all columns will display.
-When foreign_display is not set, primary key will display.
+If optional setting is not set, all columns will be displayed.
+If foreign_display is not set, primary key will be displayed as a number.
 
 """
 
@@ -52,21 +52,22 @@ from app.models.Sample import Sample
 MODELS = [
     {
         'model': User,
-        'create_display': ['name', 'email'],
-        'list_display': ['name', 'email'],
-        'detail_display': ['name', 'email'],
+        # 'create_display': ['name', 'email'],
+        # 'list_display': ['name', 'email'],
+        # 'detail_display': ['name', 'email'],
         'foreign_display': 'name',
     },
     {
         'model': Post,
-        'create_display': ['title', 'posts', 'user_id'],
+        # 'create_display': ['title', 'posts', 'user_id'],
         #'list_display': ['title', 'posts'],
         #'detail_display': ['title', 'posts', 'user_id'],
         'foreign_display': 'title',
     },
     {
         'model': Sample,
+        #'detail_display': ['date', 'datetime', 'time', 'timestamp'],
         # 'create_display': ['date', 'datetime', 'time', 'timestamp', 'user_id', 'post_id'],
-        #'list_display': ['created_at', 'timestamp'],
+        #'list_display': ['timestamp', 'created_at'],
     }
 ]

@@ -12,7 +12,7 @@ from app.models.AdminUser import AdminUser
 from app.models.LoginToken import LoginToken
 
 import json
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from inspect import getmembers
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
@@ -206,20 +206,14 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         _offset = items * (page - 1)
 
         if self.list_display:
-            new_results = []
             results = self.model.select('id', *self.list_display).offset(_offset).limit(items).get()
-            for result in results._items:
-                new_results += [result._original]
-            results = self.arr_iso_format(new_results)
-            return results
+            new_results = [result._original for result in results._items]
+            return self.arr_iso_format(new_results)
             #return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
-            new_results = []
             results = self.model.offset(_offset).limit(items).get()
-            for result in results._items:
-                new_results += [result._original]
-            results = self.arr_iso_format(new_results)
-            return results
+            new_results = [result._original for result in results._items]
+            return self.arr_iso_format(new_results)
 
         # if self.list_display:
         #     return self.model.select('id', *self.list_display).get()
@@ -239,11 +233,17 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             return response.json(None, status=403)
 
         if self.detail_display and env('DB_CONNECTION') == 'mysql':
-            return self.model.select(*self.detail_display).find(request.param('id'))
+            result = self.model.select(*self.detail_display).find(request.param('id'))
+            new_result = {i: v for i, v in result._original.items()}
+            return self.arr_iso_format(new_result)
         elif self.detail_display:
-            return self.model.select('id,' *self.detail_display).find(request.param('id'))
+            result = self.model.select('id,' *self.detail_display).find(request.param('id'))
+            new_result = {i: v for i, v in result._original.items()}
+            return self.arr_iso_format(new_result)
         else:
-            return self.model.find(request.param('id'))
+            result = self.model.find(request.param('id'))
+            new_result = {i: v for i, v in result._original.items()}
+            return self.arr_iso_format(new_result)
 
     def update(self, request: Request, response: Response):
         """Logic to update data from a given model
@@ -254,8 +254,11 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         record = self.model.where('id', request.param('id'))
         params = request.all()
         del params['login_id'], params['login_token']
-        record.update(params)
-        return self.model.where('id', request.param('id')).get().serialize()
+        try:
+            record.update(params)
+        except Exception as e:
+            return {'error': str(e)}
+        return {}#self.model.where('id', request.param('id')).get().serialize()
 
     def delete(self, request: Request, response: Response):
         """Logic to delete data from a given model
@@ -270,12 +273,15 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
         return {'error': 'Record does not exist'}
 
+
     def arr_iso_format(self, obj_):
-        print(type(obj_))
-        if isinstance(obj_, datetime):
+        #print(type(obj_))
+        if isinstance(obj_, datetime) or isinstance(obj_, date):
             return obj_.isoformat()
         if isinstance(obj_, timedelta):
-            return str(obj_)
+            print(obj_)
+            obj_arr = str(obj_).split(':')
+            return datetime(1970, 1, 2, int(obj_arr[0]), int(obj_arr[1]), int(obj_arr[2])).isoformat()
         if isinstance(obj_, list):
             return [self.arr_iso_format(o) for o in obj_]
         if isinstance(obj_, dict):

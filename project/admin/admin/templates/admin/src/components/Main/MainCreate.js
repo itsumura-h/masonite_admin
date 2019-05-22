@@ -71,17 +71,7 @@ class MainCreate extends React.Component {
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
     console.log(new_params);
-    console.log(event.currentTarget.value);
     this.setState({params: new_params});
-  }
-
-  setPramDateTime=(key, value)=>{
-    let new_params = this.state.params;
-    //new_params[key] = value.toISOString();
-    new_params[key] = value.toLocaleString();
-    console.log(new_params);
-    this.setState({params: new_params});
-    this.forceUpdate();
   }
 
   setPramDate=(key, value)=>{
@@ -92,9 +82,9 @@ class MainCreate extends React.Component {
     this.forceUpdate();
   }
 
-  setPramTime=(key, value)=>{
+  setPramDateTime=(key, value)=>{
     let new_params = this.state.params;
-    new_params[key] = Util.toTimeString();
+    new_params[key] = value.toLocaleString();
     console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
@@ -138,7 +128,9 @@ class MainCreate extends React.Component {
 
       const key = column[1];
 
-    if(keys.includes(key)){
+    if(key === 'id'){
+      ; //don't display
+    }else if(keys.includes(key)){
       //Foreign Key
       const options = []
       for(let i in this.state.foreignKeys[key]){
@@ -170,7 +162,7 @@ class MainCreate extends React.Component {
         </TableRow>
       );
     }else if(column[2] === 'DATE'){
-      // DateTime
+      // Date
       html_row.push(
         <TableRow key={key}>
           <TableCell>
@@ -211,7 +203,7 @@ class MainCreate extends React.Component {
           </TableRow>
         );
       }else if(column[2] === 'TIME'){
-        // DateTime
+        // Time
         html_row.push(
           <TableRow key={key}>
             <TableCell>

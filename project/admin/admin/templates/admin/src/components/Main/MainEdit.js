@@ -19,7 +19,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
 import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
+import { DateTimePicker, DatePicker, TimePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
 
 import List from '@material-ui/icons/List';
 import Save from '@material-ui/icons/Save';
@@ -31,10 +31,12 @@ import Util from '../../common/util';
 class MainEdit extends React.PureComponent{
   state = {
     schema: [],
+    showData: null,
     foreignKeys: [],
-    showData: [],
+    inputDataData: [],
     params: [],
     isOpenDelete: false,
+    error: '',
   }
 
   getSchema=(model)=>{
@@ -86,23 +88,26 @@ class MainEdit extends React.PureComponent{
 
   //============ Save ============
   setParam=(event)=>{
-    let new_params = this.state.showData;
+    let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
-    this.setState({showData: new_params});
+    console.log(new_params);
+    this.setState({params: new_params});
   }
 
-  setPramDateTime=(key, value)=>{
-    let new_params = this.state.showData;
-    new_params[key] = value.toISOString();
-    this.setState({showData: new_params});
+  setPramDate=(key, value)=>{
+    let new_params = this.state.params;
+    new_params[key] = Util.dateToString(value, 'YYYY-MM-DD');
+    console.log(new_params);
+    this.setState({params: new_params});
     this.forceUpdate();
   }
 
-  setParamTimeStamp=(key, value)=>{
-    let new_params = this.state.showData;
-    new_params[key] = value.getTime();
-    this.setState({showData: new_params});
+  setPramDateTime=(key, value)=>{
+    let new_params = this.state.params;
+    new_params[key] = value.toLocaleString();
+    console.log(new_params);
+    this.setState({params: new_params});
     this.forceUpdate();
   }
 
@@ -113,11 +118,16 @@ class MainEdit extends React.PureComponent{
     const id = event.currentTarget.dataset.id;
     const url = '/admin/api/'+model+'/'+id+'/patch';
 
-    Util.postAPI(url, this.state.showData)
+    Util.postAPI(url, this.state.params)
     .then(response=>{
-      this.props.history.push('../'+id);
+      if(!response.data.error){
+        this.props.history.push('../'+id);
+      }else{
+        this.setState({error: response.data.error});
+      }
     })
     .catch(err=>{
+      this.setState({error: err});
       console.error(err);
     })
   }
@@ -141,8 +151,11 @@ class MainEdit extends React.PureComponent{
     let html_row = [];
     const keys = Object.keys(this.state.foreignKeys);
     let i = 0;
+    //console.log(this.state.showData);
     for(let key in this.state.showData){
-      let show = this.state.showData[key]? this.state.showData[key]: '';
+      // console.log(key);
+      let inputData = this.state.showData[key]? this.state.showData[key]: '';
+      //console.table({'key': key, 'value': inputData, 'schema': this.state.schema[i][1]});
 
       if(key === 'id'){
         //IDの時
@@ -153,7 +166,7 @@ class MainEdit extends React.PureComponent{
             </TableCell>
             <TableCell>
               <TextField
-                defaultValue={show}
+                defaultValue={inputData}
                 name={key}
                 multiline
                 className={classes.textarea + ' params'}
@@ -168,14 +181,14 @@ class MainEdit extends React.PureComponent{
         //外部キーの問
         const options = []
         let selectedId;
-        for(let i in this.state.foreignKeys[key]){
-          const foreignData = this.state.foreignKeys[key][i];
+        for(let i2 in this.state.foreignKeys[key]){
+          const foreignData = this.state.foreignKeys[key][i2];
 
-          if(foreignData.id === show){
+          if(foreignData.id === inputData){
             selectedId = foreignData.id;
           }
           options.push(
-            <option key={i} value={foreignData.id}>{foreignData.data}</option>
+            <option key={i2} value={foreignData.id}>{foreignData.data}</option>
           );
         }
 
@@ -200,7 +213,27 @@ class MainEdit extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i][2] === 'DATETIME'){
+      }else if(this.state.schema[i] && this.state.schema[i][2] === 'DATE'){
+        // Date
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DatePicker
+                    format="yyyy-MM-dd"
+                    onChange={this.setPramDate.bind(this, key)}
+                    name={key}
+                    label="Date"
+                    value={this.state.params[key]? this.state.params[key]: inputData}
+                  />
+                </MuiPickersUtilsProvider>
+              </TableCell>
+          </TableRow>
+        );
+      }else if(this.state.schema[i] && this.state.schema[i][2] === 'DATETIME'){
         //datetime型の時
         html_row.push(
           <TableRow key={key}>
@@ -212,7 +245,7 @@ class MainEdit extends React.PureComponent{
                   <DateTimePicker
                     ampm={false}
                     format="yyyy-MM-dd HH:mm:ss"
-                    value={show}
+                    value={this.state.params[key]? this.state.params[key]: inputData}
                     onChange={this.setPramDateTime.bind(this, key)}
                     name={key}
                     label="24h clock"
@@ -221,7 +254,28 @@ class MainEdit extends React.PureComponent{
               </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i][2] === 'TIMESTAMP'){
+      }else if(this.state.schema[i] && this.state.schema[i][2] === 'TIME'){
+        // Time
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <TimePicker
+                    ampm={false}
+                    format="HH:mm:ss"
+                    onChange={this.setPramDateTime.bind(this, key)}
+                    name={key}
+                    label="24h clock"
+                    value={this.state.params[key]? this.state.params[key]: inputData}
+                  />
+                </MuiPickersUtilsProvider>
+              </TableCell>
+          </TableRow>
+        );
+      }else if(this.state.schema[i] && this.state.schema[i][2] === 'TIMESTAMP'){
         html_row.push(
           <TableRow key={key}>
             <TableCell>
@@ -232,10 +286,10 @@ class MainEdit extends React.PureComponent{
                   <DateTimePicker
                     ampm={false}
                     format="yyyy-MM-dd HH:mm:ss"
-                    onChange={this.setParamTimeStamp.bind(this, key)}
+                    onChange={this.setPramDateTime.bind(this, key)}
                     name={key}
                     label="24h clock"
-                    value={show}
+                    value={this.state.params[key]? this.state.params[key]: inputData}
                   />
                 </MuiPickersUtilsProvider>
               </TableCell>
@@ -250,7 +304,7 @@ class MainEdit extends React.PureComponent{
             </TableCell>
             <TableCell>
               <TextField
-                defaultValue={show}
+                defaultValue={this.state.params[key]? this.state.params[key]: inputData}
                 onChange={this.setParam}
                 name={key}
                 multiline
@@ -266,6 +320,7 @@ class MainEdit extends React.PureComponent{
     return(
       <div>
         <h1>{model}</h1>
+        <p className={classes.error}>{this.state.error}</p>
         <Card>
           <CardContent>
             <div className={classes.flex}>
@@ -311,6 +366,9 @@ class MainEdit extends React.PureComponent{
 const styles = {
   scroll: {
     overflow: 'auto'
+  },
+  error: {
+    backgroundColor: 'yellow'
   },
   textarea: {
     width: '90%'
