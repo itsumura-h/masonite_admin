@@ -60,11 +60,13 @@ MODELS = [
     {
         'model': Post,
         'create_display': ['title', 'posts', 'user_id'],
-        'list_display': ['title', 'posts'],
-        'detail_display': ['title', 'posts', 'user_id']
+        #'list_display': ['title', 'posts'],
+        #'detail_display': ['title', 'posts', 'user_id'],
+        'foreign_display': 'title',
     },
     {
         'model': Sample,
-        #'create_display': ['big_integer', 'binary', 'boolean'],
+        'create_display': ['date', 'datetime', 'time', 'timestamp', 'user_id', 'post_id'],
+        'list_display': ['created_at', 'timestamp'],
     }
 ]

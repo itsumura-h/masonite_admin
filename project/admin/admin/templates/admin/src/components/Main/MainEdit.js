@@ -164,6 +164,42 @@ class MainEdit extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
+      }else if(keys.includes(key)){
+        //外部キーの問
+        const options = []
+        let selectedId;
+        for(let i in this.state.foreignKeys[key]){
+          const foreignData = this.state.foreignKeys[key][i];
+
+          if(foreignData.id === show){
+            selectedId = foreignData.id;
+          }
+          options.push(
+            <option key={i} value={foreignData.id}>{foreignData.data}</option>
+          );
+        }
+
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+            <TableCell>
+              <FormControl fullWidth className={classes.formControl}>
+                <Select
+                  defaultValue={selectedId}
+                  onChange={this.setParam}
+                  name={key}
+                  className='params'
+                  autoWidth
+                  native
+                >
+                  {options}
+                </Select>
+              </FormControl>
+            </TableCell>
+          </TableRow>
+        );
       }else if(this.state.schema[i][2] === 'DATETIME'){
         //datetime型の時
         html_row.push(
@@ -203,42 +239,6 @@ class MainEdit extends React.PureComponent{
                   />
                 </MuiPickersUtilsProvider>
               </TableCell>
-          </TableRow>
-        );
-      }else if(keys.includes(key)){
-        //外部キーの問
-        const options = []
-        let selectedId;
-        for(let i in this.state.foreignKeys[key]){
-          const foreignData = this.state.foreignKeys[key][i];
-
-          if(foreignData.id === show){
-            selectedId = foreignData.id;
-          }
-          options.push(
-            <option key={i} value={foreignData.id}>{foreignData.data}</option>
-          );
-        }
-
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              <FormControl fullWidth className={classes.formControl}>
-                <Select
-                  defaultValue={selectedId}
-                  onChange={this.setParam}
-                  name={key}
-                  className='params'
-                  autoWidth
-                  native
-                >
-                  {options}
-                </Select>
-              </FormControl>
-            </TableCell>
           </TableRow>
         );
       }else{

@@ -7,8 +7,13 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             RateLimitReached)
 from .admin_controller import AdminController
 import bcrypt
+from .admin_middleware import AdminMiddleware
 from app.models.AdminUser import AdminUser
 from app.models.LoginToken import LoginToken
+
+import json
+from datetime import datetime, date, time
+from inspect import getmembers
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'count', 'show', 'update', 'delete']
@@ -158,20 +163,27 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def create(self, request: Request, response: Response):
         """Logic to create data from a given model
         """
-        if self.admin_middleware(request) == False:
+        if AdminMiddleware.checkpw_resource(self) == False:
             return response.json(None, status=403)
 
         try:
-            new_model = self.model()
-
             params = request.all()
             del params['login_id'], params['login_token']
             config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
+            new_model = self.model()
+            #new_model = config_model['model']()
 
+            print(params)
             for key, value in params.items():
-                setattr(new_model, key, value)
+                print(key)
+                print(type(value))
+                try:
+                    setattr(new_model, key, value)
+                except Exception as e:
+                    print(e)
 
-            new_model.save()
+            r = new_model.save()
+            print(r)
         except Exception as e:
             return {'error': str(e)}
         return new_model
@@ -185,17 +197,26 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def index(self, request: Request, response: Response):
         """Logic to read data from several models
         """
-        if self.admin_middleware(request) == False:
+        if AdminMiddleware.checkpw_resource(self) == False:
             return response.json(None, status=403)
 
         # pagenagion
-        items = request.input('i') if request.input('i') else 100
+        items = request.input('i') if request.input('i') else 10
         page = request.input('p') if request.input('p') else 1
+        _offset = items * (page - 1)
 
         if self.list_display:
-            return self.model.select('id', *self.list_display).paginate(items, page).serialize()
+            r = self.model.select('id', *self.list_display).offset(_offset).limit(items).get()
+            r = json.dumps(r)
+            print(r)
+            return r
+            #return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
-            return self.model.paginate(items, page).serialize()
+            r = self.model.offset(_offset).limit(items).get()
+            print(r.to_json(default=default))
+            return r.to_json(default=default)
+            # return r
+            # return self.model.paginate(items, page).serialize()
 
         # if self.list_display:
         #     return self.model.select('id', *self.list_display).get()
@@ -203,25 +224,28 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         #     return self.model.all()
 
     def count(self, request: Request, response: Response):
-        if self.admin_middleware(request) == False:
+        if AdminMiddleware.checkpw_resource(self) == False:
             return response.json(None, status=403)
 
         return {'count': self.model.count()}
 
-    def show(self, request: Request):
+    def show(self, request: Request, response: Response):
         """Logic to read data from 1 model
         """
-        if self.admin_middleware(request) == False:
+        if AdminMiddleware.checkpw_resource(self) == False:
             return response.json(None, status=403)
 
-        if self.detail_display:
-            return self.model.select('id', *self.detail_display).find(request.param('id'))
-        return self.model.find(request.param('id'))
+        if self.detail_display and env('DB_CONNECTION') == 'mysql':
+            return self.model.select(*self.detail_display).find(request.param('id'))
+        elif self.detail_display:
+            return self.model.select('id,' *self.detail_display).find(request.param('id'))
+        else:
+            return self.model.find(request.param('id'))
 
     def update(self, request: Request, response: Response):
         """Logic to update data from a given model
         """
-        if self.admin_middleware(request) == False:
+        if AdminMiddleware.checkpw_resource(self) == False:
             return response.json(None, status=403)
 
         record = self.model.where('id', request.param('id'))
@@ -233,7 +257,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def delete(self, request: Request, response: Response):
         """Logic to delete data from a given model
         """
-        if self.admin_middleware(request) == False:
+        if AdminMiddleware.checkpw_resource(self) == False:
             return response.json(None, status=403)
 
         record = self.model.find(request.param('id'))
@@ -243,18 +267,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
         return {'error': 'Record does not exist'}
 
-    @staticmethod
-    def admin_middleware(request):
-        """Beacuse middleware to resouces not works
-        """
-        try:
-            admin_user_id = request.input('login_id')
-            input_token = request.input('login_token')
 
-            #admin_user = AdminUser.where('email', email).first()
-            db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
-            if db_token == None or input_token != db_token:
-                return False
-            return True
-        except:
-            return False
+    def default(o):
+        if isinstance(o, (datetime.date, datetime.datetime)):
+            return o.isoformat()

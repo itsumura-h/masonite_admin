@@ -149,8 +149,8 @@ class AdminController:
                 cursor.execute(sql)
                 filedata = cursor.fetchone()['Create Table']
                 filedata_arr = filedata.splitlines()
-                row_in_foreign_list = [0,0,'table','key']
                 for data in filedata_arr:
+                    row_in_foreign_list = [0,0,'table','key']
                     if 'FOREIGN KEY' in data:
                         row = data.split('`')
                         row_in_foreign_list[3] = row[3]
@@ -159,8 +159,8 @@ class AdminController:
 
         foreign = {}
         for row in foreign_list:
-            data = self.foreign_data(self, row[2])
-            foreign[row[3]] = data
+            data = self.foreign_data(self, row[2]) # row[2] = table_name
+            foreign[row[3]] = data # row[3] = column_name
 
         return {'schema': schema, 'foreign_keys': foreign}
 
@@ -193,3 +193,14 @@ class AdminController:
                 break
 
         return model
+
+    @staticmethod
+    def super_serialize(self, value):
+        if isinstance(value, datetime):
+            return value.isoformat()
+        elif isinstance(value, list):
+            for i, v in enumerate(value):
+                value[i] = self.super_serialize(v)
+        elif isinstance(value, dict):
+            for i, v in value.items():
+                value[i] = self.super_serialize(v)

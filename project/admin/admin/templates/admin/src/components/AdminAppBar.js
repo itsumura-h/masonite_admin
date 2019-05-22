@@ -52,7 +52,7 @@ class AdminAppBar extends React.Component {
             <Typography variant="h6" color="inherit">
               Welcome! <span className={classes.loginName}>{window.localStorage.getItem('login_name')}</span> /
             </Typography>
-            <Button color="inherit" onClick={this.logout}>Log Out</Button>
+            <Button color="inherit" onClick={this.logout} className={classes.logoutButton} >Log Out</Button>
           </Toolbar>
         </AppBar>
       </div>
@@ -79,6 +79,13 @@ const styles = {
   },
   appbar: {
     backgroundColor: '#3C8DBC'
+  },
+  logoutButton: {
+    backgroundColor: '#EEEEEE',
+    color: '#000000',
+    '&:hover': {
+      backgroundColor: '#DDDDDD',
+    },
   }
 };
 

@@ -105,11 +105,18 @@ export default class Util extends React.Component{
   }
 
   static loginFale=(error)=>{
-    if(error.response.status === 403){
+    if(error.response && error.response.status === 403){
       window.localStorage.removeItem('login_id');
       window.localStorage.removeItem('login_token');
       window.localStorage.removeItem('login_name');
       window.location.href = '/admin/login';
     }
+  }
+
+  static dateToString=(date, format)=>{
+    format = format.replace(/YYYY/, date.getFullYear());
+    format = format.replace(/MM/, date.getMonth() + 1);
+    format = format.replace(/DD/, date.getDate());
+    return format;
   }
 }

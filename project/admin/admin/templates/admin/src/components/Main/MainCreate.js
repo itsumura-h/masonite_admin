@@ -22,7 +22,7 @@ import List from '@material-ui/icons/List';
 import Save from '@material-ui/icons/Save';
 
 import DateFnsUtils from '@date-io/date-fns';
-import { DateTimePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
+import { DateTimePicker, DatePicker, TimePicker, MuiPickersUtilsProvider } from "material-ui-pickers";
 
 import Util from '../../common/util';
 
@@ -70,20 +70,32 @@ class MainCreate extends React.Component {
     let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
+    console.log(new_params);
     console.log(event.currentTarget.value);
     this.setState({params: new_params});
   }
 
   setPramDateTime=(key, value)=>{
     let new_params = this.state.params;
-    new_params[key] = value.toISOString();
+    //new_params[key] = value.toISOString();
+    new_params[key] = value.toLocaleString();
+    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }
 
-  setParamTimeStamp=(key, value)=>{
+  setPramDate=(key, value)=>{
     let new_params = this.state.params;
-    new_params[key] = value.getTime();
+    new_params[key] = Util.dateToString(value, 'YYYY-MM-DD');
+    console.log(new_params);
+    this.setState({params: new_params});
+    this.forceUpdate();
+  }
+
+  setPramTime=(key, value)=>{
+    let new_params = this.state.params;
+    new_params[key] = Util.toTimeString();
+    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }
@@ -125,7 +137,59 @@ class MainCreate extends React.Component {
       const column = this.state.schema[i];
 
       const key = column[1];
-      if(column[2] === 'DATETIME'){
+
+    if(keys.includes(key)){
+      //Foreign Key
+      const options = []
+      for(let i in this.state.foreignKeys[key]){
+        const foreignData = this.state.foreignKeys[key][i];
+
+        options.push(
+          <option key={i} value={foreignData.id}>{foreignData.data}</option>
+        );
+      }
+
+      html_row.push(
+        <TableRow key={key}>
+          <TableCell>
+            {key}
+          </TableCell>
+          <TableCell>
+            <FormControl fullWidth className={classes.formControl}>
+              <Select
+                onChange={this.setParam}
+                name={key}
+                className='params'
+                autoWidth
+                native
+              >
+                {options}
+              </Select>
+            </FormControl>
+          </TableCell>
+        </TableRow>
+      );
+    }else if(column[2] === 'DATE'){
+      // DateTime
+      html_row.push(
+        <TableRow key={key}>
+          <TableCell>
+            {key}
+          </TableCell>
+            <TableCell>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <DatePicker
+                  format="yyyy-MM-dd"
+                  onChange={this.setPramDate.bind(this, key)}
+                  name={key}
+                  label="Date"
+                  value={this.state.params[key]? this.state.params[key]: null}
+                />
+              </MuiPickersUtilsProvider>
+            </TableCell>
+        </TableRow>
+      );
+    }else if(column[2] === 'DATETIME'){
         // DateTime
         html_row.push(
           <TableRow key={key}>
@@ -137,6 +201,27 @@ class MainCreate extends React.Component {
                   <DateTimePicker
                     ampm={false}
                     format="yyyy-MM-dd HH:mm:ss"
+                    onChange={this.setPramDateTime.bind(this, key)}
+                    name={key}
+                    label="Date and 24h clock"
+                    value={this.state.params[key]? this.state.params[key]: null}
+                  />
+                </MuiPickersUtilsProvider>
+              </TableCell>
+          </TableRow>
+        );
+      }else if(column[2] === 'TIME'){
+        // DateTime
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <TimePicker
+                    ampm={false}
+                    format="HH:mm:ss"
                     onChange={this.setPramDateTime.bind(this, key)}
                     name={key}
                     label="24h clock"
@@ -157,9 +242,9 @@ class MainCreate extends React.Component {
                   <DateTimePicker
                     ampm={false}
                     format="yyyy-MM-dd HH:mm:ss"
-                    onChange={this.setParamTimeStamp.bind(this, key)}
+                    onChange={this.setPramDateTime.bind(this, key)}
                     name={key}
-                    label="24h clock"
+                    label="Date and 24h clock"
                     value={this.state.params[key]? this.state.params[key]: null}
                   />
                 </MuiPickersUtilsProvider>
@@ -182,37 +267,6 @@ class MainCreate extends React.Component {
                   shrink: true,
                 }}
               />
-            </TableCell>
-          </TableRow>
-        );
-      }else if(keys.includes(key)){
-        //Foreign Key
-        const options = []
-        for(let i in this.state.foreignKeys[key]){
-          const foreignData = this.state.foreignKeys[key][i];
-
-          options.push(
-            <option key={i} value={foreignData.id}>{foreignData.data}</option>
-          );
-        }
-
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              <FormControl fullWidth className={classes.formControl}>
-                <Select
-                  onChange={this.setParam}
-                  name={key}
-                  className='params'
-                  autoWidth
-                  native
-                >
-                  {options}
-                </Select>
-              </FormControl>
             </TableCell>
           </TableRow>
         );
