@@ -206,17 +206,14 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         _offset = items * (page - 1)
 
         if self.list_display:
-            r = self.model.select('id', *self.list_display).offset(_offset).limit(items).get()
-            r = json.dumps(r)
-            print(r)
-            return r
+            results = self.model.select('id', *self.list_display).offset(_offset).limit(items).get()
+            results = self.arr_iso_format(self, results)
+            return results
             #return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
-            r = self.model.offset(_offset).limit(items).get()
-            print(r.to_json(default=default))
-            return r.to_json(default=default)
-            # return r
-            # return self.model.paginate(items, page).serialize()
+            results = self.model.offset(_offset).limit(items).get()
+            results = self.arr_iso_format(self, results)
+            return results
 
         # if self.list_display:
         #     return self.model.select('id', *self.list_display).get()
@@ -267,7 +264,12 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
         return {'error': 'Record does not exist'}
 
-
-    def default(o):
-        if isinstance(o, (datetime.date, datetime.datetime)):
-            return o.isoformat()
+    @staticmethod
+    def arr_iso_format(self, obj_):
+        if isinstance(obj_, datetime):
+            return obj_.iso_format()
+        if isinstance(obj_, list):
+            return [arr_iso_format(o) for o in obj_]
+        if isinstance(obj_, dict):
+            return {key: arr_iso_format(value) for key, value in obj_.items() }
+        return obj_

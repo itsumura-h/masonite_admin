@@ -9,6 +9,7 @@ class CreateSamplesTable(Migration):
         """
         with self.schema.create('samples') as table:
             table.increments('id')
+            table.date('date').nullable()
             table.datetime('datetime').nullable()
             table.time('time').nullable()
             table.timestamp('timestamp').nullable()

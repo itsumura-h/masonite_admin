@@ -5,4 +5,5 @@ from config.database import Model
 
 class Sample(Model):
     """Sample Model"""
-    pass
+    # def get_date_format(self):
+    #     return 'YY-MM-DD HH:MM:SS'
