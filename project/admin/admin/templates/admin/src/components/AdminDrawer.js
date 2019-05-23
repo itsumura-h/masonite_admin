@@ -23,9 +23,9 @@ class AdminDrawer extends React.Component {
       for(let i in state.info.models){
         let model = state.info.models[i]
         tables.push(
-          <Link to={"/admin/"+model} key={i}>
+          <Link to={"/admin/"+model['en']} key={i}>
             <ListItem button>
-              <ListItemText primary={model + ' Management'} />
+              <ListItemText primary={model['str']} />
             </ListItem>
           </Link>
         );

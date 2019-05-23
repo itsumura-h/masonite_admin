@@ -27,7 +27,11 @@ class AdminController:
     def info(self, request: Request):
         models = []
         for model in MODELS:
-            models.append(model['model'].__doc__.split(' ')[0])
+            model_en = model['model'].__doc__.split(' ')[0]
+            if 'model_str' in model:
+                models += [{'en': model_en, 'str': model['model_str']}]
+            else:
+                models += [{'en': model_en, 'str': model_en}]
 
         env = {
             'Python_version': platform.python_version(),

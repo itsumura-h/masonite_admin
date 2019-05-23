@@ -25,6 +25,7 @@ from app.models.Post import Post
 MODELS = [
     {
         'model': User,
+        'model_str': 'ユーザー一覧',
         'create_display': ['name', 'email'],
         'list_display': ['name', 'email'],
         'detail_display': ['name', 'email'],
@@ -42,6 +43,9 @@ MODELS = [
 
 model (ModelClass): required
     set model class. This item is always necessary.
+
+model_str (str): optional
+    Displaying name in drawer. It is useful for users who are not English speaker.
 
 create_display (list[str]): optional
     Lists of columns you want to display in create page.
@@ -73,6 +77,12 @@ MODELS = []
             self.line('<info>'+config_path+' Created Successfully!</info>')
         else:
             self.line('<info>'+config_path+' Already Exists!</info>')
+
+        #==================== Install masonite-api ====================
+        masonite_api_install_output = bytes(check_output(
+                    ['pip', 'install', 'masonite-api']
+                )).decode('utf-8')
+        masonite_api_install_output = ''.join(masonite_api_install_output.splitlines()) # to delete new line
 
         #==================== Create model ====================
         #whether models dir is exists
@@ -186,6 +196,7 @@ MODELS = []
         #==================== Last message ====================
         self.line('<info>Install Compleated for...</info>')
         self.line('    <comment>'+config_path+'</comment>')
+        self.line('    <comment>'+masonite_api_install_output+'</comment>')
         self.line('    <comment>'+auth_path+'</comment>')
         self.line('    <comment>'+middleware_conf_path+'</comment>')
         self.line('    <comment>'+admin_user_model_path+'</comment>')

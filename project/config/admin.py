@@ -9,6 +9,7 @@ from app.models.Post import Post
 MODELS = [
     {
         'model': User,
+        'model_str': 'ユーザー一覧',
         'create_display': ['name', 'email'],
         'list_display': ['name', 'email'],
         'detail_display': ['name', 'email'],
@@ -26,6 +27,9 @@ MODELS = [
 
 model (ModelClass): required
     Set model class.
+
+model_str (str): optional
+    Displaying name in drawer. It is useful for users who are not English speaker.
 
 create_display (list[str]): optional
     Lists of columns you want to display in create page.
@@ -52,6 +56,7 @@ from app.models.Sample import Sample
 MODELS = [
     {
         'model': User,
+        'model_str': 'ユーザー一覧',
         # 'create_display': ['name', 'email'],
         # 'list_display': ['name', 'email'],
         # 'detail_display': ['name', 'email'],
@@ -59,6 +64,7 @@ MODELS = [
     },
     {
         'model': Post,
+        #'model_str': 'ポスト',
         # 'create_display': ['title', 'posts', 'user_id'],
         #'list_display': ['title', 'posts'],
         #'detail_display': ['title', 'posts', 'user_id'],
@@ -66,6 +72,7 @@ MODELS = [
     },
     {
         'model': Sample,
+        'model_str': 'サンプル一覧',
         #'detail_display': ['date', 'datetime', 'time', 'timestamp'],
         # 'create_display': ['date', 'datetime', 'time', 'timestamp', 'user_id', 'post_id'],
         #'list_display': ['timestamp', 'created_at'],

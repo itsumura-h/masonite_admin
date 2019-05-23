@@ -5,6 +5,7 @@ const store = createStore({
   drawerOpen: true,
   drawerWidth: Const.drawerWidth,
   info: {},
+  modelStr: '',
   targetId: 0,
   rowsPerPage: 10,
 })

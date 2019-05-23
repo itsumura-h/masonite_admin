@@ -33,6 +33,16 @@ class MainIndex extends React.PureComponent {
     count: 0,
   }
 
+  setModelStr=()=>{
+    const url_model = this.props.match.params.model;
+    const models = this.props.store.state.info.models;
+    for(let i in models){ // {"en": "User", "str": "ユーザー一覧"}
+      if(models[i]['en'] === url_model){
+        this.props.store.set('modelStr')(models[i]['str']);
+      }
+    }
+  }
+
   //========================== API Access ==========================
   getIndex=(model, page=this.state.page)=>{
     const self = this;
@@ -104,6 +114,7 @@ class MainIndex extends React.PureComponent {
     if(model){
       this.getIndex(model);
       this.getPages(model);
+      this.setModelStr();
     }
   }
 
@@ -117,10 +128,14 @@ class MainIndex extends React.PureComponent {
       this.getIndex(model, 0);
       this.getPages(model);
     }
+
+    if(this.props !== nextProps){
+      this.setModelStr();
+    }
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, store } = this.props;
     // get URL param
     const model = this.props.match.params.model;
     // pagenation
@@ -178,7 +193,7 @@ class MainIndex extends React.PureComponent {
 
     return (
       <div>
-        <h1>{model}</h1>
+        <h1>{store.state.modelStr}</h1>
         <Card>
           <CardContent>
             <div className={classes.flex}>

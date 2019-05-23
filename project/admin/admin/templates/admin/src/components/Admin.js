@@ -18,7 +18,9 @@ class Admin extends React.Component {
   }
 
   componentDidMount(){
-    this.getInfo();
+    if(Object.keys(this.props.store.state.info).length === 0){
+      this.getInfo();
+    }
   }
 
   render() {
