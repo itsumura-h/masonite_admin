@@ -55,6 +55,7 @@ class MainCreate extends React.Component {
     const keys = Object.keys(foreignKeys);
     let new_params = {};
 
+    console.log(schema);
     for(let i in schema){
       const row = schema[i];
       if(keys.includes(row[1])){
@@ -125,63 +126,62 @@ class MainCreate extends React.Component {
     const keys = Object.keys(this.state.foreignKeys);
     for(let i in this.state.schema){
       const column = this.state.schema[i];
-
       const key = column[1];
 
-    if(key === 'id'){
-      ; //don't display
-    }else if(keys.includes(key)){
-      //Foreign Key
-      const options = []
-      for(let i in this.state.foreignKeys[key]){
-        const foreignData = this.state.foreignKeys[key][i];
+      if(key === 'id'){
+        ; //don't display
+      }else if(keys.includes(key)){
+        //Foreign Key
+        const options = []
+        for(let i in this.state.foreignKeys[key]){
+          const foreignData = this.state.foreignKeys[key][i];
 
-        options.push(
-          <option key={i} value={foreignData.id}>{foreignData.data}</option>
-        );
-      }
+          options.push(
+            <option key={i} value={foreignData.id}>{foreignData.data}</option>
+          );
+        }
 
-      html_row.push(
-        <TableRow key={key}>
-          <TableCell>
-            {key}
-          </TableCell>
-          <TableCell>
-            <FormControl fullWidth className={classes.formControl}>
-              <Select
-                onChange={this.setParam}
-                name={key}
-                className='params'
-                autoWidth
-                native
-              >
-                {options}
-              </Select>
-            </FormControl>
-          </TableCell>
-        </TableRow>
-      );
-    }else if(column[2] === 'DATE'){
-      // Date
-      html_row.push(
-        <TableRow key={key}>
-          <TableCell>
-            {key}
-          </TableCell>
+        html_row.push(
+          <TableRow key={key}>
             <TableCell>
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DatePicker
-                  format="yyyy-MM-dd"
-                  onChange={this.setPramDate.bind(this, key)}
-                  name={key}
-                  label="Date"
-                  value={this.state.params[key]? this.state.params[key]: null}
-                />
-              </MuiPickersUtilsProvider>
+              {key}
             </TableCell>
-        </TableRow>
-      );
-    }else if(column[2] === 'DATETIME'){
+            <TableCell>
+              <FormControl fullWidth className={classes.formControl}>
+                <Select
+                  onChange={this.setParam}
+                  name={key}
+                  className='params'
+                  autoWidth
+                  native
+                >
+                  {options}
+                </Select>
+              </FormControl>
+            </TableCell>
+          </TableRow>
+        );
+      }else if(column[2] === 'DATE'){
+        // Date
+        html_row.push(
+          <TableRow key={key}>
+            <TableCell>
+              {key}
+            </TableCell>
+              <TableCell>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DatePicker
+                    format="yyyy-MM-dd"
+                    onChange={this.setPramDate.bind(this, key)}
+                    name={key}
+                    label="Date"
+                    value={this.state.params[key]? this.state.params[key]: null}
+                  />
+                </MuiPickersUtilsProvider>
+              </TableCell>
+          </TableRow>
+        );
+      }else if(column[2] === 'DATETIME'){
         // DateTime
         html_row.push(
           <TableRow key={key}>

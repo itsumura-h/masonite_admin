@@ -1,16 +1,14 @@
 from masonite.routes import BaseHttpRoute
 from masonite.response import Response
-from api.serializers import JSONSerializer
 from masonite.request import Request
+from api.serializers import JSONSerializer
 from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             NoApiTokenFound, PermissionScopeDenied,
                             RateLimitReached)
 from .admin_controller import AdminController
-import bcrypt
 from .admin_middleware import AdminMiddleware
-from app.models.AdminUser import AdminUser
-from app.models.LoginToken import LoginToken
 
+import bcrypt
 import json
 from datetime import date, datetime, timedelta
 from inspect import getmembers
@@ -171,19 +169,14 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             del params['login_id'], params['login_token']
             config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
             new_model = self.model()
-            #new_model = config_model['model']()
 
-            print(params)
             for key, value in params.items():
-                print(key)
-                print(type(value))
                 try:
                     setattr(new_model, key, value)
                 except Exception as e:
                     print(e)
 
-            r = new_model.save()
-            print(r)
+            new_model.save()
         except Exception as e:
             return {'error': str(e)}
         return new_model
@@ -275,7 +268,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
 
     def arr_iso_format(self, obj_):
-        #print(type(obj_))
         if isinstance(obj_, datetime) or isinstance(obj_, date):
             return obj_.isoformat()
         if isinstance(obj_, timedelta):

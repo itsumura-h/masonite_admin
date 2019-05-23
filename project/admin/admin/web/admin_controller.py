@@ -65,15 +65,11 @@ class AdminController:
         schema = self._schema(self, request)
         model_name = request.param('model')
         config_model = self.get_model_row_by_model_name(model_name)
-        if 'create_display' in config_model and 'id' in config_model['create_display']:
-            config_model['create_display'].remove('id')
 
-        new_schema = []
-        for row in schema['schema']:
-            if 'create_display' not in config_model:
-                new_schema.append(row)
-            elif row[1] in config_model['create_display']:
-                new_schema.append(row)
+        if 'create_display' in config_model:
+            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] in config_model['create_display']]
+        else:
+            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] not in ['id', 'created_at', 'updated_at'] ]
 
         return {
             'schema': new_schema,
@@ -84,15 +80,11 @@ class AdminController:
         schema = self._schema(self, request)
         model_name = request.param('model')
         config_model = self.get_model_row_by_model_name(model_name)
-        if 'detail_display' in config_model and 'id' not in config_model['detail_display']:
-            config_model['detail_display'].insert(0, 'id')
 
-        new_schema = []
-        for row in schema['schema']:
-            if not 'detail_display' in config_model:
-                new_schema.append(row)
-            elif row[1] in config_model['detail_display']:
-                new_schema.append(row)
+        if 'detail_display' in config_model:
+            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] in config_model['detail_display']]
+        else:
+            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] not in ['created_at', 'updated_at'] ]
 
         return {
             'schema': new_schema,
@@ -197,14 +189,3 @@ class AdminController:
                 break
 
         return model
-
-    @staticmethod
-    def super_serialize(self, value):
-        if isinstance(value, datetime):
-            return value.isoformat()
-        elif isinstance(value, list):
-            for i, v in enumerate(value):
-                value[i] = self.super_serialize(v)
-        elif isinstance(value, dict):
-            for i, v in value.items():
-                value[i] = self.super_serialize(v)

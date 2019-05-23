@@ -91,14 +91,12 @@ class MainEdit extends React.PureComponent{
     let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
-    console.log(new_params);
     this.setState({params: new_params});
   }
 
   setPramDate=(key, value)=>{
     let new_params = this.state.params;
     new_params[key] = Util.dateToString(value, 'YYYY-MM-DD');
-    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }
@@ -106,7 +104,6 @@ class MainEdit extends React.PureComponent{
   setPramDateTime=(key, value)=>{
     let new_params = this.state.params;
     new_params[key] = value.toLocaleString();
-    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }
@@ -151,11 +148,8 @@ class MainEdit extends React.PureComponent{
     let html_row = [];
     const keys = Object.keys(this.state.foreignKeys);
     let i = 0;
-    //console.log(this.state.showData);
     for(let key in this.state.showData){
-      // console.log(key);
       let inputData = this.state.showData[key]? this.state.showData[key]: '';
-      //console.table({'key': key, 'value': inputData, 'schema': this.state.schema[i][1]});
 
       if(key === 'id'){
         //IDの時
@@ -177,6 +171,8 @@ class MainEdit extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
+      }else if(key === 'created_at' || key === 'updated_at'){
+        ; // skip
       }else if(keys.includes(key)){
         //外部キーの問
         const options = []
