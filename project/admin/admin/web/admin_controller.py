@@ -166,7 +166,6 @@ class AdminController:
                 sql = f"select column_name, data_type from information_schema.columns where table_name = '{table_name}'"
                 cursor.execute(sql)
                 schema = cursor.fetchall()
-                new_schema = []
                 for i, row in enumerate(schema):
                     row = list(row)
                     row.insert(0, i)
@@ -175,7 +174,7 @@ class AdminController:
                     for k, v in PGSQL_FIELD_TYPE.items():
                         if str(row[2]) == k:
                             row[2] = v
-                            new_schema += [row]
+                            schema[i] = row
 
             foreign_list = []
             with conn.cursor() as cursor:

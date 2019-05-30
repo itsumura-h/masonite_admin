@@ -10,7 +10,7 @@ from .admin_middleware import AdminMiddleware
 
 import bcrypt
 import json
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, time
 from inspect import getmembers
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
@@ -269,15 +269,19 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         return {'error': 'Record does not exist'}
 
 
-    def arr_iso_format(self, obj_):
-        if isinstance(obj_, datetime) or isinstance(obj_, date):
-            return obj_.isoformat()
-        if isinstance(obj_, timedelta):
-            print(obj_)
-            obj_arr = str(obj_).split(':')
-            return datetime(1970, 1, 2, int(obj_arr[0]), int(obj_arr[1]), int(obj_arr[2])).isoformat()
-        if isinstance(obj_, list):
-            return [self.arr_iso_format(o) for o in obj_]
-        if isinstance(obj_, dict):
-            return {key: self.arr_iso_format(value) for key, value in obj_.items() }
-        return obj_
+    def arr_iso_format(self, _obj):
+        if isinstance(_obj, datetime) or isinstance(_obj, date):
+            return _obj.isoformat()
+        elif isinstance(_obj, timedelta):
+            _obj_arr = str(_obj).split(':')
+            return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
+        elif isinstance(_obj, time):
+            _obj_arr = str(_obj).split(':')
+            #return _obj.isoformat()
+            return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
+        elif isinstance(_obj, list):
+            return [self.arr_iso_format(o) for o in _obj]
+        elif isinstance(_obj, dict):
+            return {key: self.arr_iso_format(value) for key, value in _obj.items() }
+        else:
+            return _obj

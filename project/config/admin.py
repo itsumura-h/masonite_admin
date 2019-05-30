@@ -74,7 +74,7 @@ MODELS = [
         'model': Sample,
         'model_str': 'サンプル一覧',
         'detail_display': ['date', 'datetime', 'time', 'timestamp'],
-         'create_display': ['date', 'datetime', 'time', 'timestamp', 'user_id', 'post_id'],
+        'create_display': ['date', 'datetime', 'time', 'timestamp', 'user_id', 'post_id'],
         'list_display': ['timestamp', 'created_at'],
     }
 ]
