@@ -37,7 +37,7 @@ FIELD_TYPE = {
 
 
 
-FIELD_TYPE = {
+MYSQL_FIELD_TYPE = {
     '1': 'TINYINT',
     '2': 'INTEGER',
     '3': 'INTEGER',
@@ -57,4 +57,21 @@ FIELD_TYPE = {
 
     #CHAR = TINY ',
     #INTERVAL = ENUM ',
+}
+
+PGSQL_FIELD_TYPE = {
+    'integer': 'INTEGER',
+    'bigint': 'INTEGER',
+    'bytea': 'BLOB',
+    'boolean': 'TINYINT',
+    'character': 'VARCHAR',
+    'date': 'DATE',
+    'timestamp': 'DATETIME',
+    'numeric': 'NUMERIC',
+    'double': 'FLOAT',
+    'json': 'json',
+    'text': 'TEXT',
+    'smallint': 'INTEGER',
+    'time': 'TIME',
+    'timestamp': 'DATETIME'
 }

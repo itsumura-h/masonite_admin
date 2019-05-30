@@ -1,31 +1,31 @@
 |orator|sqlite|mysql|pgsql|
 |---|---|---|---|
-|increments|INTEGER|3,int|
-|big_integer|INTEGER|8,bigint|
-|binary|BLOB|252,blob|
-|boolean|TINYINT|1,tinyint|
-|char|VARCHAR|254,char|
-|date|DATE|10,date|
-|datetime|DATETIME|12,datetime|
-|decimal|NUMERIC|246,decimal|
-|double|FLOAT|5,double|
-|enum|VARCHAR|254,enum|
-|float|FLOAT|5,double|
-|integer|INTEGER|3,int|
-|json|TEXT|245,json|
-|long_text|TEXT|252,longtext|
-|medium_integer|INTEGER|9,mediumint|
-|medium_text|TEXT|252,mediumtext|
-|morphs|INTEGER, VARCHAR|3:int, 253:varchar|
-|small_integer|INTEGER|2,smallint|
-|string|VARCHAR|253,varchar|
-|string_with_len|VARCHAR|253,varchar|
-|text|TEXT|252,text|
-|time|TIME|11,time|
-|timestamp|DATETIME|7,timestamp|
-|soft_deletes|DATETIME|7,timestamp|
-|timestamps|DATETIME|7,timestamp|
-|integer|INTEGER|3,int|
+|increments|INTEGER|3,int|integer
+|big_integer|INTEGER|8,bigint|bigint
+|binary|BLOB|252,blob|bytea
+|boolean|TINYINT|1,tinyint|boolean
+|char|VARCHAR|254,char|character
+|date|DATE|10,date|date
+|datetime|DATETIME|12,datetime|timestamp
+|decimal|NUMERIC|246,decimal|numeric
+|double|FLOAT|5,double|double
+|enum|VARCHAR|254,enum|character
+|float|FLOAT|5,double|double
+|integer|INTEGER|3,int|integer
+|json|TEXT|245,json|json
+|long_text|TEXT|252,longtext|text
+|medium_integer|INTEGER|9,mediumint|integer
+|medium_text|TEXT|252,mediumtext|text
+|morphs|INTEGER, VARCHAR|3:int, 253:varchar|integer, character
+|small_integer|INTEGER|2,smallint|smallint
+|string|VARCHAR|253,varchar|character
+|string_with_len|VARCHAR|253,varchar|character
+|text|TEXT|252,text|text
+|time|TIME|11,time|time
+|timestamp|DATETIME|7,timestamp|timestamp
+|soft_deletes|DATETIME|7,timestamp|timestamp
+|timestamps|DATETIME|7,timestamp|timestamp
+|integer|INTEGER|3,int|integer
 
 ### 整列
 

@@ -230,7 +230,9 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             new_result = {i: v for i, v in result._original.items()}
             return self.arr_iso_format(new_result)
         elif self.detail_display:
-            result = self.model.select('id,' *self.detail_display).find(request.param('id'))
+            if 'id' not in self.detail_display:
+                self.detail_display.insert(0, 'id')
+            result = self.model.select(*self.detail_display).find(request.param('id'))
             new_result = {i: v for i, v in result._original.items()}
             return self.arr_iso_format(new_result)
         else:

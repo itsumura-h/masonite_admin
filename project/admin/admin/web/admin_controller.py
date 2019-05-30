@@ -17,7 +17,10 @@ from pprint import pprint
 
 if env('DB_CONNECTION') == 'mysql':
     import pymysql
-    from .mysql_field_list import FIELD_TYPE
+    from .field_list import MYSQL_FIELD_TYPE
+elif env('DB_CONNECTION') == 'postgres':
+    import psycopg2
+    from .field_list import PGSQL_FIELD_TYPE
 
 class AdminController:
     def root(self):
@@ -97,8 +100,8 @@ class AdminController:
         table_name = inflection.tableize(model_name)
         row = self.get_model_row_by_model_name(model_name)
 
-        model_i = row['model']()
-        table = model_i.get_table()
+        #model_i = row['model']()
+        #table = model_i.get_table()
 
         if env('DB_CONNECTION') == 'sqlite':
             # Get Schema in SQLite with Python
@@ -133,7 +136,7 @@ class AdminController:
                 for i, row in enumerate(schema):
                     row = list(row)
                     row.insert(0, i)
-                    for k, v in FIELD_TYPE.items():
+                    for k, v in MYSQL_FIELD_TYPE.items():
                         if str(row[2]) == k:
                             row[2] = v
                     del row[3:8]
@@ -152,6 +155,40 @@ class AdminController:
                         row_in_foreign_list[3] = row[3]
                         row_in_foreign_list[2] = row[5]
                         foreign_list += [row_in_foreign_list]
+        elif env('DB_CONNECTION') == 'postgres':
+            conn = psycopg2.connect(host=env('DB_HOST'),
+                    database=env('DB_DATABASE'),
+                    user=env('DB_USERNAME'),
+                    password=env('DB_PASSWORD'),
+                    port=env('DB_PORT'))
+
+            with conn.cursor()as cursor:
+                sql = f"select column_name, data_type from information_schema.columns where table_name = '{table_name}'"
+                cursor.execute(sql)
+                schema = cursor.fetchall()
+                new_schema = []
+                for i, row in enumerate(schema):
+                    row = list(row)
+                    row.insert(0, i)
+                    row[2] = row[2].split(' ')[0]
+
+                    for k, v in PGSQL_FIELD_TYPE.items():
+                        if str(row[2]) == k:
+                            row[2] = v
+                            new_schema += [row]
+
+            foreign_list = []
+            with conn.cursor() as cursor:
+                sql = "SELECT table_name, constraint_name FROM information_schema.table_constraints WHERE table_schema = 'public' AND constraint_type = 'FOREIGN KEY'"
+                cursor.execute(sql)
+                filedata = cursor.fetchall()
+                for i, v in enumerate(filedata):
+                    key_name = v[1]
+                    key_name = key_name.replace(f'{table_name}_', '')
+                    key_name = key_name.strip('_foreign')
+
+                    if v[0] == table_name:
+                        foreign_list += [(i, 0, inflection.pluralize(key_name.strip('_id')), key_name)]
 
         foreign = {}
         for row in foreign_list:
