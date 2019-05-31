@@ -142,26 +142,21 @@ class MainIndex extends React.PureComponent {
     // set range of array
     const { rowsPerPage } = this.props.store.state;
 
-    let html_headers = [];
+    let headers = [];
     let html_table = [];
     if(this.state.indexData && this.state.indexData[0]){
       const td_key = Object.keys(this.state.indexData[0]).length;
-      let headers = Object.keys(this.state.indexData[0]);
+      headers = Object.keys(this.state.indexData[0]);
       headers.push('show', 'edit', 'delete');
-
-      for(let i in headers){
-        const header = headers[i];
-        html_headers.push(<TableCell key={i}>{header}</TableCell>);
-      }
 
       for(let i in this.state.indexData){
         const row = this.state.indexData[i];
         let row_html = [];
-        for(let key in row){
+        for(let key in row){ // Data
           row_html.push(<TableCell key={key}>{row[key]}</TableCell>);
         }
 
-        row_html.push(
+        row_html.push( // Button
           <TableCell key={td_key+1}>
             <Link to={'/admin/'+model+'/'+row.id}>
               <Fab aria-label="show">
@@ -222,11 +217,14 @@ class MainIndex extends React.PureComponent {
                       }}
                       onChangePage={this.handleChangePage}
                       onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                      // ActionsComponent={TablePaginationActionsWrapped}
                     />
                   </TableRow>
                   <TableRow>
-                    {html_headers}
+                    {
+                      headers.map((header, i)=>{
+                        return <TableCell key={i}>{header}</TableCell>
+                      })
+                    }
                   </TableRow>
                 </TableHead>
                 <TableBody>

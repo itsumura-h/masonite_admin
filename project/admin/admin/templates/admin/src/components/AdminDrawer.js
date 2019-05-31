@@ -18,21 +18,6 @@ class AdminDrawer extends React.Component {
     const { classes } = this.props;
     const state = this.props.store.state;
 
-    let tables = [];
-    if(state.info.models){
-      for(let i in state.info.models){
-        let model = state.info.models[i]
-        tables.push(
-          <Link to={"/admin/"+model['en']} key={i}>
-            <ListItem button>
-              <ListItemText primary={model['str']} />
-            </ListItem>
-          </Link>
-        );
-        i++;
-      }
-    }
-
     return (
       <Drawer
         container={this.props.container}
@@ -44,7 +29,18 @@ class AdminDrawer extends React.Component {
         }}
       >
         <List className={classes.modelList}>
-          {tables}
+          {
+            state.info.models &&
+            state.info.models.map((model, i)=>{
+              return (
+                <Link to={"/admin/"+model['en']} key={i}>
+                  <ListItem button>
+                    <ListItemText primary={model['str']} />
+                  </ListItem>
+                </Link>
+              );
+            })
+          }
         </List>
       </Drawer>
     );
