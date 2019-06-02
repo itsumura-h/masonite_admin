@@ -34,7 +34,6 @@ class MainShow extends React.PureComponent{
     const self = this;
     Util.getAPI('/admin/api/schema/'+model+'/detail')
     .then(response=>{
-      console.log(response.data.schema);
       self.setState({
         schema: response.data.schema,
         foreignKeys: response.data.foreign_keys
