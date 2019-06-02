@@ -166,14 +166,12 @@ class AdminController:
                 cursor.execute(sql)
                 schema = cursor.fetchall()
                 for i, row in enumerate(schema):
-                    row = list(row)
-                    row.insert(0, i)
-                    row[2] = row[2].split(' ')[0]
-
+                    new_row = {'id': i, 'column': row[0], 'type': row[1].split(' ')[0]}
                     for k, v in PGSQL_FIELD_TYPE.items():
-                        if str(row[2]) == k:
-                            row[2] = v
-                            schema[i] = row
+                        if str(new_row['type']) == k:
+                            new_row['type'] = v
+                            schema[i] = new_row
+                            break
 
             foreign_list = []
             with conn.cursor() as cursor:
