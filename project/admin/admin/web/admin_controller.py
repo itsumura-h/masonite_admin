@@ -133,13 +133,11 @@ class AdminController:
                 schema = list(schema)
 
                 for i, row in enumerate(schema):
-                    row = list(row)
-                    row.insert(0, i)
+                    new_row = {'id': i, 'column': row[0], 'type': row[1]}
                     for k, v in MYSQL_FIELD_TYPE.items():
-                        if str(row[2]) == k:
-                            row[2] = v
-                    del row[3:8]
-                    schema[i] = row
+                        if str(new_row['type']) == k:
+                            new_row['type'] = v
+                    schema[i] = new_row
 
             foreign_list = []
             with conn.cursor() as cursor:

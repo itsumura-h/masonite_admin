@@ -50,7 +50,7 @@ class MainIndex extends React.PureComponent {
     Util.getAPI('/admin/api/'+model, params)
     .then(response=>{
       self.setState({
-        indexData: response.data
+        indexData: response.data,
       });
     });
   }
@@ -208,7 +208,7 @@ class MainIndex extends React.PureComponent {
                   <TableRow>
                     <TablePagination
                       rowsPerPageOptions={[10, 20, 30, 50, 100]}
-                      colSpan={4}
+                      colSpan={2}
                       count={this.state.count}
                       rowsPerPage={rowsPerPage}
                       page={this.state.page}

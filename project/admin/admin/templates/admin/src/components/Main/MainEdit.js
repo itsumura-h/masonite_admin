@@ -141,7 +141,7 @@ class MainEdit extends React.PureComponent{
   }
 
   render(){
-    const { classes } = this.props;
+    const { classes, store } = this.props;
     // get URL param
     const model = this.props.match.params.model;
 
@@ -209,7 +209,7 @@ class MainEdit extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i] && this.state.schema[i][2] === 'DATE'){
+      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATE'){
         // Date
         html_row.push(
           <TableRow key={key}>
@@ -229,7 +229,7 @@ class MainEdit extends React.PureComponent{
               </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i] && this.state.schema[i][2] === 'DATETIME'){
+      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATETIME'){
         //datetime型の時
         html_row.push(
           <TableRow key={key}>
@@ -250,7 +250,7 @@ class MainEdit extends React.PureComponent{
               </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i] && this.state.schema[i][2] === 'TIME'){
+      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIME'){
         // Time
         html_row.push(
           <TableRow key={key}>
@@ -271,7 +271,7 @@ class MainEdit extends React.PureComponent{
               </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i] && this.state.schema[i][2] === 'TIMESTAMP'){
+      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIMESTAMP'){
         html_row.push(
           <TableRow key={key}>
             <TableCell>
@@ -315,7 +315,7 @@ class MainEdit extends React.PureComponent{
 
     return(
       <div>
-        <h1>{model}</h1>
+        <h1>{store.state.modelStr}</h1>
         <p className={classes.error}>{this.state.error}</p>
         <Card>
           <CardContent>

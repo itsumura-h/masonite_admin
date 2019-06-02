@@ -87,7 +87,7 @@ class MainShow extends React.PureComponent{
   }
 
   render(){
-    const { classes } = this.props;
+    const { classes, store } = this.props;
     // get URL param
     const model = this.props.match.params.model;
     const id = this.props.match.params.id;
@@ -191,7 +191,7 @@ class MainShow extends React.PureComponent{
 
     return(
       <div>
-        <h1>{model}</h1>
+        <h1>{store.state.modelStr}</h1>
         <Card>
           <CardContent>
           <div className={classes.flex}>
