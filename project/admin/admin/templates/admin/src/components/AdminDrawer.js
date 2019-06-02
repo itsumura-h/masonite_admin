@@ -29,6 +29,9 @@ class AdminDrawer extends React.Component {
         }}
       >
         <List className={classes.modelList}>
+          <ListItem>
+            <ListItemText primary={'Table List'} />
+          </ListItem>
           {
             state.info.models &&
             state.info.models.map((model, i)=>{
