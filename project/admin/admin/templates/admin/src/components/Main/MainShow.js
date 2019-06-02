@@ -34,6 +34,7 @@ class MainShow extends React.PureComponent{
     const self = this;
     Util.getAPI('/admin/api/schema/'+model+'/detail')
     .then(response=>{
+      console.log(response.data.schema);
       self.setState({
         schema: response.data.schema,
         foreignKeys: response.data.foreign_keys
@@ -127,7 +128,7 @@ class MainShow extends React.PureComponent{
             </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i] && this.state.schema[i][2] === 'DATETIME'){
+      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATETIME'){
         //datetime
         html_row.push(
           <TableRow key={key}>
@@ -147,9 +148,8 @@ class MainShow extends React.PureComponent{
               </TableCell>
           </TableRow>
         );
-      }else if(this.state.schema[i] && this.state.schema[i][2] === 'TIME'){
+      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIME'){
         //time
-
         html_row.push(
           <TableRow key={key}>
             <TableCell>

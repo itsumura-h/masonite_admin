@@ -85,9 +85,9 @@ class AdminController:
         config_model = self.get_model_row_by_model_name(model_name)
 
         if 'detail_display' in config_model:
-            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] in config_model['detail_display']]
+            new_schema = [v for i, v in enumerate(schema['schema']) if v['column'] in config_model['detail_display']]
         else:
-            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] not in ['created_at', 'updated_at'] ]
+            new_schema = [v for i, v in enumerate(schema['schema']) if v['column'] not in ['created_at', 'updated_at'] ]
 
         return {
             'schema': new_schema,
@@ -113,8 +113,7 @@ class AdminController:
             schema = list(cursor.fetchall())
             for i, row in enumerate(schema):
                 row = list(row)
-                del row[3:6]
-                schema[i] = row
+                schema[i] = {'id': row[0], 'column': row[1], 'type': row[2]}
 
             cursor.execute(f"PRAGMA foreign_key_list('{table_name}')")
             foreign_list = cursor.fetchall()
