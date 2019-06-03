@@ -55,7 +55,6 @@ class MainCreate extends React.Component {
     const keys = Object.keys(foreignKeys);
     let new_params = {};
 
-    console.log(schema);
     for(let i in schema){
       const row = schema[i];
       if(keys.includes(row[1])){
@@ -71,14 +70,12 @@ class MainCreate extends React.Component {
     let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
-    console.log(new_params);
     this.setState({params: new_params});
   }
 
   setPramDate=(key, value)=>{
     let new_params = this.state.params;
     new_params[key] = Util.dateToString(value, 'YYYY-MM-DD');
-    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }
@@ -86,7 +83,6 @@ class MainCreate extends React.Component {
   setPramDateTime=(key, value)=>{
     let new_params = this.state.params;
     new_params[key] = value.toLocaleString();
-    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }
