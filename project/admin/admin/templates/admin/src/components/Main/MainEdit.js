@@ -143,7 +143,6 @@ class MainEdit extends React.PureComponent{
   render(){
     const { classes, store } = this.props;
     // get URL param
-    const model = this.props.match.params.model;
 
     let html_row = [];
     const keys = Object.keys(this.state.foreignKeys);

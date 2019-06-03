@@ -89,7 +89,6 @@ class MainShow extends React.PureComponent{
   render(){
     const { classes, store } = this.props;
     // get URL param
-    const model = this.props.match.params.model;
     const id = this.props.match.params.id;
 
     let i = 0;
