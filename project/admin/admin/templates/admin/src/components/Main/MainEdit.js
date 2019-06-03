@@ -152,7 +152,6 @@ class MainEdit extends React.PureComponent{
       let inputData = this.state.showData[key]? this.state.showData[key]: '';
 
       if(key === 'id'){
-        //IDの時
         html_row.push(
           <TableRow key={key}>
             <TableCell>
@@ -174,7 +173,7 @@ class MainEdit extends React.PureComponent{
       }else if(key === 'created_at' || key === 'updated_at'){
         ; // skip
       }else if(keys.includes(key)){
-        //外部キーの問
+        // when in foreign key
         const options = []
         let selectedId;
         for(let i2 in this.state.foreignKeys[key]){
@@ -230,7 +229,7 @@ class MainEdit extends React.PureComponent{
           </TableRow>
         );
       }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATETIME'){
-        //datetime型の時
+        // Datetime
         html_row.push(
           <TableRow key={key}>
             <TableCell>
@@ -272,6 +271,7 @@ class MainEdit extends React.PureComponent{
           </TableRow>
         );
       }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIMESTAMP'){
+        // TIMESTAMP
         html_row.push(
           <TableRow key={key}>
             <TableCell>
@@ -292,7 +292,6 @@ class MainEdit extends React.PureComponent{
           </TableRow>
         );
       }else{
-        //文字列の時
         html_row.push(
           <TableRow key={key}>
             <TableCell>
