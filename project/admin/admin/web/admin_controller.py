@@ -1,20 +1,18 @@
+import inspect, os, pathlib, platform, sqlite3
+from collections import OrderedDict
+from datetime import datetime
+from pprint import pprint
+
+import inflection
+import pkg_resources
+from api.resources import Resource
+from dateutil import tz
+from masonite import env
 from masonite.controllers import Controller
 from masonite.request import Request
-from config.database import DB, Model
 
-from masonite import env
-import sqlite3
-from api.resources import Resource
 from config.admin import MODELS
-import platform
-import pkg_resources
-from collections import OrderedDict
-import inflection
-import inspect
-from datetime import datetime
-from dateutil import tz
-import os, pathlib
-from pprint import pprint
+from config.database import DB, Model
 
 if env('DB_CONNECTION') == 'mysql':
     import pymysql
