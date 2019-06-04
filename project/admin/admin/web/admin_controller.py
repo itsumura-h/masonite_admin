@@ -13,6 +13,7 @@ import inflection
 import inspect
 from datetime import datetime
 from dateutil import tz
+import os, pathlib
 from pprint import pprint
 
 if env('DB_CONNECTION') == 'mysql':
@@ -22,9 +23,11 @@ elif env('DB_CONNECTION') == 'postgres':
     import psycopg2
     from .field_list import PGSQL_FIELD_TYPE
 
+ADMIN_STATIC_DIR_PATH = pathlib.Path(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../templates/admin/build/static'))
+
 class AdminController:
     def root(self):
-        with open('admin/admin/templates/admin/build/index.html', 'r') as f:
+        with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../templates/admin/build/index.html'), 'r') as f:
             return f.read()
 
     def info(self, request: Request):

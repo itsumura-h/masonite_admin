@@ -6,7 +6,7 @@ from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
                             NoApiTokenFound, PermissionScopeDenied,
                             RateLimitReached)
 from .admin_controller import AdminController
-from .admin_middleware import AdminMiddleware
+from app.http.middleware.admin_middleware import AdminMiddleware
 
 import bcrypt
 import json

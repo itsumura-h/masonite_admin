@@ -2,13 +2,13 @@
 """Admin Routes."""
 
 from masonite.routes import Get, Post, RouteGroup
-from admin.web.admin_controller import AdminController
+from admin.web.admin_controller import AdminController, ADMIN_STATIC_DIR_PATH
 from admin.web.admin_resources import AdminResource
 from admin.web.login_controller import LoginController
 from config.admin import MODELS
 from config.storage import STATICFILES
 
-STATICFILES['admin/admin/templates/admin/build/static'] = 'static/'
+STATICFILES[ADMIN_STATIC_DIR_PATH] = 'static/'
 
 ADMIN_ROUTES_WITH_MIDDLEWARE = [
     Get().route('/api/info',AdminController.info),

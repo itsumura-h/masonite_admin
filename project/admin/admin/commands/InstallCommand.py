@@ -78,12 +78,6 @@ MODELS = []
         else:
             self.line('<info>'+config_path+' Already Exists!</info>')
 
-        #==================== Install masonite-api ====================
-        masonite_api_install_output = bytes(check_output(
-                    ['pip', 'install', 'masonite-api']
-                )).decode('utf-8')
-        masonite_api_install_output = ''.join(masonite_api_install_output.splitlines()) # to delete new line
-
         #==================== Create model ====================
         #whether models dir is exists
         isdir = os.path.isdir('app/models')
@@ -113,11 +107,56 @@ MODELS = []
         self.line('<info>LoginToken '+login_token_output+'</info>')
 
         #==================== Edit Middleware ====================
-        middleware_path = 'admin/admin/web/admin_middleware.py'
+        filedata = '''
+from masonite.request import Request
+from masonite.response import Response
+#LoginToken
+
+class AdminMiddleware:
+    """Check token
+    """
+
+    def __init__(self, request: Request, response: Response):
+        self.request = request
+        self.response = response
+
+    def before(self):
+        return self.checkpw()
+
+    def after(self):
+        pass
+
+    def checkpw(self):
+        try:
+            admin_user_id = self.request.input('login_id')
+            input_token = self.request.input('login_token')
+
+            db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
+            if db_token == None or input_token != db_token:
+                return self.response.json(None, status=403)
+        except:
+            return self.response.json(None, status=403)
+
+    def checkpw_resource(self):
+        try:
+            admin_user_id = self.request.input('login_id')
+            input_token = self.request.input('login_token')
+
+            db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
+            if db_token == None or input_token != db_token:
+                return False
+        except:
+            return False
+'''
+        middleware_path = 'app/http/middleware/admin_middleware.py'
+        with open(middleware_path, 'w') as f:
+            f.write(filedata)
+
         with open(middleware_path, 'r') as f:
             filedata = f.read()
 
         if "#LoginToken" in filedata:
+            print(isdir)
             if isdir:
                 filedata = filedata.replace('#LoginToken', 'from app.models.LoginToken import LoginToken')
             else:
@@ -141,7 +180,7 @@ MODELS = []
         else:
             lines = [
                 "",
-                "from admin.web.admin_middleware import AdminMiddleware",
+                "from app.http.middleware.admin_middleware import AdminMiddleware",
                 "",
                 "ROUTE_MIDDLEWARE['admin'] = AdminMiddleware"
                 ""
@@ -196,7 +235,6 @@ MODELS = []
         #==================== Last message ====================
         self.line('<info>Install Compleated for...</info>')
         self.line('    <comment>'+config_path+'</comment>')
-        self.line('    <comment>'+masonite_api_install_output+'</comment>')
         self.line('    <comment>'+auth_path+'</comment>')
         self.line('    <comment>'+middleware_conf_path+'</comment>')
         self.line('    <comment>'+admin_user_model_path+'</comment>')

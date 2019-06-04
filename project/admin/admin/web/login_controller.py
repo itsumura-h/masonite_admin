@@ -25,7 +25,6 @@ class LoginController(Controller):
             login_token = LoginToken()
             login_token.admin_user_id = user.id
             login_token.token = hash
-            print(vars(login_token))
             login_token.save()
             return {'login': True, 'token': hash, 'id': user.id, 'name': user.name}
         else:

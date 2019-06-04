@@ -6,6 +6,7 @@ ROUTES = [
     Get().route('/', 'WelcomeController@show').name('welcome'),
 ]
 
+
 from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, MODEL_ROUTES
 
 ROUTES += [

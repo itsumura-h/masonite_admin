@@ -1,3 +1,4 @@
+
 from masonite.request import Request
 from masonite.response import Response
 from app.models.LoginToken import LoginToken
