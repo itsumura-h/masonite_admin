@@ -162,7 +162,6 @@ class AdminMiddleware:
             filedata = f.read()
 
         if "#LoginToken" in filedata:
-            print(isdir)
             if isdir:
                 filedata = filedata.replace('#LoginToken', 'from app.models.LoginToken import LoginToken')
             else:
@@ -194,6 +193,23 @@ class AdminMiddleware:
             with open(middleware_conf_path, 'a') as f:
                 f.write('\n'.join(lines))
             self.line('<info>Edit '+middleware_conf_path+' Successfully!</info>')
+
+        #==================== Edit CSRF Middleware ====================
+        csrf_middleware_path = 'app/http/middleware/CsrfMiddleware.py'
+
+        with open(csrf_middleware_path, 'r') as f:
+            filedata = f.read()
+
+        if 'admin/*' in filedata:
+            self.line('<info>'+csrf_middleware_path+' Is Already Edited!</info>')
+        else:
+            lines = [
+                "",
+                "    exempt += ['/admin/*']",
+            ]
+            with open(csrf_middleware_path, 'a') as f:
+                f.write('\n'.join(lines))
+            self.line('<info>Edit '+csrf_middleware_path+' Successfully!</info>')
 
         #==================== Edit Auth ====================
         auth_path = 'config/auth.py'
@@ -244,6 +260,7 @@ class AdminMiddleware:
         self.line('    <comment>'+masonite_api_install_output+'</comment>')
         self.line('    <comment>'+auth_path+'</comment>')
         self.line('    <comment>'+middleware_conf_path+'</comment>')
+        self.line('    <comment>'+csrf_middleware_path+'</comment>')
         self.line('    <comment>'+admin_user_model_path+'</comment>')
         self.line('    <comment>'+login_token_model_path+'</comment>')
         self.line('    <comment>'+route_path+'</comment>')
