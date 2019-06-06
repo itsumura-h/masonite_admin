@@ -332,6 +332,7 @@ class MainEdit extends React.PureComponent{
                           </TableRow>
                         );
                       }
+                      return false;
                     })
                   }
                 </TableBody>

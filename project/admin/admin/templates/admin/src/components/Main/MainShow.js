@@ -137,6 +137,7 @@ class MainShow extends React.PureComponent{
                             foreignId = foreignData.id;
                             return true;
                           }
+                          return false;
                         })
                         return (
                           <TableRow key={key}>

@@ -55,7 +55,7 @@ class MainCreate extends React.Component {
     const keys = Object.keys(foreignKeys);
     let new_params = {};
 
-    schema.map((row, i)=>{
+    schema.forEach((row, i)=>{
       if(keys.includes(row['column'])){
         new_params[row['column']] = foreignKeys[row['column']][0]? foreignKeys[row['column']][0].id: null;
       }else{
@@ -289,6 +289,7 @@ class MainCreate extends React.Component {
                           </TableRow>
                         );
                       }
+                      return false;
                     })
                   }
                 </TableBody>
