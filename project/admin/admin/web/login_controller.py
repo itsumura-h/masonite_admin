@@ -1,10 +1,12 @@
+import secrets
+from datetime import datetime
+
+from bcrypt import checkpw
+from masonite.auth import Sign
 from masonite.controllers import Controller
 from masonite.request import Request
-from masonite.auth import Sign
+
 from config.auth import AUTH
-from bcrypt import checkpw
-from datetime import datetime
-import secrets
 
 try:
     from app.models.LoginToken import LoginToken

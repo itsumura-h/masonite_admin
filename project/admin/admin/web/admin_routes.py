@@ -2,7 +2,8 @@
 """Admin Routes."""
 
 from masonite.routes import Get, Post, RouteGroup
-from admin.web.admin_controller import AdminController, ADMIN_STATIC_DIR_PATH
+
+from admin.web.admin_controller import ADMIN_STATIC_DIR_PATH, AdminController
 from admin.web.admin_resources import AdminResource
 from admin.web.login_controller import LoginController
 from config.admin import MODELS
