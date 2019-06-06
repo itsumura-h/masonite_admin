@@ -149,12 +149,12 @@ class MainIndex extends React.PureComponent {
       headers = Object.keys(this.state.indexData[0]);
       headers.push('show', 'edit', 'delete');
 
-      for(let i in this.state.indexData){
-        const row = this.state.indexData[i];
-        let row_html = [];
-        for(let key in row){ // Data
-          row_html.push(<TableCell key={key}>{row[key]}</TableCell>);
-        }
+      this.state.indexData.forEach((row, i)=>{
+        let row_html = [
+          Object.keys(row).map((key)=>{
+            return <TableCell key={key}>{row[key]}</TableCell>
+          })
+        ];
 
         row_html.push( // Button
           <TableCell key={td_key+1}>
@@ -182,8 +182,9 @@ class MainIndex extends React.PureComponent {
               </Fab>
           </TableCell>
         );
+
         html_table.push(<TableRow key={i}>{row_html}</TableRow>);
-      }
+      });
     }
 
     return (
