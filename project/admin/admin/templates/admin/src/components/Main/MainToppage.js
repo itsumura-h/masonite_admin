@@ -15,40 +15,6 @@ class MainToppage extends React.Component {
 
   render() {
     const state = this.props.store.state;
-    let env = [];
-    let pkg = [];
-
-    if(state.info){
-
-      for(let key in state.info.env){
-        let value = state.info.env[key];
-        env.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              {state.info.env? value: ''}
-            </TableCell>
-          </TableRow>
-        );
-      }
-
-      for(let key in state.info.pkg){
-        let value = state.info.pkg[key];
-        pkg.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              {state.info.env? value: ''}
-            </TableCell>
-          </TableRow>
-        );
-      }
-    }
-
 
     return (
       <div>
@@ -60,7 +26,21 @@ class MainToppage extends React.Component {
                 Environment
                 <Table>
                   <TableBody>
-                    {env}
+                    {
+                      state.info.env && Object.keys(state.info.env).map((key, i)=>{
+                        let value = state.info.env[key];
+                        return (
+                          <TableRow key={i}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                            <TableCell>
+                              {value}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    }
                   </TableBody>
                 </Table>
               </CardContent>
@@ -72,7 +52,21 @@ class MainToppage extends React.Component {
                 Dependencies
                 <Table>
                   <TableBody>
-                    {pkg}
+                    {
+                      state.info.pkg && Object.keys(state.info.pkg).map((key, i)=>{
+                        let value = state.info.pkg[key];
+                        return (
+                          <TableRow key={i}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                            <TableCell>
+                              {value}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })
+                    }
                   </TableBody>
                 </Table>
               </CardContent>

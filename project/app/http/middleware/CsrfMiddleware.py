@@ -10,4 +10,4 @@ class CsrfMiddleware(Middleware):
     every_request = False
     token_length = 30
 
-    exempt += ['/admin/*']
+    exempt += ['/admin/api/*']

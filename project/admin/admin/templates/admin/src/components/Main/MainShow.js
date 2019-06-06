@@ -90,103 +90,7 @@ class MainShow extends React.PureComponent{
     const { classes, store } = this.props;
     // get URL param
     const id = this.props.match.params.id;
-
-    let i = 0;
-    let html_row = [];
     const keys = Object.keys(this.state.foreignKeys);
-    for(let key in this.state.showData){
-      let show = this.state.showData[key]? this.state.showData[key]: '';
-
-      // when column is forwign key
-      if(keys.includes(key)){
-        let foreignValue, foreignId;
-        for(let i in this.state.foreignKeys[key]){
-          const foreignData = this.state.foreignKeys[key][i];
-          if(foreignData.id === show){
-            foreignValue = foreignData.data;
-            foreignId = foreignData.id;
-            break;
-          }
-        }
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              <TextField
-                value={foreignValue}
-                data-id={foreignId}
-                InputProps={{
-                  readOnly: true,
-                }}
-                multiline
-                className={classes.textarea}
-              />
-            </TableCell>
-          </TableRow>
-        );
-      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATETIME'){
-        //datetime
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-              <TableCell>
-                <TextField
-                  value={new Date(show).toString()}
-                  data-id={key}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  multiline
-                  className={classes.textarea}
-                />
-              </TableCell>
-          </TableRow>
-        );
-      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIME'){
-        //time
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-              <TableCell>
-                <TextField
-                  value={new Date(show).toTimeString().split(' ')[0]}
-                  data-id={key}
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  multiline
-                  className={classes.textarea}
-                />
-              </TableCell>
-          </TableRow>
-        );
-      }else{
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              <TextField
-                value={show}
-                InputProps={{
-                  readOnly: true,
-                }}
-                multiline
-                className={classes.textarea}
-              />
-            </TableCell>
-          </TableRow>
-        );
-      }
-      i++;
-    }
 
     return(
       <div>
@@ -220,7 +124,99 @@ class MainShow extends React.PureComponent{
             <div className={classes.scroll}>
               <Table>
                 <TableBody>
-                  {html_row}
+                  {
+                    Object.keys(this.state.showData).map((key, i)=>{
+                      let show = this.state.showData[key]? this.state.showData[key]: '';
+
+                      // when column is forwign key
+                      if(keys.includes(key)){
+                        let foreignValue, foreignId;
+                        this.state.foreignKeys[key].some((foreignData)=>{
+                          if(foreignData.id === show){
+                            foreignValue = foreignData.data;
+                            foreignId = foreignData.id;
+                            return true;
+                          }
+                        })
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                value={foreignValue}
+                                data-id={foreignId}
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                                multiline
+                                className={classes.textarea}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATETIME'){
+                        //datetime
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                              <TableCell>
+                                <TextField
+                                  value={new Date(show).toString()}
+                                  data-id={key}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  multiline
+                                  className={classes.textarea}
+                                />
+                              </TableCell>
+                          </TableRow>
+                        );
+                      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIME'){
+                        //time
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                              <TableCell>
+                                <TextField
+                                  value={new Date(show).toTimeString().split(' ')[0]}
+                                  data-id={key}
+                                  InputProps={{
+                                    readOnly: true,
+                                  }}
+                                  multiline
+                                  className={classes.textarea}
+                                />
+                              </TableCell>
+                          </TableRow>
+                        );
+                      }else{
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                value={show}
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                                multiline
+                                className={classes.textarea}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }
+                    })
+                  }
                 </TableBody>
               </Table>
             </div>

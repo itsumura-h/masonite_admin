@@ -13,12 +13,13 @@ HTTP middleware is middleware that will be ran on every request. Middleware
 is only ran when a HTTP call is successful (a 200 response). This list
 should contain a simple aggregate of middleware classes.
 """
-
+from masonite.middleware import CorsMiddleware #
 HTTP_MIDDLEWARE = [
     LoadUserMiddleware,
     CsrfMiddleware,
     ResponseMiddleware,
     MaintenanceModeMiddleware,
+    CorsMiddleware, #
 ]
 
 """Route Middleware
@@ -35,3 +36,12 @@ ROUTE_MIDDLEWARE = {
 from app.http.middleware.admin_middleware import AdminMiddleware
 
 ROUTE_MIDDLEWARE['admin'] = AdminMiddleware
+
+#
+CORS = {
+    'Access-Control-Allow-Origin': "*",
+    "Access-Control-Allow-Methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
+    "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With",
+    "Access-Control-Max-Age": "3600",
+    "Access-Control-Allow-Credentials": "true"
+}

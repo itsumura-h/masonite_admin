@@ -71,9 +71,9 @@ class AdminController:
         config_model = self.get_model_row_by_model_name(model_name)
 
         if 'create_display' in config_model:
-            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] in config_model['create_display']]
+            new_schema = [v for i, v in enumerate(schema['schema']) if v['column'] in config_model['create_display']]
         else:
-            new_schema = [v for i, v in enumerate(schema['schema']) if v[1] not in ['id', 'created_at', 'updated_at'] ]
+            new_schema = [v for i, v in enumerate(schema['schema']) if v['column'] not in ['id', 'created_at', 'updated_at'] ]
 
         return {
             'schema': new_schema,

@@ -143,173 +143,7 @@ class MainEdit extends React.PureComponent{
   render(){
     const { classes, store } = this.props;
     // get URL param
-
-    let html_row = [];
     const keys = Object.keys(this.state.foreignKeys);
-    let i = 0;
-    for(let key in this.state.showData){
-      let inputData = this.state.showData[key]? this.state.showData[key]: '';
-
-      if(key === 'id'){
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              <TextField
-                defaultValue={inputData}
-                name={key}
-                multiline
-                className={classes.textarea + ' params'}
-                InputProps={{
-                  readOnly: true,
-                }}
-              />
-            </TableCell>
-          </TableRow>
-        );
-      }else if(key === 'created_at' || key === 'updated_at'){
-        ; // skip
-      }else if(keys.includes(key)){
-        // when in foreign key
-        const options = []
-        let selectedId;
-        for(let i2 in this.state.foreignKeys[key]){
-          const foreignData = this.state.foreignKeys[key][i2];
-
-          if(foreignData.id === inputData){
-            selectedId = foreignData.id;
-          }
-          options.push(
-            <option key={i2} value={foreignData.id}>{foreignData.data}</option>
-          );
-        }
-
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              <FormControl fullWidth className={classes.formControl}>
-                <Select
-                  defaultValue={selectedId}
-                  onChange={this.setParam}
-                  name={key}
-                  className='params'
-                  autoWidth
-                  native
-                >
-                  {options}
-                </Select>
-              </FormControl>
-            </TableCell>
-          </TableRow>
-        );
-      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATE'){
-        // Date
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-              <TableCell>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DatePicker
-                    format="yyyy-MM-dd"
-                    onChange={this.setPramDate.bind(this, key)}
-                    name={key}
-                    label="Date"
-                    value={this.state.params[key]? this.state.params[key]: inputData}
-                  />
-                </MuiPickersUtilsProvider>
-              </TableCell>
-          </TableRow>
-        );
-      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'DATETIME'){
-        // Datetime
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-              <TableCell>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DateTimePicker
-                    ampm={false}
-                    format="yyyy-MM-dd HH:mm:ss"
-                    value={this.state.params[key]? this.state.params[key]: inputData}
-                    onChange={this.setPramDateTime.bind(this, key)}
-                    name={key}
-                    label="24h clock"
-                  />
-                </MuiPickersUtilsProvider>
-              </TableCell>
-          </TableRow>
-        );
-      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIME'){
-        // Time
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-              <TableCell>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <TimePicker
-                    ampm={false}
-                    format="HH:mm:ss"
-                    onChange={this.setPramDateTime.bind(this, key)}
-                    name={key}
-                    label="24h clock"
-                    value={this.state.params[key]? this.state.params[key]: inputData}
-                  />
-                </MuiPickersUtilsProvider>
-              </TableCell>
-          </TableRow>
-        );
-      }else if(this.state.schema[i] && this.state.schema[i]['type'] === 'TIMESTAMP'){
-        // TIMESTAMP
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-              <TableCell>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <DateTimePicker
-                    ampm={false}
-                    format="yyyy-MM-dd HH:mm:ss"
-                    onChange={this.setPramDateTime.bind(this, key)}
-                    name={key}
-                    label="24h clock"
-                    value={this.state.params[key]? this.state.params[key]: inputData}
-                  />
-                </MuiPickersUtilsProvider>
-              </TableCell>
-          </TableRow>
-        );
-      }else{
-        html_row.push(
-          <TableRow key={key}>
-            <TableCell>
-              {key}
-            </TableCell>
-            <TableCell>
-              <TextField
-                defaultValue={this.state.params[key]? this.state.params[key]: inputData}
-                onChange={this.setParam}
-                name={key}
-                multiline
-                className={classes.textarea + ' params'}
-              />
-            </TableCell>
-          </TableRow>
-        );
-      }
-      i++;
-    }
 
     return(
       <div>
@@ -341,7 +175,165 @@ class MainEdit extends React.PureComponent{
             <div className={classes.scroll}>
               <Table>
                 <TableBody>
-                  {html_row}
+                  {
+                    this.state.showData && Object.keys(this.state.showData).map((key, i)=>{
+                      let inputData = this.state.showData[key]? this.state.showData[key]: '';
+
+                      if(key === 'id'){
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                defaultValue={inputData}
+                                name={key}
+                                multiline
+                                className={classes.textarea + ' params'}
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }else if(key === 'created_at' || key === 'updated_at'){
+                        ; // skip
+                      }else if(keys.includes(key)){
+                        // when in foreign key
+                        let selectedId;
+                        const options = this.state.foreignKeys[key].map((foreignData, i2)=>{
+                          if(foreignData.id === inputData){
+                            selectedId = foreignData.id;
+                          }
+                          return <option key={i2} value={foreignData.id}>{foreignData.data}</option>
+                        })
+
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                            <TableCell>
+                              <FormControl fullWidth className={classes.formControl}>
+                                <Select
+                                  defaultValue={selectedId}
+                                  onChange={this.setParam}
+                                  name={key}
+                                  className='params'
+                                  autoWidth
+                                  native
+                                >
+                                  {options}
+                                </Select>
+                              </FormControl>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }else if(this.state.schema[i]['type'] === 'DATE'){
+                        // Date
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                              <TableCell>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                  <DatePicker
+                                    format="yyyy-MM-dd"
+                                    onChange={this.setPramDate.bind(this, key)}
+                                    name={key}
+                                    label="Date"
+                                    value={this.state.params[key]? this.state.params[key]: inputData}
+                                  />
+                                </MuiPickersUtilsProvider>
+                              </TableCell>
+                          </TableRow>
+                        );
+                      }else if(this.state.schema[i]['type'] === 'DATETIME'){
+                        // Datetime
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                              <TableCell>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                  <DateTimePicker
+                                    ampm={false}
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    value={this.state.params[key]? this.state.params[key]: inputData}
+                                    onChange={this.setPramDateTime.bind(this, key)}
+                                    name={key}
+                                    label="24h clock"
+                                  />
+                                </MuiPickersUtilsProvider>
+                              </TableCell>
+                          </TableRow>
+                        );
+                      }else if(this.state.schema[i]['type'] === 'TIME'){
+                        // Time
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                              <TableCell>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                  <TimePicker
+                                    ampm={false}
+                                    format="HH:mm:ss"
+                                    onChange={this.setPramDateTime.bind(this, key)}
+                                    name={key}
+                                    label="24h clock"
+                                    value={this.state.params[key]? this.state.params[key]: inputData}
+                                  />
+                                </MuiPickersUtilsProvider>
+                              </TableCell>
+                          </TableRow>
+                        );
+                      }else if(this.state.schema[i]['type'] === 'TIMESTAMP'){
+                        // TIMESTAMP
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                              <TableCell>
+                                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                  <DateTimePicker
+                                    ampm={false}
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    onChange={this.setPramDateTime.bind(this, key)}
+                                    name={key}
+                                    label="24h clock"
+                                    value={this.state.params[key]? this.state.params[key]: inputData}
+                                  />
+                                </MuiPickersUtilsProvider>
+                              </TableCell>
+                          </TableRow>
+                        );
+                      }else{
+                        return (
+                          <TableRow key={key}>
+                            <TableCell>
+                              {key}
+                            </TableCell>
+                            <TableCell>
+                              <TextField
+                                defaultValue={this.state.params[key]? this.state.params[key]: inputData}
+                                onChange={this.setParam}
+                                name={key}
+                                multiline
+                                className={classes.textarea + ' params'}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      }
+                    })
+                  }
                 </TableBody>
               </Table>
             </div>
