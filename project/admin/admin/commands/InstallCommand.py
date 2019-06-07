@@ -78,12 +78,6 @@ MODELS = []
         else:
             self.line('<info>'+config_path+' Already Exists!</info>')
 
-        #==================== Install masonite-api ====================
-        masonite_api_install_output = bytes(check_output(
-                    ['pip', 'install', 'masonite-api']
-                )).decode('utf-8')
-        masonite_api_install_output = ''.join(masonite_api_install_output.splitlines()) # to delete new line
-
         #==================== Create model ====================
         #whether models dir is exists
         isdir = os.path.isdir('app/models')
@@ -257,7 +251,6 @@ class AdminMiddleware:
         #==================== Last message ====================
         self.line('<info>Install Compleated for...</info>')
         self.line('    <comment>'+config_path+'</comment>')
-        self.line('    <comment>'+masonite_api_install_output+'</comment>')
         self.line('    <comment>'+auth_path+'</comment>')
         self.line('    <comment>'+middleware_conf_path+'</comment>')
         self.line('    <comment>'+csrf_middleware_path+'</comment>')
