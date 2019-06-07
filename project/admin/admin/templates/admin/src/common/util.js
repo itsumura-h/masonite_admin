@@ -29,11 +29,10 @@ export default class Util extends React.Component{
     params['login_id'] = window.localStorage.getItem('login_id')
     params['login_token'] = window.localStorage.getItem('login_token')
 
-    const newParams = new URLSearchParams();
-    for(let key in params){
-      const param = params[key];
-      newParams.append(key, param);
-    }
+    const newParams = new FormData();
+    Object.keys(params).forEach((key)=>{
+      newParams.append(key, params[key]);
+    });
 
     return axios.post(url, newParams)
       .then(response=>{
@@ -52,11 +51,10 @@ export default class Util extends React.Component{
     params['login_id'] = window.localStorage.getItem('login_id')
     params['login_token'] = window.localStorage.getItem('login_token')
 
-    const newParams = new URLSearchParams();
-    for(let key in params){
-      const param = params[key];
-      newParams.append(key, param);
-    }
+    const newParams = new FormData();
+    Object.keys(params).forEach((key)=>{
+      newParams.append(key, params[key]);
+    });
 
     return axios.post(url, newParams)
       .then(response=>{
@@ -72,11 +70,10 @@ export default class Util extends React.Component{
   static loginApi=(url, params)=>{
     url = CONST.APIHOST + url;
 
-    const newParams = new URLSearchParams();
-    for(let key in params){
-      const param = params[key];
-      newParams.append(key, param);
-    }
+    const newParams = new FormData();
+    Object.keys(params).forEach((key)=>{
+      newParams.append(key, params[key]);
+    });
 
     return axios.post(url, newParams)
       .then(response=>{
@@ -91,7 +88,7 @@ export default class Util extends React.Component{
   static logoutApi=()=>{
     const url = CONST.APIHOST + '/admin/api/logout';
 
-    const params = new URLSearchParams();
+    const params = new FormData();
     params.append('login_id', window.localStorage.getItem('login_id'));
 
     return axios.post(url, params)

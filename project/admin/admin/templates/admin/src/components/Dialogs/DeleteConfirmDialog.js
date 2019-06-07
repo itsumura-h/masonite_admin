@@ -27,10 +27,10 @@ class DeleteConfirmDialog extends React.Component {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Do you want to delete this data?"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">{"Do you want to delete?"}</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              If you want to delete this data, click OK button
+              Are you sure you wish to delete? This action cannot be undone.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
@@ -38,7 +38,7 @@ class DeleteConfirmDialog extends React.Component {
               Cancel
             </Button>
             <Button onClick={this.clickOK} data-id={this.props.id} color="primary" autoFocus>
-              OK
+              Delete
             </Button>
           </DialogActions>
         </Dialog>

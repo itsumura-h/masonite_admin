@@ -148,7 +148,7 @@ class AdminMiddleware:
         except:
             return False
 '''
-        middleware_path = 'app/http/middleware/admin_middleware.py'
+        middleware_path = 'app/http/middleware/AdminMiddleware.py'
         with open(middleware_path, 'w') as f:
             f.write(filedata)
 
@@ -179,8 +179,7 @@ class AdminMiddleware:
         else:
             lines = [
                 "",
-                "from app.http.middleware.admin_middleware import AdminMiddleware",
-                "",
+                "from app.http.middleware.AdminMiddleware import AdminMiddleware",
                 "ROUTE_MIDDLEWARE['admin'] = AdminMiddleware"
                 ""
             ]
