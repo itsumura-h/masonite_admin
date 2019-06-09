@@ -176,7 +176,8 @@ class MainEdit extends React.PureComponent{
               <Table>
                 <TableBody>
                   {
-                    this.state.showData && Object.keys(this.state.showData).map((key, i)=>{
+                    this.state.showData &&
+                    Object.keys(this.state.showData).map((key, i)=>{
                       let inputData = this.state.showData[key]? this.state.showData[key]: '';
 
                       if(key === 'id'){

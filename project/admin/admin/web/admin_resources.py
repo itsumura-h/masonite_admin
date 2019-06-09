@@ -12,7 +12,7 @@ from masonite.response import Response
 from masonite.routes import BaseHttpRoute
 
 from admin.web.admin_controller import AdminController
-from app.http.middleware.admin_middleware import AdminMiddleware
+from app.http.middleware.AdminMiddleware import AdminMiddleware
 
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
@@ -163,7 +163,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def create(self, request: Request, response: Response):
         """Logic to create data from a given model
         """
-        if AdminMiddleware.checkpw_resource(self) == False:
+        if AdminMiddleware(request, response).checkpw_resource() == False:
             return response.json(None, status=403)
 
         try:
@@ -192,7 +192,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def index(self, request: Request, response: Response):
         """Logic to read data from several models
         """
-        if AdminMiddleware.checkpw_resource(self) == False:
+        if AdminMiddleware(request, response).checkpw_resource() == False:
             return response.json(None, status=403)
 
         # pagenagion
@@ -216,7 +216,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         #     return self.model.all()
 
     def count(self, request: Request, response: Response):
-        if AdminMiddleware.checkpw_resource(self) == False:
+        if AdminMiddleware(request, response).checkpw_resource() == False:
             return response.json(None, status=403)
 
         return {'count': self.model.count()}
@@ -224,7 +224,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def show(self, request: Request, response: Response):
         """Logic to read data from 1 model
         """
-        if AdminMiddleware.checkpw_resource(self) == False:
+        if AdminMiddleware(request, response).checkpw_resource() == False:
             return response.json(None, status=403)
 
         if self.detail_display and env('DB_CONNECTION') == 'mysql':
@@ -245,7 +245,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
     def update(self, request: Request, response: Response):
         """Logic to update data from a given model
         """
-        if AdminMiddleware.checkpw_resource(self) == False:
+        if AdminMiddleware(request, response).checkpw_resource() == False:
             return response.json(None, status=403)
 
         record = self.model.where('id', request.param('id'))
@@ -255,12 +255,13 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             record.update(params)
         except Exception as e:
             return {'error': str(e)}
+
         return {}#self.model.where('id', request.param('id')).get().serialize()
 
     def delete(self, request: Request, response: Response):
         """Logic to delete data from a given model
         """
-        if AdminMiddleware.checkpw_resource(self) == False:
+        if AdminMiddleware(request, response).checkpw_resource() == False:
             return response.json(None, status=403)
 
         record = self.model.find(request.param('id'))

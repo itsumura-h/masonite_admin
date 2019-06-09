@@ -10,9 +10,20 @@ class AdminUserTableSeeder(Seeder):
         """
         Run the database seeds.
         """
-        self.factory.register(AdminUser, self.admin_users_factory)
-        self.faker = Faker('en')
-        self.factory(AdminUser, 1).create()
+        admin_users = []
+        for i in range(100):
+            admin_users.append(
+                {
+                    'name': 'user'+str(i),
+                    'email': 'test'+str(i)+'@gmail.com',
+                    'password': bcrypt_password('Password'+str(i))
+                }
+            )
+        AdminUser.insert(admin_users)
+
+        # self.factory.register(AdminUser, self.admin_users_factory)
+        # self.faker = Faker('en')
+        # self.factory(AdminUser, 1).create()
 
     def admin_users_factory(self, faker):
         return {

@@ -33,7 +33,7 @@ ROUTE_MIDDLEWARE = {
     'verified': VerifyEmailMiddleware,
 }
 
-from app.http.middleware.admin_middleware import AdminMiddleware
+from app.http.middleware.AdminMiddleware import AdminMiddleware
 
 ROUTE_MIDDLEWARE['admin'] = AdminMiddleware
 

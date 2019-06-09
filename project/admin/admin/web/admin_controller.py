@@ -84,6 +84,8 @@ class AdminController:
         schema = self._schema(self, request)
         model_name = request.param('model')
         config_model = self.get_model_row_by_model_name(model_name)
+        if 'id' not in config_model['detail_display']:
+            config_model['detail_display'].insert(0, 'id')
 
         if 'detail_display' in config_model:
             new_schema = [v for i, v in enumerate(schema['schema']) if v['column'] in config_model['detail_display']]
