@@ -8,26 +8,25 @@ import Util from '../common/util';
 
 class Admin extends React.Component {
   getInfo=()=>{
-    const store = this.props.store;
     Util.getAPI('/admin/api/info')
     .then(response=>{
-      if(response.data){
-        store.set('info')(response.data);
-      }
-    })
+      this.props.store.set('info')(response.data);
+    });
   }
 
   componentDidMount(){
-    if(Object.keys(this.props.store.state.info).length === 0){
+    if(Object.keys(this.props.store.get('info')).length === 0){
       this.getInfo();
     }
   }
 
   render() {
+    const {store} = this.props;
+
     return (
       <div>
         <AdminDrawer/>
-        <div className='rightContents' style={{marginLeft: this.props.store.state.drawerWidth}}>
+        <div className='rightContents' style={{marginLeft: store.get('drawerWidth')}}>
           <AdminAppBar/>
           <AdminMain/>
         </div>

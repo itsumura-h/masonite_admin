@@ -21,7 +21,7 @@ elif env('DB_CONNECTION') == 'postgres':
     import psycopg2
     from .field_list import PGSQL_FIELD_TYPE
 
-ADMIN_STATIC_DIR_PATH = pathlib.Path(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../templates/admin/build/static'))
+ADMIN_STATIC_DIR_PATH = pathlib.Path(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../templates/admin/build'))
 
 class AdminController:
     def root(self):

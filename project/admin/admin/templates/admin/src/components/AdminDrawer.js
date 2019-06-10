@@ -15,15 +15,14 @@ class AdminDrawer extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
-    const state = this.props.store.state;
+    const { classes, store } = this.props;
 
     return (
       <Drawer
         container={this.props.container}
         variant="persistent"
         anchor="left"
-        open={state.drawerOpen}
+        open={store.get('drawerOpen')}
         classes={{
           paper: classes.drawerPaper,
         }}
@@ -33,8 +32,8 @@ class AdminDrawer extends React.Component {
             <ListItemText primary={'Table List'} />
           </ListItem>
           {
-            state.info.models &&
-            state.info.models.map((model, i)=>{
+            'models' in store.get('info') &&
+            store.get('info').models.map((model, i)=>{
               return (
                 <Link to={"/admin/"+model['en']} key={i}>
                   <ListItem button>

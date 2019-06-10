@@ -27,7 +27,8 @@ class MainToppage extends React.Component {
                 <Table>
                   <TableBody>
                     {
-                      state.info.env && Object.keys(state.info.env).map((key, i)=>{
+                      'env' in state.info &&
+                      Object.keys(state.info.env).map((key, i)=>{
                         let value = state.info.env[key];
                         return (
                           <TableRow key={i}>
@@ -53,7 +54,8 @@ class MainToppage extends React.Component {
                 <Table>
                   <TableBody>
                     {
-                      state.info.pkg && Object.keys(state.info.pkg).map((key, i)=>{
+                      'pkg' in state.info &&
+                      Object.keys(state.info.pkg).map((key, i)=>{
                         let value = state.info.pkg[key];
                         return (
                           <TableRow key={i}>

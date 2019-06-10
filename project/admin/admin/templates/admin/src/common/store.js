@@ -8,6 +8,6 @@ const store = createStore({
   modelStr: '',
   targetId: 0,
   rowsPerPage: 10,
-})
+});
 
-export const withStore = connect(store)
+export const withStore = connect(store);

@@ -303,5 +303,5 @@ class AdminMiddleware:
         self.line('    <comment>'+middleware_conf_path+'</comment>')
         self.line('    <comment>'+csrf_middleware_path+'</comment>')
         self.line('    <comment>'+admin_user_model_path+'</comment>')
-        self.line('    <comment>'+login_token_model_path+'</comment>')
+        # self.line('    <comment>'+login_token_model_path+'</comment>')
         self.line('    <comment>'+route_path+'</comment>')

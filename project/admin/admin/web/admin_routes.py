@@ -9,7 +9,7 @@ from admin.web.login_controller import LoginController
 from config.admin import MODELS
 from config.storage import STATICFILES
 
-STATICFILES[ADMIN_STATIC_DIR_PATH] = 'static/'
+STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
 
 ADMIN_ROUTES_WITH_MIDDLEWARE = [
     Get().route('/api/info',AdminController.info),

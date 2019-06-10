@@ -10,11 +10,7 @@ export default class Util extends React.Component{
 
     return axios.get(url, {params: params})
       .then(response=>{
-        if(response.headers['content-type'] === 'application/json; charset=utf-8'){
-          return response;
-        }else{
-          return [];
-        }
+        return response;
       })
       .catch(err=>{
         this.loginFale(err);

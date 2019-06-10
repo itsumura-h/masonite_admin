@@ -35,7 +35,7 @@ class MainIndex extends React.PureComponent {
 
   setModelStr=()=>{
     const url_model = this.props.match.params.model;
-    const models = this.props.store.state.info.models;
+    const models = this.props.store.get('info').models;
     for(let i in models){ // {"en": "User", "str": "ユーザー一覧"}
       if(models[i]['en'] === url_model){
         this.props.store.set('modelStr')(models[i]['str']);
@@ -46,7 +46,7 @@ class MainIndex extends React.PureComponent {
   //========================== API Access ==========================
   getIndex=(model, page=this.state.page)=>{
     const self = this;
-    const params = {p: page+1, i: this.props.store.state.rowsPerPage};
+    const params = {p: page+1, i: this.props.store.get('rowsPerPage')};
     Util.getAPI('/admin/api/'+model, params)
     .then(response=>{
       self.setState({
@@ -66,8 +66,7 @@ class MainIndex extends React.PureComponent {
   //========================== Delete ==========================
   openDelete=(event)=>{
     if(event){
-      const store = this.props.store;
-      store.set('targetId')(event.currentTarget.dataset.id);
+      this.props.store.set('targetId')(event.currentTarget.dataset.id);
     }
 
     const newIsOpenDelete = this.state.isOpenDelete? false: true;
@@ -78,7 +77,7 @@ class MainIndex extends React.PureComponent {
     // get URL param
     const model = this.props.match.params.model;
 
-    const id = this.props.store.state.targetId;
+    const id = this.props.store.get('targetId');
     const url = '/admin/api/'+model+'/'+id+'/delete';
 
     Util.deleteAPI(url)
@@ -123,7 +122,7 @@ class MainIndex extends React.PureComponent {
     const model = this.props.match.params.model;
 
     if(this.props.match.params.model !== nextProps.match.params.model ||
-      this.props.store.state.rowsPerPage !== nextProps.store.state.rowsPerPage){
+      this.props.store.get('rowsPerPage') !== nextProps.store.get('rowsPerPage')){
       this.setState({page: 0});
       this.getIndex(model, 0);
       this.getPages(model);
@@ -140,7 +139,7 @@ class MainIndex extends React.PureComponent {
     const model = this.props.match.params.model;
     // pagenation
     // set range of array
-    const { rowsPerPage } = this.props.store.state;
+    const rowsPerPage = store.get('rowsPerPage');
 
     let headers = [];
     let html_table = [];
@@ -189,7 +188,7 @@ class MainIndex extends React.PureComponent {
 
     return (
       <div>
-        <h1>{store.state.modelStr}</h1>
+        <h1>{store.get('modelStr')}</h1>
         <Card>
           <CardContent>
             <div className={classes.flex}>
