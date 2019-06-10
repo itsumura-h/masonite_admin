@@ -1,2 +1,10 @@
-.venv/*
-project/databases/db.sqlite3
+*.pyc
+.env
+*__pycache__
+venv
+.env.*
+.vscode
+.pytest_cache
+databases/login.bin
+databases/db.sqlite3
+#admin/admin.egg-info/*
