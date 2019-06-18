@@ -102,6 +102,4 @@ from datetime import timedelta
 LOGIN_CONF = {
     'file_path': 'databases/login.bin',
     'timeout': timedelta(hours=1),
-    # 'timeout': timedelta(seconds=30)
-    # 'timeout': timedelta(minutes=1),
 }
