@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
@@ -25,7 +25,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class MainIndex extends React.PureComponent {
+class MainIndex extends PureComponent {
   state = {
     indexData: [],
     isOpenDelete: false,

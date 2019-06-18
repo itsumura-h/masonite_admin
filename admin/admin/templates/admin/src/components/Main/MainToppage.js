@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
@@ -10,74 +10,70 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
+const MainToppage=(props)=>{
+  const {state} = props.store;
 
-class MainToppage extends React.Component {
-
-  render() {
-    const state = this.props.store.state;
-
-    return (
-      <div>
-        <h2>Dashboard</h2>
-        <Grid container spacing={24}>
-          <Grid item xs>
-            <Card>
-              <CardContent>
-                Environment
-                <Table>
-                  <TableBody>
-                    {
-                      'env' in state.info &&
-                      Object.keys(state.info.env).map((key, i)=>{
-                        let value = state.info.env[key];
-                        return (
-                          <TableRow key={i}>
-                            <TableCell>
-                              {key}
-                            </TableCell>
-                            <TableCell>
-                              {value}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    }
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs>
-            <Card>
-              <CardContent>
-                Dependencies
-                <Table>
-                  <TableBody>
-                    {
-                      'pkg' in state.info &&
-                      Object.keys(state.info.pkg).map((key, i)=>{
-                        let value = state.info.pkg[key];
-                        return (
-                          <TableRow key={i}>
-                            <TableCell>
-                              {key}
-                            </TableCell>
-                            <TableCell>
-                              {value}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    }
-                  </TableBody>
-                </Table>
-              </CardContent>
-            </Card>
-          </Grid>
+  return (
+    <div>
+      <h2>Dashboard</h2>
+      <Grid container spacing={24}>
+        <Grid item xs>
+          <Card>
+            <CardContent>
+              Environment
+              <Table>
+                <TableBody>
+                  {
+                    'env' in state.info &&
+                    Object.keys(state.info.env).map((key, i)=>{
+                      let value = state.info.env[key];
+                      return (
+                        <TableRow key={i}>
+                          <TableCell>
+                            {key}
+                          </TableCell>
+                          <TableCell>
+                            {value}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  }
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         </Grid>
-      </div>
-    );
-  }
+        <Grid item xs>
+          <Card>
+            <CardContent>
+              Dependencies
+              <Table>
+                <TableBody>
+                  {
+                    'pkg' in state.info &&
+                    Object.keys(state.info.pkg).map((key, i)=>{
+                      let value = state.info.pkg[key];
+                      return (
+                        <TableRow key={i}>
+                          <TableCell>
+                            {key}
+                          </TableCell>
+                          <TableCell>
+                            {value}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  }
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </div>
+  );
 }
 
 const styles = {

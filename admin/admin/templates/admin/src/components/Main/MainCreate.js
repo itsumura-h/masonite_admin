@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
@@ -27,7 +27,7 @@ import { DateTimePicker, DatePicker, TimePicker, MuiPickersUtilsProvider } from 
 import Util from '../../common/util';
 
 
-class MainCreate extends React.Component {
+class MainCreate extends PureComponent {
   state = {
     schema: [],
     foreignKeys: [],
@@ -114,13 +114,12 @@ class MainCreate extends React.Component {
   }
 
   render(){
-    const { classes } = this.props;
-    const model = this.props.match.params.model;
+    const { classes, store } = this.props;
     const keys = Object.keys(this.state.foreignKeys);
 
     return(
       <div>
-        <h1>{model}</h1>
+        <h1>{store.state.modelStr}</h1>
         <p className={classes.error}>{this.state.error}</p>
         <Card>
           <CardContent>

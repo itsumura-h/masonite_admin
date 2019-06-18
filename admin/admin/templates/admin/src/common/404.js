@@ -4,20 +4,17 @@ import { withStore } from './store';
 
 import { withRouter } from 'react-router';
 
-class NotFound extends React.Component {
-
-  render() {
-    const {classes} = this.props;
-    return (
-      <div className={classes.style}>
-        <div className={classes.content}>
-          <div className={classes.title}>
-            404 Not Found
-            </div>
-        </div>
+const NotFound=(props)=>{
+  const {classes} = props;
+  return (
+    <div className={classes.style}>
+      <div className={classes.content}>
+        <div className={classes.title}>
+          404 Not Found
+          </div>
       </div>
-    )
-  }
+    </div>
+  );
 }
 
 const styles = {

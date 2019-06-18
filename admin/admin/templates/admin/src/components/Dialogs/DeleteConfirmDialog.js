@@ -9,41 +9,39 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-class DeleteConfirmDialog extends React.Component {
-  openDelete=()=>{
-    this.props.openDelete();
+const DeleteConfirmDialog=(props)=>{
+  const openDelete=()=>{
+    props.openDelete();
   }
 
-  clickOK=()=>{
-    this.props.openDelete();
-    this.props.handleOkMethod();
+  const clickOK=()=>{
+    props.openDelete();
+    props.handleOkMethod();
   }
 
-  render(){
-    return(
-      <Dialog
-          open={this.props.isOpen}
-          onClose={this.openDelete}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">{"Do you want to delete?"}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Are you sure you wish to delete? This action cannot be undone.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={this.openDelete}>
-              Cancel
-            </Button>
-            <Button onClick={this.clickOK} data-id={this.props.id} color="primary" autoFocus>
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-    );
-  }
+  return(
+    <Dialog
+      open={props.isOpen}
+      onClose={openDelete}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{"Do you want to delete?"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you wish to delete? This action cannot be undone.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={openDelete}>
+          Cancel
+        </Button>
+        <Button onClick={clickOK} data-id={props.id} color="primary" autoFocus>
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
 
 const styles = {

@@ -1,5 +1,5 @@
 const DEV = {
-  APIHOST: 'http://localhost:8001',
+  APIHOST: 'http://localhost:8000',
   drawerWidth: 240,
 }
 

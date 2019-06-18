@@ -17,7 +17,7 @@ import Lock from '@material-ui/icons/Lock';
 
 import Util from '../../common/util';
 
-class Login extends React.Component {
+class Login extends React.PureComponent {
   state = {
     params: [],
     isOpenSnackbar: false,

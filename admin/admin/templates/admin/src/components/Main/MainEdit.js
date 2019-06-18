@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PureComponent} from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../../common/store';
 
@@ -28,7 +28,7 @@ import Delete from '@material-ui/icons/Delete';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 import Util from '../../common/util';
 
-class MainEdit extends React.PureComponent{
+class MainEdit extends PureComponent{
   state = {
     schema: [],
     showData: null,

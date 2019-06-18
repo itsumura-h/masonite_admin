@@ -12,52 +12,49 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {NavLink} from 'react-router-dom';
 import Util from '../common/util';
 
-class AdminAppBar extends React.Component {
+const AdminAppBar=(props)=>{
+  const { classes, store } = props;
 
-  drawerOpen=()=>{
-    const store = this.props.store;
+  const drawerOpen=()=>{
     const newIsOpen = store.get('drawerOpen')? false: true;
     store.set('drawerOpen')(newIsOpen);
     const newWidth = store.get('drawerWidth') === 240? 0: 240;
     store.set('drawerWidth')(newWidth);
   }
 
-  logout=()=>{
+  const logout=()=>{
     Util.logoutApi()
     .then(response=>{
       window.localStorage.removeItem('login_id');
       window.localStorage.removeItem('login_token');
       window.localStorage.removeItem('login_name');
-      this.props.history.push('/admin/login')
+      props.history.push('/admin/login')
     })
     .catch(err=>{
       console.error(err);
     })
   }
 
-  render(){
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-        <AppBar position="static" className={classes.appbar}>
-          <Toolbar>
-            <IconButton onClick={this.drawerOpen} className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              <NavLink to="/admin" className={classes.link}>
-                Masonite Admin
-              </NavLink>
-            </Typography>
-            <Typography variant="h6" color="inherit">
-              Welcome! <span className={classes.loginName}>{window.localStorage.getItem('login_name')}</span>
-            </Typography>
-            <Button color="inherit" onClick={this.logout} className={classes.logoutButton} >Log Out</Button>
-          </Toolbar>
-        </AppBar>
-      </div>
-    );
-  }
+  return (
+    <div className={classes.root}>
+      <AppBar position="static" className={classes.appbar}>
+        <Toolbar>
+          <IconButton onClick={drawerOpen} className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" color="inherit" className={classes.grow}>
+            <NavLink to="/admin" className={classes.link}>
+              Masonite Admin
+            </NavLink>
+          </Typography>
+          <Typography variant="h6" color="inherit">
+            Welcome! <span className={classes.loginName}>{window.localStorage.getItem('login_name')}</span>
+          </Typography>
+          <Button color="inherit" onClick={logout} className={classes.logoutButton} >Log Out</Button>
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
 }
 
 const styles = {

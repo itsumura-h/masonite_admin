@@ -9,44 +9,38 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import {Link} from 'react-router-dom';
 
-class AdminDrawer extends React.Component {
-  state = {
-    tables: null,
-  }
+const AdminDrawer=(props)=>{
+  const { classes, store } = props;
 
-  render() {
-    const { classes, store } = this.props;
-
-    return (
-      <Drawer
-        container={this.props.container}
-        variant="persistent"
-        anchor="left"
-        open={store.get('drawerOpen')}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <List className={classes.modelList}>
-          <ListItem>
-            <ListItemText primary={'Table List'} />
-          </ListItem>
-          {
-            'models' in store.get('info') &&
-            store.get('info').models.map((model, i)=>{
-              return (
-                <Link to={"/admin/"+model['en']} key={i}>
-                  <ListItem button>
-                    <ListItemText primary={model['str']} />
-                  </ListItem>
-                </Link>
-              );
-            })
-          }
-        </List>
-      </Drawer>
-    );
-  }
+  return (
+    <Drawer
+      container={props.container}
+      variant="persistent"
+      anchor="left"
+      open={store.get('drawerOpen')}
+      classes={{
+        paper: classes.drawerPaper,
+      }}
+    >
+      <List className={classes.modelList}>
+        <ListItem>
+          <ListItemText primary={'Table List'} />
+        </ListItem>
+        {
+          'models' in store.get('info') &&
+          store.get('info').models.map((model, i)=>{
+            return (
+              <Link to={"/admin/"+model['en']} key={i}>
+                <ListItem button>
+                  <ListItemText primary={model['str']} />
+                </ListItem>
+              </Link>
+            );
+          })
+        }
+      </List>
+    </Drawer>
+  );
 }
 
 const styles = {
