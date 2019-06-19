@@ -86,6 +86,10 @@ class MainShow extends PureComponent{
     }
   }
 
+  componentDidUpdate(){
+    Util.setModelTitle();
+  }
+
   render(){
     const { classes, store } = this.props;
     // get URL param
@@ -94,7 +98,7 @@ class MainShow extends PureComponent{
 
     return(
       <div>
-        <h1>{store.state.modelStr}</h1>
+        <h1>{store.get('modelStr')['str']}</h1>
         <Card>
           <CardContent>
           <div className={classes.flex}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import CONST from './const';
+import {store} from './store';
 
 export default class Util extends React.Component{
   static getAPI=(url, params={})=>{
@@ -31,6 +32,28 @@ export default class Util extends React.Component{
     });
 
     return axios.post(url, newParams)
+      .then(response=>{
+        return response;
+      })
+      .catch(err=>{
+        this.loginFale(err);
+        console.error(err);
+        return [];
+      })
+  }
+
+  static putAPI=(url, params)=>{
+    url = CONST.APIHOST + url;
+
+    params['login_id'] = window.localStorage.getItem('login_id')
+    params['login_token'] = window.localStorage.getItem('login_token')
+
+    const newParams = new FormData();
+    Object.keys(params).forEach((key)=>{
+      newParams.append(key, params[key]);
+    });
+
+    return axios.put(url, newParams)
       .then(response=>{
         return response;
       })
@@ -111,5 +134,19 @@ export default class Util extends React.Component{
     format = format.replace(/MM/, date.getMonth() + 1);
     format = format.replace(/DD/, date.getDate());
     return format;
+  }
+
+  static setModelTitle=()=>{
+    const model_en_url = window.location.pathname.split('/')[2];
+    const model_en_store = store.get('modelStr')['en'];
+
+    model_en_url !== model_en_store &&
+    Object.keys(store.get('info')).length > 0 &&
+      store.get('info').models.some(model=>{
+        if(window.location.pathname.split('/')[2] === model['en']){
+          store.set('modelStr')(model);
+          return true;
+        }
+      });
   }
 }

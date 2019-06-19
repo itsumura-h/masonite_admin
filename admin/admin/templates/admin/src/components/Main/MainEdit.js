@@ -92,6 +92,7 @@ class MainEdit extends PureComponent{
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
     this.setState({params: new_params});
+    this.forceUpdate();
   }
 
   setPramDate=(key, value)=>{
@@ -111,14 +112,13 @@ class MainEdit extends PureComponent{
   save=(event)=>{
     // get URL param
     const model = this.props.match.params.model;
-
     const id = event.currentTarget.dataset.id;
-    const url = '/admin/api/'+model+'/'+id+'/patch';
+    const url = `/admin/api/${model}/${id}/put`;
 
     Util.postAPI(url, this.state.params)
     .then(response=>{
       if(!response.data.error){
-        this.props.history.push('../'+id);
+        this.props.history.push(`../${id}`);
       }else{
         this.setState({error: response.data.error});
       }
@@ -140,14 +140,19 @@ class MainEdit extends PureComponent{
     }
   }
 
+  componentDidUpdate(){
+    Util.setModelTitle();
+  }
+
   render(){
     const { classes, store } = this.props;
+
     // get URL param
     const keys = Object.keys(this.state.foreignKeys);
 
     return(
       <div>
-        <h1>{store.state.modelStr}</h1>
+        <h1>{store.get('modelStr')['str']}</h1>
         <p className={classes.error}>{this.state.error}</p>
         <Card>
           <CardContent>
@@ -159,7 +164,12 @@ class MainEdit extends PureComponent{
                     <List/>list
                   </Button>
                 </NavLink>
-                <Button variant="contained" className={classes.saveButton} data-id={this.props.match.params.id} onClick={this.save}>
+                <Button variant="contained"
+                  className={classes.saveButton}
+                  data-id={this.props.match.params.id}
+                  onClick={this.save}
+                  disabled={Object.keys(this.state.params).length === 0? true: false}
+                >
                   <Save/>save
                 </Button>
                 <Button variant="contained"

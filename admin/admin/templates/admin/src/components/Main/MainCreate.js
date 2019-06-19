@@ -113,13 +113,17 @@ class MainCreate extends PureComponent {
     }
   }
 
+  componentDidUpdate(){
+    Util.setModelTitle();
+  }
+
   render(){
     const { classes, store } = this.props;
     const keys = Object.keys(this.state.foreignKeys);
 
     return(
       <div>
-        <h1>{store.state.modelStr}</h1>
+        <h1>{store.get('modelStr')['str']}</h1>
         <p className={classes.error}>{this.state.error}</p>
         <Card>
           <CardContent>

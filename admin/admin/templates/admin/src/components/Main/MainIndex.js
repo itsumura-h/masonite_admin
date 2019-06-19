@@ -33,16 +33,6 @@ class MainIndex extends PureComponent {
     count: 0,
   }
 
-  setModelStr=()=>{
-    const url_model = this.props.match.params.model;
-    const models = this.props.store.get('info').models;
-    for(let i in models){ // {"en": "User", "str": "ユーザー一覧"}
-      if(models[i]['en'] === url_model){
-        this.props.store.set('modelStr')(models[i]['str']);
-      }
-    }
-  }
-
   //========================== API Access ==========================
   getIndex=(model, page=this.state.page)=>{
     const self = this;
@@ -113,7 +103,7 @@ class MainIndex extends PureComponent {
     if(model){
       this.getIndex(model);
       this.getPages(model);
-      this.setModelStr();
+      Util.setModelTitle();
     }
   }
 
@@ -129,7 +119,7 @@ class MainIndex extends PureComponent {
     }
 
     if(this.props !== nextProps){
-      this.setModelStr();
+      Util.setModelTitle();
     }
   }
 
@@ -188,7 +178,7 @@ class MainIndex extends PureComponent {
 
     return (
       <div>
-        <h1>{store.get('modelStr')}</h1>
+        <h1>{store.get('modelStr')['str']}</h1>
         <Card>
           <CardContent>
             <div className={classes.flex}>

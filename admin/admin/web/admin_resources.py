@@ -17,7 +17,7 @@ from app.http.middleware.AdminMiddleware import AdminMiddleware
 
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
-    methods = ['create', 'index', 'count', 'show', 'update', 'delete']
+    methods = ['create', 'index', 'count', 'show', 'update', 'delete', 'options']
     prefix = ''
 
     def __init__(self, model, url='', create_display=[], list_display=[], detail_display=[], without=[], method_type=['GET'], request=Request):
@@ -54,9 +54,13 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         if 'show' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url + '/@id', detail_display=self.detail_display, method_type=['GET']))
         if 'update' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/@id/patch', method_type=['POST']))
+            routes.append(self.__class__(self.model, url=self.base_url + '/@id/put', method_type=['POST']))
+        # if 'update' in self.methods:
+        #     routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['PUT']))
         if 'delete' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url + '/@id/delete', method_type=['POST']))
+        # if 'options' in self.methods:
+        #     routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['OPTIONS']))
 
         return routes
 
@@ -89,7 +93,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             # elif 'DELETE' in self.method_type:
             #     response = self.request.app().resolve(getattr(self, 'delete'))
 
-            if 'POST' in self.method_type and 'patch' in self.route_url:
+            if 'POST' in self.method_type and 'put' in self.route_url:
                 response = self.request.app().resolve(getattr(self, 'update'))
             elif 'POST' in self.method_type and 'delete' in self.route_url:
                 response = self.request.app().resolve(getattr(self, 'delete'))
@@ -101,6 +105,8 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
                 response = self.request.app().resolve(getattr(self, 'count'))
             elif 'GET' in self.method_type:
                 response = self.request.app().resolve(getattr(self, 'index'))
+            # elif 'OPTIONS' in self.method_type:
+            #     response = self.request.app().resolve(getattr(self, 'options'))
 
 
         # If the resource needs it's own serializer method
@@ -319,6 +325,9 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             return record
 
         return {'error': 'Record does not exist'}
+
+    # def options(self, request: Request, response: Response):
+    #     return {}
 
 
     def arr_iso_format(self, _obj):

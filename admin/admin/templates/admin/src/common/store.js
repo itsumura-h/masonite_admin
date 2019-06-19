@@ -1,11 +1,11 @@
 import { connect, createStore } from 'undux'
 import Const from '../common/const';
 
-const store = createStore({
+export const store = createStore({
   drawerOpen: true,
   drawerWidth: Const.drawerWidth,
   info: {},
-  modelStr: '',
+  modelStr: {},
   targetId: 0,
   rowsPerPage: 10,
 });

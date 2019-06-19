@@ -34,6 +34,7 @@ class AdminMiddleware:
 
     def checkpw_resource(self):
         try:
+            print(self.request.all())
             admin_user_id = self.request.input('login_id')
             input_token = self.request.input('login_token')
 
