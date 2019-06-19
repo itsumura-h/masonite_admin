@@ -15,7 +15,7 @@ should contain a simple aggregate of middleware classes.
 """
 from masonite.middleware import CorsMiddleware #
 HTTP_MIDDLEWARE = [
-    LoadUserMiddleware,
+    # LoadUserMiddleware,
     CsrfMiddleware,
     ResponseMiddleware,
     MaintenanceModeMiddleware,

@@ -1,6 +1,7 @@
-import json
+import json, re
 from datetime import date, datetime, time, timedelta
 from inspect import getmembers
+from masonite.routes import Route
 
 import bcrypt
 from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
@@ -123,10 +124,54 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         self.request = request
         return self
 
-    def compile_route_to_regex(self, router):
-        """Compiles this resource url to a regex pattern
-        """
+    # for Masonite 2.1
+    # def compile_route_to_regex(self, router):
+    #     """Compiles this resource url to a regex pattern
+    #     """
 
+    #     # Split the route
+    #     split_given_route = self.route_url.split('/')
+    #     # compile the provided url into regex
+    #     url_list = []
+    #     regex = '^'
+    #     for regex_route in split_given_route:
+    #         if '@' in regex_route:
+    #             if ':' in regex_route:
+    #                 try:
+    #                     regex += router.route_compilers[regex_route.split(':')[
+    #                         1]]
+    #                 except KeyError:
+    #                     raise InvalidRouteCompileException(
+    #                         'Route compiler "{}" is not an available route compiler. '
+    #                         'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
+    #                             regex_route.split(':')[1])
+    #                     )
+    #             else:
+    #                 regex += router.route_compilers['default']
+
+    #             regex += r'\/'
+
+    #             # append the variable name passed @(variable):int to a list
+    #             url_list.append(
+    #                 regex_route.replace('@', '').split(':')[0]
+    #             )
+    #         else:
+    #             regex += regex_route + r'\/'
+
+    #     router.url_list = url_list
+    #     regex += '$'
+    #     return regex
+
+    # for 2.2, 2.1 give router arg but it's not used in 2.2
+    def compile_route_to_regex(self, router=None):
+        """Compile the given route to a regex string.
+
+        Arguments:
+            route {string} -- URI of the route to compile.
+
+        Returns:
+            string -- Compiled URI string.
+        """
         # Split the route
         split_given_route = self.route_url.split('/')
         # compile the provided url into regex
@@ -136,7 +181,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             if '@' in regex_route:
                 if ':' in regex_route:
                     try:
-                        regex += router.route_compilers[regex_route.split(':')[
+                        regex += Route.route_compilers[regex_route.split(':')[
                             1]]
                     except KeyError:
                         raise InvalidRouteCompileException(
@@ -145,7 +190,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
                                 regex_route.split(':')[1])
                         )
                 else:
-                    regex += router.route_compilers['default']
+                    regex += Route.route_compilers['default']
 
                 regex += r'\/'
 
@@ -156,8 +201,12 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             else:
                 regex += regex_route + r'\/'
 
-        router.url_list = url_list
+        self.url_list = url_list
         regex += '$'
+
+        self._compiled_regex = re.compile(regex.replace(r'\/$', r'$'))
+        self._compiled_regex_end = re.compile(regex)
+
         return regex
 
     def create(self, request: Request, response: Response):
