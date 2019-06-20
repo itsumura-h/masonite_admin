@@ -134,8 +134,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         self.request = request
         return self
 
-    # for Masonite 2.1
-    def compile_route_to_regex(self, router):
+    def compile_route_to_regex(self, router=None):
         masonite_version = str(pkg_resources.working_set.by_key['masonite']).split(' ')[1]
         miner_ver = masonite_version.split('.')
         del miner_ver[2]
