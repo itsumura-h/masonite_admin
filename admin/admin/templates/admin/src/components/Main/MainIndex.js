@@ -68,7 +68,7 @@ class MainIndex extends PureComponent {
     const model = this.props.match.params.model;
 
     const id = this.props.store.get('targetId');
-    const url = '/admin/api/'+model+'/'+id+'/delete';
+    const url = `/admin/api/${model}/${id}/delete`;
 
     Util.deleteAPI(url)
     .then(response=>{

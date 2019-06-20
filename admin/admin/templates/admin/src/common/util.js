@@ -4,6 +4,12 @@ import CONST from './const';
 import {store} from './store';
 
 export default class Util extends React.Component{
+
+  static contentType=()=>{
+    return new FormData();
+    // return new URLSearchParams();
+  }
+
   static getAPI=(url, params={})=>{
     url = CONST.APIHOST + url;
     params['login_id'] = window.localStorage.getItem('login_id')
@@ -26,7 +32,7 @@ export default class Util extends React.Component{
     params['login_id'] = window.localStorage.getItem('login_id')
     params['login_token'] = window.localStorage.getItem('login_token')
 
-    const newParams = new FormData();
+    const newParams = this.contentType();
     Object.keys(params).forEach((key)=>{
       newParams.append(key, params[key]);
     });
@@ -48,12 +54,12 @@ export default class Util extends React.Component{
     params['login_id'] = window.localStorage.getItem('login_id')
     params['login_token'] = window.localStorage.getItem('login_token')
 
-    const newParams = new FormData();
+    const newParams = this.contentType();
     Object.keys(params).forEach((key)=>{
       newParams.append(key, params[key]);
     });
 
-    return axios.put(url, newParams)
+    return axios.post(url, newParams)
       .then(response=>{
         return response;
       })

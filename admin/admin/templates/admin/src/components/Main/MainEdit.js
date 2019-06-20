@@ -75,7 +75,7 @@ class MainEdit extends PureComponent{
 
     //const id = event.currentTarget.dataset.id;
     const id = this.props.store.state.targetId;
-    const url = '/admin/api/'+model+'/'+id+'/delete';
+    const url = `/admin/api/${model}/${id}/delete`;
 
     Util.deleteAPI(url)
     .then(response=>{
@@ -115,7 +115,8 @@ class MainEdit extends PureComponent{
     const id = event.currentTarget.dataset.id;
     const url = `/admin/api/${model}/${id}/put`;
 
-    Util.postAPI(url, this.state.params)
+    // Util.postAPI(url, this.state.params)
+    Util.putAPI(url, this.state.params)
     .then(response=>{
       if(!response.data.error){
         this.props.history.push(`../${id}`);
@@ -124,8 +125,9 @@ class MainEdit extends PureComponent{
       }
     })
     .catch(err=>{
-      this.setState({error: err});
-      console.error(err);
+      // if(err){this.setState({error: err})}
+      // console.error(err);
+      ;
     })
   }
 

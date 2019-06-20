@@ -64,7 +64,7 @@ class MainShow extends PureComponent{
     const model = this.props.match.params.model;
 
     const id = this.props.store.state.targetId;
-    const url = '/admin/api/'+model+'/'+id+'/delete';
+    const url = `/admin/api/${model}/${id}/delete`;
 
     Util.deleteAPI(url)
     .then(response=>{

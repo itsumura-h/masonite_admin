@@ -15,6 +15,10 @@ from masonite.routes import BaseHttpRoute
 from admin.web.admin_controller import AdminController
 from app.http.middleware.AdminMiddleware import AdminMiddleware
 
+# To support OPTIONS request
+from masonite.middleware import CorsMiddleware #
+from masonite.helpers import config #
+
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'count', 'show', 'update', 'delete', 'options']
@@ -55,12 +59,11 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             routes.append(self.__class__(self.model, url=self.base_url + '/@id', detail_display=self.detail_display, method_type=['GET']))
         if 'update' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url + '/@id/put', method_type=['POST']))
-        # if 'update' in self.methods:
-        #     routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['PUT']))
         if 'delete' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url + '/@id/delete', method_type=['POST']))
-        # if 'options' in self.methods:
-        #     routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['OPTIONS']))
+
+        if 'options' in self.methods:
+            routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['OPTIONS']))
 
         return routes
 
@@ -78,7 +81,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             # Get a response from the authentication method if one exists
             if not response:
                 response = self.run_scope()
-
 
         # If the authenticate method did not return a response, continue on to one of the CRUD responses
         if not response:
@@ -105,8 +107,9 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
                 response = self.request.app().resolve(getattr(self, 'count'))
             elif 'GET' in self.method_type:
                 response = self.request.app().resolve(getattr(self, 'index'))
-            # elif 'OPTIONS' in self.method_type:
-            #     response = self.request.app().resolve(getattr(self, 'options'))
+
+            elif 'OPTIONS' in self.method_type:
+                response = self.request.app().resolve(getattr(self, 'options'))
 
 
         # If the resource needs it's own serializer method
@@ -228,10 +231,10 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             new_model = self.model()
 
             for key, value in params.items():
-                try:
-                    setattr(new_model, key, value)
-                except Exception as e:
-                    print(e)
+                    try:
+                        setattr(new_model, key, value)
+                    except Exception as e:
+                        print(e)
 
             new_model.save()
         except Exception as e:
@@ -259,12 +262,13 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             results = self.model.select('id', *self.list_display).offset(_offset).limit(items).get()
             new_results = [result._original for result in results._items]
             return self.arr_iso_format(new_results)
+            # return new_results
             #return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
             results = self.model.offset(_offset).limit(items).get()
             new_results = [result._original for result in results._items]
             return self.arr_iso_format(new_results)
-
+            # return new_results
         # if self.list_display:
         #     return self.model.select('id', *self.list_display).get()
         # else:
@@ -306,6 +310,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         record = self.model.where('id', request.param('id'))
         params = request.all()
         del params['login_id'], params['login_token']
+
         try:
             record.update(params)
         except Exception as e:
@@ -326,8 +331,10 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
         return {'error': 'Record does not exist'}
 
-    # def options(self, request: Request, response: Response):
-    #     return {}
+    def options(self, request: Request, response: Response):
+        headers = config('middleware.cors') or {}
+        self.request.header(headers)
+        return ''
 
 
     def arr_iso_format(self, _obj):
@@ -340,6 +347,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             _obj_arr = str(_obj).split(':')
             #return _obj.isoformat()
             return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
+            # return f'{_obj_arr[0]}:{_obj_arr[1]}:{_obj_arr[2]}'
         elif isinstance(_obj, list):
             return [self.arr_iso_format(o) for o in _obj]
         elif isinstance(_obj, dict):

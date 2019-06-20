@@ -89,7 +89,7 @@ class MainCreate extends PureComponent {
   save=(event)=>{
     // get URL param
     const model = this.props.match.params.model;
-    const url = '/admin/api/'+model;
+    const url = `/admin/api/${model}`;
 
     Util.postAPI(url, this.state.params)
     .then(response=>{

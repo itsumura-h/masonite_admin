@@ -1,11 +1,10 @@
+import datetime, pickle
+
 from masonite.request import Request
 from masonite.response import Response
 
-# from app.models.LoginToken import LoginToken
 from admin.web.LoginToken import LoginToken
 from config.admin import LOGIN_CONF
-
-import pickle, datetime
 
 timeout = datetime.timedelta(hours=1)
 
@@ -26,7 +25,8 @@ class AdminMiddleware:
         return self.checkpw()
 
     def after(self):
-        pass
+        # To hundle Pypy GC error. Request's instans is reused.
+        self.request.request_variables = {}
 
     def checkpw(self):
         if self.checkpw_resource() == False:
@@ -34,7 +34,6 @@ class AdminMiddleware:
 
     def checkpw_resource(self):
         try:
-            print(self.request.all())
             admin_user_id = self.request.input('login_id')
             input_token = self.request.input('login_token')
 

@@ -19,7 +19,7 @@ HTTP_MIDDLEWARE = [
     CsrfMiddleware,
     ResponseMiddleware,
     MaintenanceModeMiddleware,
-    CorsMiddleware, #
+    CorsMiddleware,
 ]
 
 """Route Middleware
@@ -34,7 +34,6 @@ ROUTE_MIDDLEWARE = {
 }
 
 from app.http.middleware.AdminMiddleware import AdminMiddleware
-
 ROUTE_MIDDLEWARE['admin'] = AdminMiddleware
 
 #
