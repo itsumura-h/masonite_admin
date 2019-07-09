@@ -1,0 +1,5 @@
+recursive-include admin/commands *
+recursive-include admin/migrations *
+recursive-include admin/templates/admin/build *
+recursive-include admin/web *
+include admin *.py
