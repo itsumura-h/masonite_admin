@@ -1,4 +1,4 @@
-import inspect, os, pathlib, platform, sqlite3
+import inspect, os, pathlib, platform
 from collections import OrderedDict
 from datetime import datetime
 from pprint import pprint
@@ -20,6 +20,8 @@ if env('DB_CONNECTION') == 'mysql':
 elif env('DB_CONNECTION') == 'postgres':
     import psycopg2
     from .field_list import PGSQL_FIELD_TYPE
+else:
+    import sqlite3
 
 ADMIN_STATIC_DIR_PATH = pathlib.Path(os.path.join(os.path.abspath(os.path.dirname(__file__)), '../templates/admin/build'))
 

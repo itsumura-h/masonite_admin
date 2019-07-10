@@ -8,3 +8,4 @@ venv
 !.env.testing
 .373
 *.egg-info
+databases/login.bin

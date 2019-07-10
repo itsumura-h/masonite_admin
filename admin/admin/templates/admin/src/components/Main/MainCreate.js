@@ -37,7 +37,7 @@ class MainCreate extends PureComponent {
 
   getSchema=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/schema/'+model+'/create')
+    Util.getAPI(`/admin/api/schema/create/${model}`)
     .then(response=>{
       const schema = response.data.schema;
       const foreignKeys = response.data.foreign_keys;

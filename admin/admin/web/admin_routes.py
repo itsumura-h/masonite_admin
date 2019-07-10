@@ -3,20 +3,23 @@
 
 from masonite.routes import Get, Post, RouteGroup
 
-from admin.web.admin_controller import ADMIN_STATIC_DIR_PATH, AdminController
+# from admin.web.admin_controller import ADMIN_STATIC_DIR_PATH, AdminController
+from admin.web.admin_controller import AdminController
 from admin.web.admin_resources import AdminResource
 from admin.web.login_controller import LoginController
 from config.admin import MODELS
 from config.storage import STATICFILES
+
+from admin.web.controllers.display_front_controller import DisplayFrontController, ADMIN_STATIC_DIR_PATH
 
 STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
 
 ADMIN_ROUTES_WITH_MIDDLEWARE = [
     Get().route('/api/info',AdminController.info),
     Get().route('/api/schema/@model',AdminController.schema),
-    Get().route('/api/schema/@model/create',AdminController.create),
-    Get().route('/api/schema/@model/detail',AdminController.detail),
-    Get().route('/api/create_display/@model', AdminController.create_display),
+    Get().route('/api/schema/create/@model',AdminController.create),
+    Get().route('/api/schema/detail/@model',AdminController.detail),
+    # Get().route('/api/create_display/@model', AdminController.create_display),
 ]
 
 MODEL_ROUTES = []
@@ -32,12 +35,18 @@ for model in MODELS:
 ADMIN_ROUTES = [
     Post().route('/api/login', LoginController.store),
     Post().route('/api/logout', LoginController.destroy),
-    Get().route('/', AdminController.root),
-    Get().route('/login', AdminController.root),
-    Get().route('/@model', AdminController.root),
-    Get().route('/@model/@id/edit', AdminController.root),
-    Get().route('/@model/@id/create', AdminController.root),
-    Get().route('/@model/@id', AdminController.root),
+    # Get().route('/', AdminController.root),
+    # Get().route('/login', AdminController.root),
+    # Get().route('/@model', AdminController.root),
+    # Get().route('/@model/@id/edit', AdminController.root),
+    # Get().route('/@model/@id/create', AdminController.root),
+    # Get().route('/@model/@id', AdminController.root),
+    Get().route('/', DisplayFrontController.show),
+    Get().route('/login', DisplayFrontController.show),
+    Get().route('/@model', DisplayFrontController.show),
+    Get().route('/@model/@id/edit', DisplayFrontController.show),
+    Get().route('/@model/@id/create', DisplayFrontController.show),
+    Get().route('/@model/@id', DisplayFrontController.show),
 ]
 
 # ROUTES += [
