@@ -10,12 +10,16 @@ from admin.web.login_controller import LoginController
 from config.admin import MODELS
 from config.storage import STATICFILES
 
-from admin.web.controllers.display_front_controller import DisplayFrontController, ADMIN_STATIC_DIR_PATH
+from admin.web.controllers.display_static_controller import DisplayStaticController, ADMIN_STATIC_DIR_PATH
+from admin.web.controllers.info_controller import InfoController
 
 STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
 
 ADMIN_ROUTES_WITH_MIDDLEWARE = [
-    Get().route('/api/info',AdminController.info),
+    # Get().route('/api/info',AdminController.info),
+    Get().route('/api/info',InfoController.show),
+
+    # Get().route('/api/schema/@model',AdminController.schema),
     Get().route('/api/schema/@model',AdminController.schema),
     Get().route('/api/schema/create/@model',AdminController.create),
     Get().route('/api/schema/detail/@model',AdminController.detail),
@@ -41,12 +45,12 @@ ADMIN_ROUTES = [
     # Get().route('/@model/@id/edit', AdminController.root),
     # Get().route('/@model/@id/create', AdminController.root),
     # Get().route('/@model/@id', AdminController.root),
-    Get().route('/', DisplayFrontController.show),
-    Get().route('/login', DisplayFrontController.show),
-    Get().route('/@model', DisplayFrontController.show),
-    Get().route('/@model/@id/edit', DisplayFrontController.show),
-    Get().route('/@model/@id/create', DisplayFrontController.show),
-    Get().route('/@model/@id', DisplayFrontController.show),
+    Get().route('/', DisplayStaticController.show),
+    Get().route('/login', DisplayStaticController.show),
+    Get().route('/@model', DisplayStaticController.show),
+    Get().route('/@model/@id/edit', DisplayStaticController.show),
+    Get().route('/@model/@id/create', DisplayStaticController.show),
+    Get().route('/@model/@id', DisplayStaticController.show),
 ]
 
 # ROUTES += [
