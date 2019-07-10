@@ -32,7 +32,7 @@ class MainShow extends PureComponent{
 
   getSchema=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/schema/'+model+'/detail')
+    Util.getAPI(`/admin/api/schema/detail/${model}`)
     .then(response=>{
       self.setState({
         schema: response.data.schema,

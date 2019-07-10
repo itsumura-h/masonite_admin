@@ -10,20 +10,17 @@ from admin.web.login_controller import LoginController
 from config.admin import MODELS
 from config.storage import STATICFILES
 
-from admin.web.controllers.display_static_controller import DisplayStaticController, ADMIN_STATIC_DIR_PATH
-from admin.web.controllers.info_controller import InfoController
+from admin.web.controllers.DisplayStaticController import DisplayStaticController, ADMIN_STATIC_DIR_PATH
+from admin.web.controllers.InfoController import InfoController
+from admin.web.controllers.SchemaController import SchemaController
 
 STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
 
 ADMIN_ROUTES_WITH_MIDDLEWARE = [
-    # Get().route('/api/info',AdminController.info),
     Get().route('/api/info',InfoController.show),
-
-    # Get().route('/api/schema/@model',AdminController.schema),
-    Get().route('/api/schema/@model',AdminController.schema),
-    Get().route('/api/schema/create/@model',AdminController.create),
-    Get().route('/api/schema/detail/@model',AdminController.detail),
-    # Get().route('/api/create_display/@model', AdminController.create_display),
+    Get().route('/api/schema/@model',SchemaController.schema),
+    Get().route('/api/schema/create/@model',SchemaController.schema_in_create),
+    Get().route('/api/schema/detail/@model',SchemaController.schema_in_detail),
 ]
 
 MODEL_ROUTES = []
@@ -39,12 +36,6 @@ for model in MODELS:
 ADMIN_ROUTES = [
     Post().route('/api/login', LoginController.store),
     Post().route('/api/logout', LoginController.destroy),
-    # Get().route('/', AdminController.root),
-    # Get().route('/login', AdminController.root),
-    # Get().route('/@model', AdminController.root),
-    # Get().route('/@model/@id/edit', AdminController.root),
-    # Get().route('/@model/@id/create', AdminController.root),
-    # Get().route('/@model/@id', AdminController.root),
     Get().route('/', DisplayStaticController.show),
     Get().route('/login', DisplayStaticController.show),
     Get().route('/@model', DisplayStaticController.show),
