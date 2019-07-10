@@ -163,7 +163,7 @@ class AdminMiddleware:
         return self.checkpw()
 
     def after(self):
-        # To hundle Pypy GC error. Request's instans is reused.
+        # To hundle Pypy GC error. Request's instance is reused.
         self.request.request_variables = {}
 
     def checkpw(self):
