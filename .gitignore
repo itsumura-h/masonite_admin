@@ -9,3 +9,4 @@ venv
 .373
 *.egg-info
 databases/login.bin
+*.sqlite3

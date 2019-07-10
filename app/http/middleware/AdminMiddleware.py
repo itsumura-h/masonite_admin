@@ -1,17 +1,20 @@
 
-import datetime, pickle
+import datetime
+import pickle
 
 from masonite.request import Request
 from masonite.response import Response
 
-from admin.web.LoginToken import LoginToken
+from admin.web.Login.LoginRepository import LoginRepository
+from admin.web.Login.LoginService import LoginService
+
 from config.admin import LOGIN_CONF
 
 timeout = datetime.timedelta(hours=1)
 
+
 class AdminMiddleware:
-    """Check token
-    """
+    """Check token."""
 
     def __init__(self, request: Request, response: Response):
         self.request = request
@@ -19,8 +22,6 @@ class AdminMiddleware:
         self.timeout = LOGIN_CONF['timeout'] if 'timeout' in LOGIN_CONF else timeout
         if not isinstance(self.timeout, datetime.timedelta):
             self.timeout = timeout
-
-        self.login_token = LoginToken()
 
     def before(self):
         return self.checkpw()
@@ -39,7 +40,7 @@ class AdminMiddleware:
             input_token = self.request.input('login_token')
 
             # db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
-            login_data = self.login_token.load()[int(admin_user_id)]
+            login_data = LoginRepository().load()[int(admin_user_id)]
 
             # check token is exists
             db_token = login_data['token']
@@ -54,13 +55,12 @@ class AdminMiddleware:
             # check timeout
             diff = datetime.datetime.now() - login_data['last_access']
             if diff > self.timeout:
-                self.login_token.logout(admin_user_id)
+                LoginService().logout(admin_user_id)
                 return False
             else:
-                self.login_token.update_last_access(int(admin_user_id))
+                LoginService().update_last_access(int(admin_user_id))
 
             return True
 
         except Exception as e:
             return False
-

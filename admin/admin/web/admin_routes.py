@@ -6,13 +6,14 @@ from masonite.routes import Get, Post, RouteGroup
 # from admin.web.admin_controller import ADMIN_STATIC_DIR_PATH, AdminController
 from admin.web.admin_controller import AdminController
 from admin.web.admin_resources import AdminResource
-from admin.web.login_controller import LoginController
+# from admin.web.login_controller import LoginController
 from config.admin import MODELS
 from config.storage import STATICFILES
 
 from admin.web.controllers.DisplayStaticController import DisplayStaticController, ADMIN_STATIC_DIR_PATH
 from admin.web.controllers.InfoController import InfoController
 from admin.web.controllers.SchemaController import SchemaController
+from admin.web.controllers.LoginController import LoginController
 
 STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
 

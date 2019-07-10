@@ -1,32 +1,27 @@
-import json, re, pkg_resources
+import re
 from datetime import date, datetime, time, timedelta
-from inspect import getmembers
-from masonite.routes import Route
 
-import bcrypt
-from api.exceptions import (ApiNotAuthenticated, ExpiredToken, InvalidToken,
-                            NoApiTokenFound, PermissionScopeDenied,
-                            RateLimitReached)
+import pkg_resources
 from api.serializers import JSONSerializer
+from masonite import env
+from masonite.exceptions import InvalidRouteCompileException
+from masonite.helpers import config  #
 from masonite.request import Request
 from masonite.response import Response
-from masonite.routes import BaseHttpRoute
+from masonite.routes import BaseHttpRoute, Route
 
-from admin.web.admin_controller import AdminController
+# from admin.web.admin_controller import AdminController
 from app.http.middleware.AdminMiddleware import AdminMiddleware
-
-# To support OPTIONS request
-from masonite.middleware import CorsMiddleware #
-from masonite.helpers import config #
 
 
 class AdminResource(BaseHttpRoute, JSONSerializer):
-    methods = ['create', 'index', 'count', 'show', 'update', 'delete', 'options']
+    methods = ['create', 'index', 'count',
+               'show', 'update', 'delete', 'options']
     prefix = ''
 
     def __init__(self, model, url='', create_display=[], list_display=[], detail_display=[], without=[], method_type=['GET'], request=Request):
-        self.base_url = model.__doc__.split(' ')[0] # Model name
-        self.route_url = '/api/' + url # /api/model_name/ /api/model_name/@id
+        self.base_url = model.__doc__.split(' ')[0]  # Model name
+        self.route_url = '/api/' + url  # /api/model_name/ /api/model_name/@id
         self.method_type = method_type
         self.named_route = None
         self.list_middleware = []
@@ -51,26 +46,32 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['DELETE']))
 
         if 'create' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url, method_type=['POST']))
+            routes.append(self.__class__(
+                self.model, url=self.base_url, method_type=['POST']))
         if 'index' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url, list_display=self.list_display, method_type=['GET']))
+            routes.append(self.__class__(self.model, url=self.base_url,
+                                         list_display=self.list_display, method_type=['GET']))
         if 'count' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/count', list_display=self.list_display, method_type=['GET']))
+            routes.append(self.__class__(self.model, url=self.base_url +
+                                         '/count', list_display=self.list_display, method_type=['GET']))
         if 'show' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/@id', detail_display=self.detail_display, method_type=['GET']))
+            routes.append(self.__class__(self.model, url=self.base_url + '/@id',
+                                         detail_display=self.detail_display, method_type=['GET']))
         if 'update' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/@id/put', method_type=['POST']))
+            routes.append(self.__class__(
+                self.model, url=self.base_url + '/@id/put', method_type=['POST']))
         if 'delete' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/@id/delete', method_type=['POST']))
+            routes.append(self.__class__(
+                self.model, url=self.base_url + '/@id/delete', method_type=['POST']))
 
         if 'options' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/@id', method_type=['OPTIONS']))
+            routes.append(self.__class__(
+                self.model, url=self.base_url + '/@id', method_type=['OPTIONS']))
 
         return routes
 
     def get_response(self):
-        """Gets the response that should be returned from this resource
-        """
+        """Gets the response that should be returned from this resource."""
 
         response = None
 
@@ -112,7 +113,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             elif 'OPTIONS' in self.method_type:
                 response = self.request.app().resolve(getattr(self, 'options'))
 
-
         # If the resource needs it's own serializer method
         if hasattr(self, 'serialize'):
             response = self.serialize(response)
@@ -123,7 +123,7 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         return response
 
     def run_middleware(self, middleware_type):
-        """Runs any middleware necessary for this resource
+        """Runs any middleware necessary for this resource.
 
         Arguments:
             middleware_type {string} -- Either 'before' or 'after'
@@ -135,14 +135,14 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         return self
 
     def compile_route_to_regex(self, router=None):
-        masonite_version = str(pkg_resources.working_set.by_key['masonite']).split(' ')[1]
+        masonite_version = str(
+            pkg_resources.working_set.by_key['masonite']).split(' ')[1]
         miner_ver = masonite_version.split('.')
         del miner_ver[2]
         miner_ver = '.'.join(miner_ver)
 
         if miner_ver == '2.1':
-            """Compiles this resource url to a regex pattern
-            """
+            """Compiles this resource url to a regex pattern."""
             # Split the route
             split_given_route = self.route_url.split('/')
             # compile the provided url into regex
@@ -221,7 +221,6 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
             return regex
 
-
     # for 2.2, 2.1 give router arg but it's not used in 2.2
     # def compile_route_to_regex(self, router=None):
     #     """Compile the given route to a regex string.
@@ -269,28 +268,27 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
     #     return regex
 
-
-    #==================================================
+    # ==================================================
     # CRUD
-    #==================================================
+    # ==================================================
 
     def create(self, request: Request, response: Response):
-        """Logic to create data from a given model
-        """
-        if self.before_crud_check(request, response) == False:
+        """Logic to create data from a given model."""
+        if self.before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         try:
             params = request.all()
             del params['login_id'], params['login_token'], params['permission']
-            config_model = AdminController.get_model_row_by_model_name(self.model.__doc__.split(' ')[0])
+            # config_model = AdminController.get_model_row_by_model_name(
+            #     self.model.__doc__.split(' ')[0])
             new_model = self.model()
 
             for key, value in params.items():
-                    try:
-                        setattr(new_model, key, value)
-                    except Exception as e:
-                        print(e)
+                try:
+                    setattr(new_model, key, value)
+                except Exception as e:
+                    print(e)
 
             new_model.save()
         except Exception as e:
@@ -304,9 +302,8 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         # return record
 
     def index(self, request: Request, response: Response):
-        """Logic to read data from several models
-        """
-        if self.before_crud_check(request, response) == False:
+        """Logic to read data from several models."""
+        if self.before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         # pagenagion
@@ -315,41 +312,36 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         _offset = items * (page - 1)
 
         if self.list_display:
-            results = self.model.select('id', *self.list_display).offset(_offset).limit(items).get()
+            results = self.model.select(
+                'id', *self.list_display).offset(_offset).limit(items).get()
             new_results = [result._original for result in results._items]
             return self.arr_iso_format(new_results)
-            # return new_results
-            #return self.model.select('id', *self.list_display).paginate(items, page).serialize()
         else:
             results = self.model.offset(_offset).limit(items).get()
             new_results = [result._original for result in results._items]
             return self.arr_iso_format(new_results)
-            # return new_results
-        # if self.list_display:
-        #     return self.model.select('id', *self.list_display).get()
-        # else:
-        #     return self.model.all()
 
     def count(self, request: Request, response: Response):
-        if self.before_crud_check(request, response) == False:
+        if self.before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         return {'count': self.model.count()}
 
     def show(self, request: Request, response: Response):
-        """Logic to read data from 1 model
-        """
-        if self.before_crud_check(request, response) == False:
+        """Logic to read data from 1 model."""
+        if self.before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         if self.detail_display and env('DB_CONNECTION') == 'mysql':
-            result = self.model.select(*self.detail_display).find(request.param('id'))
+            result = self.model.select(
+                *self.detail_display).find(request.param('id'))
             new_result = {i: v for i, v in result._original.items()}
             return self.arr_iso_format(new_result)
         elif self.detail_display:
             if 'id' not in self.detail_display:
                 self.detail_display.insert(0, 'id')
-            result = self.model.select(*self.detail_display).find(request.param('id'))
+            result = self.model.select(
+                *self.detail_display).find(request.param('id'))
             new_result = {i: v for i, v in result._original.items()}
             return self.arr_iso_format(new_result)
         else:
@@ -358,9 +350,8 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             return self.arr_iso_format(new_result)
 
     def update(self, request: Request, response: Response):
-        """Logic to update data from a given model
-        """
-        if self.before_crud_check(request, response) == False:
+        """Logic to update data from a given model."""
+        if self.before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         record = self.model.where('id', request.param('id'))
@@ -372,12 +363,11 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
         except Exception as e:
             return {'error': str(e)}
 
-        return {}#self.model.where('id', request.param('id')).get().serialize()
+        return {}
 
     def delete(self, request: Request, response: Response):
-        """Logic to delete data from a given model
-        """
-        if self.before_crud_check(request, response) == False:
+        """Logic to delete data from a given model."""
+        if self.before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         record = self.model.find(request.param('id'))
@@ -387,16 +377,14 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
 
         return {'error': 'Record does not exist'}
 
-
-    #==================================================
-    # Application Service
-    #==================================================
-
     def options(self, request: Request, response: Response):
         headers = config('middleware.cors') or {}
         self.request.header(headers)
         return ''
 
+    # ==================================================
+    # Application Service
+    # ==================================================
 
     def arr_iso_format(self, _obj):
         if isinstance(_obj, datetime) or isinstance(_obj, date):
@@ -406,18 +394,16 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
         elif isinstance(_obj, time):
             _obj_arr = str(_obj).split(':')
-            #return _obj.isoformat()
             return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
-            # return f'{_obj_arr[0]}:{_obj_arr[1]}:{_obj_arr[2]}'
         elif isinstance(_obj, list):
             return [self.arr_iso_format(o) for o in _obj]
         elif isinstance(_obj, dict):
-            return {key: self.arr_iso_format(value) for key, value in _obj.items() }
+            return {key: self.arr_iso_format(value) for key, value in _obj.items()}
         else:
             return _obj
 
     def before_crud_check(self, request, response):
-        if AdminMiddleware(request, response).checkpw_resource() == False:
+        if AdminMiddleware(request, response).checkpw_resource() is False:
             return False
 
         permission = request.input('permission')

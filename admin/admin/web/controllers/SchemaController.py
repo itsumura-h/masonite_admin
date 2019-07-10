@@ -1,5 +1,5 @@
 from masonite.request import Request
-from admin.web.schema.schema_service import SchemaService
+from admin.web.schema.SchemaService import SchemaService
 
 
 class SchemaController:
