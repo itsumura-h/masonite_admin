@@ -1,20 +1,15 @@
 import re
-from datetime import date, datetime, time, timedelta
 
 import pkg_resources
 from api.serializers import JSONSerializer
-from masonite import env
 from masonite.exceptions import InvalidRouteCompileException
-from masonite.helpers import config  #
 from masonite.request import Request
-from masonite.response import Response
 from masonite.routes import BaseHttpRoute, Route
 
-# from admin.web.admin_controller import AdminController
-from app.http.middleware.AdminMiddleware import AdminMiddleware
+from admin.web.Resource.ResourceDomainService import ResourceDomainService
 
 
-class AdminResource(BaseHttpRoute, JSONSerializer):
+class ResourceController(BaseHttpRoute, JSONSerializer):
     methods = ['create', 'index', 'count',
                'show', 'update', 'delete', 'options']
     prefix = ''
@@ -97,21 +92,29 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             # elif 'DELETE' in self.method_type:
             #     response = self.request.app().resolve(getattr(self, 'delete'))
 
-            if 'POST' in self.method_type and 'put' in self.route_url:
-                response = self.request.app().resolve(getattr(self, 'update'))
-            elif 'POST' in self.method_type and 'delete' in self.route_url:
-                response = self.request.app().resolve(getattr(self, 'delete'))
-            elif 'POST' in self.method_type:
-                response = self.request.app().resolve(getattr(self, 'create'))
-            elif 'GET' in self.method_type and '@' in self.route_url:
-                response = self.request.app().resolve(getattr(self, 'show'))
-            elif 'GET' in self.method_type and 'count' in self.route_url:
-                response = self.request.app().resolve(getattr(self, 'count'))
-            elif 'GET' in self.method_type:
-                response = self.request.app().resolve(getattr(self, 'index'))
+            resource_args = {
+                'model': self.model,
+                'create_display': self.create_display,
+                'list_display': self.list_display,
+                'detail_display': self.detail_display
+            }
 
+            respurce_domain_service = ResourceDomainService(**resource_args)
+
+            if 'POST' in self.method_type and 'put' in self.route_url:
+                response = self.request.app().resolve(getattr(respurce_domain_service, 'update'))
+            elif 'POST' in self.method_type and 'delete' in self.route_url:
+                response = self.request.app().resolve(getattr(respurce_domain_service, 'delete'))
+            elif 'POST' in self.method_type:
+                response = self.request.app().resolve(getattr(respurce_domain_service, 'create'))
+            elif 'GET' in self.method_type and '@' in self.route_url:
+                response = self.request.app().resolve(getattr(respurce_domain_service, 'show'))
+            elif 'GET' in self.method_type and 'count' in self.route_url:
+                response = self.request.app().resolve(getattr(respurce_domain_service, 'count'))
+            elif 'GET' in self.method_type:
+                response = self.request.app().resolve(getattr(respurce_domain_service, 'index'))
             elif 'OPTIONS' in self.method_type:
-                response = self.request.app().resolve(getattr(self, 'options'))
+                response = self.request.app().resolve(getattr(respurce_domain_service, 'options'))
 
         # If the resource needs it's own serializer method
         if hasattr(self, 'serialize'):
@@ -220,192 +223,3 @@ class AdminResource(BaseHttpRoute, JSONSerializer):
             self._compiled_regex_end = re.compile(regex)
 
             return regex
-
-    # for 2.2, 2.1 give router arg but it's not used in 2.2
-    # def compile_route_to_regex(self, router=None):
-    #     """Compile the given route to a regex string.
-
-    #     Arguments:
-    #         route {string} -- URI of the route to compile.
-
-    #     Returns:
-    #         string -- Compiled URI string.
-    #     """
-    #     # Split the route
-    #     split_given_route = self.route_url.split('/')
-    #     # compile the provided url into regex
-    #     url_list = []
-    #     regex = '^'
-    #     for regex_route in split_given_route:
-    #         if '@' in regex_route:
-    #             if ':' in regex_route:
-    #                 try:
-    #                     regex += Route.route_compilers[regex_route.split(':')[
-    #                         1]]
-    #                 except KeyError:
-    #                     raise InvalidRouteCompileException(
-    #                         'Route compiler "{}" is not an available route compiler. '
-    #                         'Verify you spelled it correctly or that you have added it using the compile() method.'.format(
-    #                             regex_route.split(':')[1])
-    #                     )
-    #             else:
-    #                 regex += Route.route_compilers['default']
-
-    #             regex += r'\/'
-
-    #             # append the variable name passed @(variable):int to a list
-    #             url_list.append(
-    #                 regex_route.replace('@', '').split(':')[0]
-    #             )
-    #         else:
-    #             regex += regex_route + r'\/'
-
-    #     self.url_list = url_list
-    #     regex += '$'
-
-    #     self._compiled_regex = re.compile(regex.replace(r'\/$', r'$'))
-    #     self._compiled_regex_end = re.compile(regex)
-
-    #     return regex
-
-    # ==================================================
-    # CRUD
-    # ==================================================
-
-    def create(self, request: Request, response: Response):
-        """Logic to create data from a given model."""
-        if self.before_crud_check(request, response) is False:
-            return response.json(None, status=403)
-
-        try:
-            params = request.all()
-            del params['login_id'], params['login_token'], params['permission']
-            # config_model = AdminController.get_model_row_by_model_name(
-            #     self.model.__doc__.split(' ')[0])
-            new_model = self.model()
-
-            for key, value in params.items():
-                try:
-                    setattr(new_model, key, value)
-                except Exception as e:
-                    print(e)
-
-            new_model.save()
-        except Exception as e:
-            return {'error': str(e)}
-        return new_model
-
-        # try:
-        #     record = self.model.create(self.request.all())
-        # except Exception as e:
-        #     return {'error': str(e)}
-        # return record
-
-    def index(self, request: Request, response: Response):
-        """Logic to read data from several models."""
-        if self.before_crud_check(request, response) is False:
-            return response.json(None, status=403)
-
-        # pagenagion
-        items = int(request.input('i')) if request.input('i') else 10
-        page = int(request.input('p')) if request.input('p') else 1
-        _offset = items * (page - 1)
-
-        if self.list_display:
-            results = self.model.select(
-                'id', *self.list_display).offset(_offset).limit(items).get()
-            new_results = [result._original for result in results._items]
-            return self.arr_iso_format(new_results)
-        else:
-            results = self.model.offset(_offset).limit(items).get()
-            new_results = [result._original for result in results._items]
-            return self.arr_iso_format(new_results)
-
-    def count(self, request: Request, response: Response):
-        if self.before_crud_check(request, response) is False:
-            return response.json(None, status=403)
-
-        return {'count': self.model.count()}
-
-    def show(self, request: Request, response: Response):
-        """Logic to read data from 1 model."""
-        if self.before_crud_check(request, response) is False:
-            return response.json(None, status=403)
-
-        if self.detail_display and env('DB_CONNECTION') == 'mysql':
-            result = self.model.select(
-                *self.detail_display).find(request.param('id'))
-            new_result = {i: v for i, v in result._original.items()}
-            return self.arr_iso_format(new_result)
-        elif self.detail_display:
-            if 'id' not in self.detail_display:
-                self.detail_display.insert(0, 'id')
-            result = self.model.select(
-                *self.detail_display).find(request.param('id'))
-            new_result = {i: v for i, v in result._original.items()}
-            return self.arr_iso_format(new_result)
-        else:
-            result = self.model.find(request.param('id'))
-            new_result = {i: v for i, v in result._original.items()}
-            return self.arr_iso_format(new_result)
-
-    def update(self, request: Request, response: Response):
-        """Logic to update data from a given model."""
-        if self.before_crud_check(request, response) is False:
-            return response.json(None, status=403)
-
-        record = self.model.where('id', request.param('id'))
-        params = request.all()
-        del params['login_id'], params['login_token'], params['permission']
-
-        try:
-            record.update(params)
-        except Exception as e:
-            return {'error': str(e)}
-
-        return {}
-
-    def delete(self, request: Request, response: Response):
-        """Logic to delete data from a given model."""
-        if self.before_crud_check(request, response) is False:
-            return response.json(None, status=403)
-
-        record = self.model.find(request.param('id'))
-        if record:
-            record.delete()
-            return record
-
-        return {'error': 'Record does not exist'}
-
-    def options(self, request: Request, response: Response):
-        headers = config('middleware.cors') or {}
-        self.request.header(headers)
-        return ''
-
-    # ==================================================
-    # Application Service
-    # ==================================================
-
-    def arr_iso_format(self, _obj):
-        if isinstance(_obj, datetime) or isinstance(_obj, date):
-            return _obj.isoformat()
-        elif isinstance(_obj, timedelta):
-            _obj_arr = str(_obj).split(':')
-            return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
-        elif isinstance(_obj, time):
-            _obj_arr = str(_obj).split(':')
-            return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
-        elif isinstance(_obj, list):
-            return [self.arr_iso_format(o) for o in _obj]
-        elif isinstance(_obj, dict):
-            return {key: self.arr_iso_format(value) for key, value in _obj.items()}
-        else:
-            return _obj
-
-    def before_crud_check(self, request, response):
-        if AdminMiddleware(request, response).checkpw_resource() is False:
-            return False
-
-        permission = request.input('permission')
-        if request.method != 'GET' and int(permission) > 2:
-            return False

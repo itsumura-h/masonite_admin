@@ -1,12 +1,8 @@
-
 """Admin Routes."""
 
 from masonite.routes import Get, Post, RouteGroup
 
-# from admin.web.admin_controller import ADMIN_STATIC_DIR_PATH, AdminController
-from admin.web.admin_controller import AdminController
-from admin.web.admin_resources import AdminResource
-# from admin.web.login_controller import LoginController
+from admin.web.controllers.ResourceController import ResourceController
 from config.admin import MODELS
 from config.storage import STATICFILES
 
@@ -32,7 +28,7 @@ for model in MODELS:
     if model.get('detail_display'):
         args['detail_display'] = model['detail_display']
 
-    MODEL_ROUTES.append(AdminResource(model['model'], **args).routes())
+    MODEL_ROUTES.append(ResourceController(model['model'], **args).routes())
 
 ADMIN_ROUTES = [
     Post().route('/api/login', LoginController.store),
@@ -44,20 +40,3 @@ ADMIN_ROUTES = [
     Get().route('/@model/@id/create', DisplayStaticController.show),
     Get().route('/@model/@id', DisplayStaticController.show),
 ]
-
-# ROUTES += [
-#     RouteGroup(ADMIN_ROUTES, prefix='/admin')
-# ]
-
-
-"""
-
-from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, MODEL_ROUTES
-
-ROUTES += [
-    RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',)),
-    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',)), #middleware not working
-    RouteGroup(ADMIN_ROUTES, prefix='/admin'),
-]
-
-"""
