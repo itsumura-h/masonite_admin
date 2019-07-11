@@ -28,7 +28,14 @@ class LoginService:
         data[login_id]['last_access'] = datetime.now()
         LoginRepository().dump(data)
 
-    def logout(self, login_id: int):
+    def logout(self, id: int, token: str):
         data = LoginRepository().load()
-        data.pop(login_id)
-        LoginRepository().dump(data)
+        try:
+            if data[id]['token'] == token:
+                data.pop(id)
+                LoginRepository().dump(data)
+                return True
+            else:
+                raise Exception
+        except Exception:
+            return False

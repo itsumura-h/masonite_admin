@@ -36,7 +36,7 @@ ADMIN_ROUTES = [
     Get().route('/', DisplayStaticController.show),
     Get().route('/login', DisplayStaticController.show),
     Get().route('/@model', DisplayStaticController.show),
-    Get().route('/@model/@id/edit', DisplayStaticController.show),
-    Get().route('/@model/@id/create', DisplayStaticController.show),
+    Get().route('/@model/create', DisplayStaticController.show),
     Get().route('/@model/@id', DisplayStaticController.show),
+    Get().route('/@model/@id/edit', DisplayStaticController.show),
 ]

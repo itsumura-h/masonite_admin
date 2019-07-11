@@ -10,3 +10,4 @@ venv
 *.egg-info
 databases/login.bin
 *.sqlite3
+htmlcov

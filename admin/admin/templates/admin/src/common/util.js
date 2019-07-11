@@ -108,6 +108,7 @@ export default class Util extends React.Component{
 
     const params = new FormData();
     params.append('login_id', window.localStorage.getItem('login_id'));
+    params.append('login_token', window.localStorage.getItem('login_token'));
 
     return axios.post(url, params)
       .then(response=>{

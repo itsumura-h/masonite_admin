@@ -68,13 +68,15 @@ urllib3 = "=1.25.3"
 webencodings = "=0.5.1"
 whitenoise = "=4.1.2"
 wrapt = "=1.11.2"
-pytest = "^5.0"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.3"
 autopep8 = "^1.4"
 flake8 = "^3.7"
 pyformat = "^0.7.0"
+pytest = "^5.0"
+pytest-cov = "^2.7"
+masonite-selenium = "^0.0.3"
 
 [build-system]
 requires = ["poetry>=0.12"]

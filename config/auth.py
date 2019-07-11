@@ -2,7 +2,7 @@
 
 from masonite import env
 
-from app.AdminUser import AdminUser
+from app.models.AdminUser import AdminUser
 
 """Authentication Model
 Put the model here that will be used to authenticate users to your site.
