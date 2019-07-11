@@ -5,88 +5,81 @@ from admin.web.Resource.ResourceAppService import ResourceAppService
 
 
 class ResourceRepository:
-    def __init__(self, model, create_display, list_display, detail_display):
-        self.model = model
-        self.create_display = create_display
-        self.list_display = list_display
-        self.detail_display = detail_display
-        self.request = Request
 
-    def create(self, request: Request, response: Response):
-        try:
-            params = request.all()
-            del params['login_id'], params['login_token'], params['permission']
-            new_model = self.model()
+    @staticmethod
+    def create(params, new_model):
 
-            for key, value in params.items():
-                try:
-                    setattr(new_model, key, value)
-                except Exception as e:
-                    print(e)
+        for key, value in params.items():
+            try:
+                setattr(new_model, key, value)
+            except Exception as e:
+                print(e)
 
-            new_model.save()
-        except Exception as e:
-            return {'error': str(e)}
-        return new_model
+        new_model.save()
 
-    def index(self, request: Request, response: Response):
-        # pagenagion
-        items = int(request.input('i')) if request.input('i') else 10
-        page = int(request.input('p')) if request.input('p') else 1
-        _offset = items * (page - 1)
+    @staticmethod
+    def index(model, list_display, offset, items):
+        """bussiness logic of index method.
 
-        if self.list_display:
-            results = self.model.select('id', *self.list_display) \
-                    .offset(_offset) \
-                    .limit(items) \
-                    .get()
+        Args:
+            model (class): model class
+            list_display ([str]): dfinded in admin config
+            offset (int): start position of fetch query
+            items (int): how meny items to fetch
+
+        Returns:
+            new_result: serialized result
+        """
+        if list_display:
+            results = model.select('id', *list_display) \
+                .offset(offset) \
+                .limit(items) \
+                .get()
 
             new_results = [result._original for result in results._items]
-            return ResourceAppService().arr_iso_format(new_results)
         else:
-            results = self.model.offset(_offset).limit(items).get()
+            results = model.offset(offset).limit(items).get()
             new_results = [result._original for result in results._items]
-            return ResourceAppService().arr_iso_format(new_results)
 
-    def count(self, request: Request, response: Response):
-        return {'count': self.model.count()}
+        return new_results
 
-    def show(self, request, response: Response):
-        if self.detail_display and env('DB_CONNECTION') == 'mysql':
-            result = self.model.select(
-                *self.detail_display).find(request.param('id'))
-            new_result = {i: v for i, v in result._original.items()}
-            return ResourceAppService().arr_iso_format(new_result)
+    @staticmethod
+    def show(model, detail_display, id):
+        """bussiness logic of show method.
 
-        elif self.detail_display:
-            if 'id' not in self.detail_display:
-                self.detail_display.insert(0, 'id')
-            result = self.model.select(
-                *self.detail_display).find(request.param('id'))
-            new_result = {i: v for i, v in result._original.items()}
-            return ResourceAppService().arr_iso_format(new_result)
+        Args:
+            model (class): model class
+            detail_display ([str]): definded in admin config
+            id (int): from request param
+
+        Returns:
+            new_result: serialized result
+        """
+        if detail_display and env('DB_CONNECTION') == 'mysql':
+            result = model \
+                .select(*detail_display) \
+                .find(id)
+
+        elif detail_display:
+            if 'id' not in detail_display:
+                detail_display.insert(0, 'id')
+            result = model \
+                .select(*detail_display) \
+                .find(id)
 
         else:
-            result = self.model.find(request.param('id'))
-            new_result = {i: v for i, v in result._original.items()}
-            return ResourceAppService().arr_iso_format(new_result)
+            result = model.find(id)
 
-    def update(self, request: Request, response: Response):
-        record = self.model.where('id', request.param('id'))
-        params = request.all()
-        del params['login_id'], params['login_token'], params['permission']
+        new_result = {i: v for i, v in result._original.items()}
+        return new_result
 
-        try:
-            record.update(params)
-        except Exception as e:
-            return {'error': str(e)}
+    @staticmethod
+    def update(record, params):
+        record.update(params)
 
-        return {}
-
-    def delete(self, request: Request, response: Response):
-        record = self.model.find(request.param('id'))
+    @staticmethod
+    def delete(model, id):
+        record = model.find(id)
         if record:
             record.delete()
             return record
-
-        return {'error': 'Record does not exist'}

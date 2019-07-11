@@ -41,27 +41,27 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['DELETE']))
 
         if 'create' in self.methods:
-            routes.append(self.__class__(
-                self.model, url=self.base_url, method_type=['POST']))
+            routes.append(self.__class__(self.model, url=self.base_url,
+                                        method_type=['POST']))
         if 'index' in self.methods:
             routes.append(self.__class__(self.model, url=self.base_url,
-                                         list_display=self.list_display, method_type=['GET']))
+                                        list_display=self.list_display, method_type=['GET']))
         if 'count' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url +
-                                         '/count', list_display=self.list_display, method_type=['GET']))
+            routes.append(self.__class__(self.model, url=f'{self.base_url}/count',
+                                        list_display=self.list_display, method_type=['GET']))
         if 'show' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url + '/@id',
-                                         detail_display=self.detail_display, method_type=['GET']))
+            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id',
+                                        detail_display=self.detail_display, method_type=['GET']))
         if 'update' in self.methods:
-            routes.append(self.__class__(
-                self.model, url=self.base_url + '/@id/put', method_type=['POST']))
+            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id/put',
+                                        method_type=['POST']))
         if 'delete' in self.methods:
-            routes.append(self.__class__(
-                self.model, url=self.base_url + '/@id/delete', method_type=['POST']))
+            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id/delete',
+                                        method_type=['POST']))
 
         if 'options' in self.methods:
-            routes.append(self.__class__(
-                self.model, url=self.base_url + '/@id', method_type=['OPTIONS']))
+            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id',
+                                        method_type=['OPTIONS']))
 
         return routes
 
