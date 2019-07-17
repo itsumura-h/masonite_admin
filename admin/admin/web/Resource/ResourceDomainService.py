@@ -66,22 +66,34 @@ class ResourceDomainService:
             id
         )
 
-        return ResourceAppService().arr_iso_format(new_result)
+        if new_result:
+            return ResourceAppService().arr_iso_format(new_result)
+        else:
+            return response.view('', status=404)
 
     def update(self, request: Request, response: Response):
         """Logic to update data from a given model."""
         if ResourceAppService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
-        record = self.model.where('id', request.param('id'))
-        params = request.all()
-        del params['login_id'], params['login_token'], params['permission']
+        # record = self.model.where('id', request.param('id'))
+        # params = request.all()
+        # del params['login_id'], params['login_token'], params['permission']
+        # if '__token' in params:
+        #     del params['__token']
 
         try:
-            record.update(params)
-            ResourceRepository.update(record, params)
+            record = self.model.where('id', request.param('id'))
+            params = request.all()
+            del params['login_id'], params['login_token'], params['permission']
+            if '__token' in params:
+                del params['__token']
+            is_success = ResourceRepository.update(record, params)
+
+            if is_success == 0:
+                return response.json({'error': 'data is not exist'}, status=400)
         except Exception as e:
-            return {'error': str(e)}
+            return response.json({'error': str(e)}, status=400)
 
         return {}
 
@@ -95,7 +107,7 @@ class ResourceDomainService:
         if result:
             return result
         else:
-            return {'error': 'Record does not exist'}
+            return response.view('', status=404)
 
     def options(self, request: Request, response: Response):
         headers = config('middleware.cors') or {}

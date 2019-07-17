@@ -77,7 +77,7 @@ MODELS = [
     {
         'model': User,
         'model_str': 'ユーザー一覧',
-        'create_display': ['name', 'email'],
+        'create_display': ['name', 'email', 'password'],
         'list_display': ['name', 'email'],
         'detail_display': ['name', 'email'],
         'foreign_display': 'name',

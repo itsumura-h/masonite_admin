@@ -32,7 +32,7 @@ class SchemaService:
 
         foreign = {}
         for row in foreign_list:
-            data = self.__foreign_data(self, row[2])  # row[2] = table_name
+            data = self._foreign_data(self, row[2])  # row[2] = table_name
             foreign[row[3]] = data  # row[3] = column_name
 
         return {'schema': schema, 'foreign_keys': foreign}
@@ -42,7 +42,7 @@ class SchemaService:
     # ==================================================
 
     @staticmethod
-    def __foreign_data(self, table_name):
+    def _foreign_data(self, table_name):
         row = self.get_model_row_by_table_name(table_name)
         try:
             return DB.table(table_name) \

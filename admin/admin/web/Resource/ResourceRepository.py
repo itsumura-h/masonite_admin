@@ -70,12 +70,13 @@ class ResourceRepository:
         else:
             result = model.find(id)
 
-        new_result = {i: v for i, v in result._original.items()}
-        return new_result
+        if result:
+            new_result = {i: v for i, v in result._original.items()}
+            return new_result
 
     @staticmethod
     def update(record, params):
-        record.update(params)
+        return record.update(**params)
 
     @staticmethod
     def delete(model, id):
