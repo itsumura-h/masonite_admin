@@ -13,7 +13,9 @@ export default class Util extends React.Component{
   static getAPI=(url, params={})=>{
     url = CONST.APIHOST + url;
     params = this.setLoginParamas(params);
+    const header = this.setCustomLoginHeader();
 
+    // return axios.get(url, {params: params, headers: header})
     return axios.get(url, {params: params})
       .then(response=>{
         return response;
@@ -126,6 +128,14 @@ export default class Util extends React.Component{
     params['permission'] = window.localStorage.getItem('permission');
 
     return params;
+  }
+
+  static setCustomLoginHeader=()=>{
+    return {
+      'X-LOGIN-ID': window.localStorage.getItem('login_id'),
+      'X-LOGIN-TOKEN': window.localStorage.getItem('login_token'),
+      'X-LOGIN-PERMISSION': window.localStorage.getItem('permission')
+    }
   }
 
   static loginFale=(error)=>{

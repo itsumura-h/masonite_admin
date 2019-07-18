@@ -58,10 +58,9 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
         if 'delete' in self.methods:
             routes.append(self.__class__(self.model, url=f'{self.base_url}/@id/delete',
                                         method_type=['POST']))
-
-        if 'options' in self.methods:
-            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id',
-                                        method_type=['OPTIONS']))
+        # if 'options' in self.methods:
+        #     routes.append(self.__class__(self.model, url=f'{self.base_url}/@id',
+        #                                 method_type=['OPTIONS']))
 
         return routes
 

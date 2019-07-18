@@ -24,11 +24,11 @@ HTTP_MIDDLEWARE = [
 
 #
 CORS = {
-    'Access-Control-Allow-Origin': "*",
-    "Access-Control-Allow-Methods": "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT",
-    "Access-Control-Allow-Headers": "Content-Type, Accept, X-Requested-With",
-    "Access-Control-Max-Age": "3600",
-    "Access-Control-Allow-Credentials": "true"
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT',
+    'Access-Control-Allow-Headers': 'Content-Type, Accept, X-Requested-With, X-ADMIN-LOGIN-ID, X-ADMIN-LOGIN-TOKEN, X-ADMIN-LOGIN-PERMISSION',
+    'Access-Control-Max-Age': '3600',
+    'Access-Control-Allow-Credentials': 'true'
 }
 
 """Route Middleware

@@ -36,10 +36,13 @@ class AdminMiddleware:
 
     def checkpw_resource(self):
         try:
+            # admin_user_id = self.request.header('HTTP_X_LOGIN_ID')
+            # input_token = self.request.header('HTTP_X_LOGIN_TOKEN')
+            # permission = self.request.header('HTTP_X_LOGIN_PERMISSION')
+
             admin_user_id = self.request.input('login_id')
             input_token = self.request.input('login_token')
-
-            # db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
+            permission = self.request.input('permission')
             login_data = LoginRepository().load()[int(admin_user_id)]
 
             # check token is exists
@@ -48,7 +51,6 @@ class AdminMiddleware:
                 return False
 
             # check whther admin is not edited
-            permission = self.request.input('permission')
             if int(login_data['permission']) != int(permission):
                 return False
 

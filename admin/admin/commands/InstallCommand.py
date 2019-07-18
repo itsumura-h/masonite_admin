@@ -8,7 +8,7 @@ from masonite.packages import append_web_routes
 
 class Install(Command):
     """
-    Install admin package: create model and config
+    Install admin package
 
     admin:install
     """
@@ -287,9 +287,9 @@ class AdminMiddleware:
                 "from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, MODEL_ROUTES",
                 "",
                 "ROUTES += [",
-                "    RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',)),",
-                "    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',)), #middleware not working",
-                "    RouteGroup(ADMIN_ROUTES, prefix='/admin'),",
+                "    RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',), add_methods=['OPTIONS']),",
+                "    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',), add_methods=['OPTIONS']), #middleware not working",
+                "    RouteGroup(ADMIN_ROUTES, prefix='/admin', add_methods=['OPTIONS']),",
                 "]",
                 ""
             ]
