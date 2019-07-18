@@ -26,7 +26,7 @@ class ResourceDomainService:
 
         try:
             params = request.all()
-            del params['login_id'], params['login_token'], params['permission']
+            params = ResourceAppService.delete_login_params(params)
             new_model = self.model()
 
             ResourceRepository.create(params, new_model)
@@ -76,18 +76,10 @@ class ResourceDomainService:
         if ResourceAppService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
-        # record = self.model.where('id', request.param('id'))
-        # params = request.all()
-        # del params['login_id'], params['login_token'], params['permission']
-        # if '__token' in params:
-        #     del params['__token']
-
         try:
             record = self.model.where('id', request.param('id'))
             params = request.all()
-            del params['login_id'], params['login_token'], params['permission']
-            if '__token' in params:
-                del params['__token']
+            params = ResourceAppService.delete_login_params(params)
             is_success = ResourceRepository.update(record, params)
 
             if is_success == 0:

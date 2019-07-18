@@ -1,6 +1,6 @@
 from datetime import date, datetime, time, timedelta
 from app.http.middleware.AdminMiddleware import AdminMiddleware
-
+from typing import Dict
 
 class ResourceAppService:
     # ==================================================
@@ -11,11 +11,18 @@ class ResourceAppService:
         if isinstance(_obj, datetime) or isinstance(_obj, date):
             return _obj.isoformat()
         elif isinstance(_obj, timedelta):
-            _obj_arr = str(_obj).split(':')
-            return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
+            _obj = str(_obj).split(' ')[2] # "7138 days, 14:32:46.649462"→"14:32:46.649462"
+            _obj_arr = str(_obj).split(':') # "14:32:46.649462"→[14, 32, 46.649462]
+            _h = int(_obj_arr[0])
+            _m = int(_obj_arr[1])
+            _s = int(_obj_arr[2].split('.')[0])
+            return datetime(1970, 1, 2, _h, _m, _s).isoformat()
         elif isinstance(_obj, time):
             _obj_arr = str(_obj).split(':')
-            return datetime(1970, 1, 2, int(_obj_arr[0]), int(_obj_arr[1]), int(_obj_arr[2])).isoformat()
+            _h = int(_obj_arr[0])
+            _m = int(_obj_arr[1])
+            _s = int(_obj_arr[2].split('.')[0])
+            return datetime(1970, 1, 2, _h, _m, _s).isoformat()
         elif isinstance(_obj, list):
             return [self.arr_iso_format(o) for o in _obj]
         elif isinstance(_obj, dict):
@@ -30,3 +37,20 @@ class ResourceAppService:
         permission = request.input('permission')
         if request.method != 'GET' and int(permission) > 2:
             return False
+
+    @staticmethod
+    def delete_login_params(params: Dict) -> Dict:
+        """delete login params from request params
+
+        Args:
+            params (Dict{str: str}): including login_id, login_token and permission
+
+        Returns:
+            Dict: params which is not contain login_id, login_token and permission
+        """
+        del params['login_id'], params['login_token'], params['permission']
+
+        if '__token' in params:
+            del params['__token']
+
+        return params
