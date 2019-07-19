@@ -19,9 +19,16 @@ class CreateSuperUser(Command):
         name = None
         default_name = 'Anonymous' if os.environ.get("USER") == None else os.environ.get("USER")
         while name == None:
+            # check include whitespace
             name = input('Username (leave blank to use '+ default_name +'):')
-            if name == '':
+
+            SPACE_REGEX = re.compile(r'\s')
+            if SPACE_REGEX.search(name):
+                self.line('<error>Error: Username cannot include whitespace.</error>')
+                name = None
+            elif name == '':
                 name = default_name
+
         self.line('<comment>'+name+'</comment>')
 
         email = None
