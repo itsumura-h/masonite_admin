@@ -36,6 +36,19 @@ const AdminAppBar=(props)=>{
     })
   }
 
+  const clickUserEditButton=()=>{
+    props.history.push('/admin/AdminUserEdit');
+  }
+
+  const UserEditButton=(props)=>{
+    const permission = localStorage.getItem('permission');
+    if(Number(permission) === 1){
+      return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>user edit</Button>;
+    }else{
+      return null;
+    }
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.appbar}>
@@ -51,12 +64,14 @@ const AdminAppBar=(props)=>{
           <Typography variant="h6" color="inherit">
             Welcome! <span className={classes.loginName}>{window.localStorage.getItem('login_name')}</span>
           </Typography>
+            <UserEditButton clickUserEditButton={clickUserEditButton} classes={classes}/>
           <Button color="inherit" onClick={logout} className={classes.logoutButton} >Log Out</Button>
         </Toolbar>
       </AppBar>
     </div>
   );
 }
+
 
 const styles=(theme)=>({
   root: {
