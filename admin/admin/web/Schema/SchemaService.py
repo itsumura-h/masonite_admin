@@ -2,7 +2,7 @@ import inflection
 from masonite import env
 from masonite.request import Request
 
-from admin.web.schema.SchemaRepositry import SchemaRepositry
+from admin.web.Schema.SchemaRepositry import SchemaRepositry
 from config.admin import MODELS
 from config.database import DB
 

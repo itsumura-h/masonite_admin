@@ -133,7 +133,7 @@ class MainIndex extends PureComponent {
     const permission = localStorage.getItem('permission');
 
     let newButton = null;
-    if(permission < 3){
+    if(permission === 'administrator' || permission === 'member'){
       newButton = (
         <NavLink to={'/admin/'+model+'/create'}>
           <Button variant="contained" className={classes.newButton}>
@@ -148,7 +148,7 @@ class MainIndex extends PureComponent {
     if(this.state.indexData && this.state.indexData[0]){
       const td_key = Object.keys(this.state.indexData[0]).length;
       headers = Object.keys(this.state.indexData[0]);
-      if(permission > 2){
+      if(permission === 'user'){
         headers.push('show');
       }else{
         headers.push('show', 'edit', 'delete');
@@ -161,7 +161,7 @@ class MainIndex extends PureComponent {
           })
         ];
 
-        if(permission > 2){
+        if(permission === 'user'){
           row_html.push( // Button
             <TableCell key={td_key+1}>
               <Link to={'/admin/'+model+'/'+row.id}>

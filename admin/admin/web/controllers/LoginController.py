@@ -4,7 +4,6 @@ from masonite.request import Request
 from masonite.response import Response
 
 from admin.web.Login.LoginService import LoginService
-from config.auth import AUTH
 
 
 class LoginController(Controller):
@@ -12,12 +11,12 @@ class LoginController(Controller):
         email = request.input('email')
         password = request.input('password')
         try:
-            user = AUTH['model'].where('email', email).first()
+            user = LoginService().get_user(email)
             login = checkpw(bytes(password, 'utf-8'),
                             bytes(user.password, 'utf-8'))
 
             if login:
-                hash = LoginService().login(int(user.id), int(user.permission))
+                hash = LoginService().login(int(user.id), user.permission)
                 return {
                     'login': True,
                     'token': hash,

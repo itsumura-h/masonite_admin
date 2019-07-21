@@ -3,6 +3,7 @@ from datetime import datetime
 
 from config.admin import LOGIN_CONF
 from admin.web.Login.LoginRepository import LoginRepository
+from admin.web.Login.LoginEntity import LoginUserEntity
 
 token_path = 'databases/login.bin'
 
@@ -12,7 +13,12 @@ class LoginService:
         self.token_path = LOGIN_CONF['file_path'] \
             if 'file_path' in LOGIN_CONF else token_path
 
-    def login(self, login_id: int, permission: int):
+    def get_user(self, email):
+        user = LoginRepository().get_user(email)
+        user = LoginUserEntity(**user)
+        return user
+
+    def login(self, login_id: int, permission: str):
         hash = secrets.token_urlsafe()
         data = LoginRepository().load()
         data[login_id] = {

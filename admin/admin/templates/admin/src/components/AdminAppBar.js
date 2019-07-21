@@ -42,7 +42,7 @@ const AdminAppBar=(props)=>{
 
   const UserEditButton=(props)=>{
     const permission = localStorage.getItem('permission');
-    if(Number(permission) === 1){
+    if(permission === 'administrator'){
       return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>user edit</Button>;
     }else{
       return null;

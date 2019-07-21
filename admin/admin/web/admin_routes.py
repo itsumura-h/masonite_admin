@@ -10,6 +10,7 @@ from admin.web.controllers.DisplayStaticController import DisplayStaticControlle
 from admin.web.controllers.InfoController import InfoController
 from admin.web.controllers.SchemaController import SchemaController
 from admin.web.controllers.LoginController import LoginController
+from admin.web.controllers.AdminUsersController import AdminUsersController
 
 STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
 
@@ -18,6 +19,7 @@ ADMIN_ROUTES_WITH_MIDDLEWARE = [
     Get().route('/api/schema/@model',SchemaController.schema),
     Get().route('/api/schema/create/@model',SchemaController.schema_in_create),
     Get().route('/api/schema/detail/@model',SchemaController.schema_in_detail),
+    Get().route('/api/admin_users',AdminUsersController.index),
 ]
 
 MODEL_ROUTES = []

@@ -193,7 +193,7 @@ class AdminMiddleware:
             # check timeout
             diff = datetime.datetime.now() - login_data['last_access']
             if diff > self.timeout:
-                LoginService().logout(admin_user_id)
+                LoginService().logout(admin_user_id, db_token)
                 return False
             else:
                 LoginService().update_last_access(int(admin_user_id))

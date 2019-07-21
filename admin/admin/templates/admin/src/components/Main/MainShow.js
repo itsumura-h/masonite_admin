@@ -98,7 +98,7 @@ class MainShow extends PureComponent{
     const permission = localStorage.getItem('permission');
 
     let buttons = null;
-    if(permission < 3){
+    if(permission === 'administrator' || performance === 'member'){
       buttons = (
         <div className={classes.buttons}>
           <NavLink to='./'>
