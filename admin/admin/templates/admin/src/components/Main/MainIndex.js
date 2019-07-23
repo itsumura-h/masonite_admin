@@ -28,7 +28,7 @@ import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 class MainIndex extends PureComponent {
   state = {
     indexData: [],
-    isOpenDelete: false,
+    isOpenDeleteConfirm: false,
     page: 0,
     count: 0,
   }
@@ -59,8 +59,8 @@ class MainIndex extends PureComponent {
       this.props.store.set('targetId')(event.currentTarget.dataset.id);
     }
 
-    const newIsOpenDelete = this.state.isOpenDelete? false: true;
-    this.setState({isOpenDelete: newIsOpenDelete});
+    const newIsOpenDelete = this.state.isOpenDeleteConfirm? false: true;
+    this.setState({isOpenDeleteConfirm: newIsOpenDelete});
   }
 
   delete=(event)=>{
@@ -249,7 +249,7 @@ class MainIndex extends PureComponent {
           </CardContent>
         </Card>
         <DeleteConfirmDialog
-          isOpen={this.state.isOpenDelete}
+          isOpen={this.state.isOpenDeleteConfirm}
           openDelete={this.openDelete}
           handleOkMethod={this.delete}
         />
