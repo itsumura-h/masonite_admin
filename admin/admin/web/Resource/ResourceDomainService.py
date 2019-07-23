@@ -5,6 +5,7 @@ from masonite.response import Response
 from masonite import env
 from admin.web.Resource.ResourceRepository import ResourceRepository
 from admin.web.Resource.ResourceAppService import ResourceAppService
+from admin.web.ApplicationService import ApplicationService
 from masonite.helpers import config  #
 
 
@@ -26,7 +27,7 @@ class ResourceDomainService:
 
         try:
             params = request.all()
-            params = ResourceAppService.delete_login_params(params)
+            params = ApplicationService.delete_login_params(params)
             new_model = self.model()
 
             ResourceRepository.create(params, new_model)
@@ -79,7 +80,7 @@ class ResourceDomainService:
         try:
             record = self.model.where('id', request.param('id'))
             params = request.all()
-            params = ResourceAppService.delete_login_params(params)
+            params = ApplicationService.delete_login_params(params)
             is_success = ResourceRepository.update(record, params)
 
             if is_success == 0:

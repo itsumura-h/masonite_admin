@@ -42,7 +42,7 @@ class AdminMiddleware:
 
             admin_user_id = self.request.input('login_id')
             input_token = self.request.input('login_token')
-            permission = self.request.input('permission')
+            permission = self.request.input('login_permission')
             login_data = LoginRepository().load()[int(admin_user_id)]
 
             # check token is exists

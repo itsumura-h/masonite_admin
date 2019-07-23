@@ -28,7 +28,7 @@ const AdminAppBar=(props)=>{
       window.localStorage.removeItem('login_id');
       window.localStorage.removeItem('login_token');
       window.localStorage.removeItem('login_name');
-      window.localStorage.removeItem('permission');
+      window.localStorage.removeItem('login_permission');
       props.history.push('/admin/login')
     })
     .catch(err=>{
@@ -41,8 +41,8 @@ const AdminAppBar=(props)=>{
   }
 
   const UserEditButton=(props)=>{
-    const permission = localStorage.getItem('permission');
-    if(permission === 'administrator'){
+    const login_permission = localStorage.getItem('login_permission');
+    if(login_permission === 'administrator'){
       return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>user edit</Button>;
     }else{
       return null;

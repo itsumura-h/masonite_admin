@@ -5,7 +5,7 @@ import {withStore} from '../../common/store';
 const Auth=(props)=>{
   if(!window.localStorage.getItem('login_id') ||
       !window.localStorage.getItem('login_token') ||
-      !window.localStorage.getItem('permission')
+      !window.localStorage.getItem('login_permission')
   ){
     return <Redirect to={'/admin/login'} />
   }else{

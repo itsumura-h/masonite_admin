@@ -125,7 +125,7 @@ export default class Util extends React.Component{
   static setLoginParamas=(params)=>{
     params['login_id'] = window.localStorage.getItem('login_id');
     params['login_token'] = window.localStorage.getItem('login_token');
-    params['permission'] = window.localStorage.getItem('permission');
+    params['login_permission'] = window.localStorage.getItem('login_permission');
 
     return params;
   }
@@ -134,7 +134,7 @@ export default class Util extends React.Component{
     return {
       'X-LOGIN-ID': window.localStorage.getItem('login_id'),
       'X-LOGIN-TOKEN': window.localStorage.getItem('login_token'),
-      'X-LOGIN-PERMISSION': window.localStorage.getItem('permission')
+      'X-LOGIN-PERMISSION': window.localStorage.getItem('login_permission')
     }
   }
 
@@ -143,7 +143,7 @@ export default class Util extends React.Component{
       window.localStorage.removeItem('login_id');
       window.localStorage.removeItem('login_token');
       window.localStorage.removeItem('login_name');
-      window.localStorage.removeItem('permission');
+      window.localStorage.removeItem('login_permission');
       window.location.href = '/admin/login';
     }
   }

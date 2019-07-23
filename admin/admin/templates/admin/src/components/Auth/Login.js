@@ -38,7 +38,7 @@ class Login extends React.PureComponent {
         window.localStorage.setItem('login_id', response.data.id);
         window.localStorage.setItem('login_token', response.data.token);
         window.localStorage.setItem('login_name', response.data.name);
-        window.localStorage.setItem('permission', response.data.permission);
+        window.localStorage.setItem('login_permission', response.data.permission);
         this.props.history.push('/admin');
       }else{
         this.changeOpenSnackbar();

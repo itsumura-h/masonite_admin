@@ -20,6 +20,8 @@ ADMIN_ROUTES_WITH_MIDDLEWARE = [
     Get().route('/api/schema/create/@model',SchemaController.schema_in_create),
     Get().route('/api/schema/detail/@model',SchemaController.schema_in_detail),
     Get().route('/api/admin_users',AdminUsersController.index),
+    Post().route('/api/admin_users/create',AdminUsersController.create),
+    Get().route('/api/admin_users/@id',AdminUsersController.show),
 ]
 
 MODEL_ROUTES = []

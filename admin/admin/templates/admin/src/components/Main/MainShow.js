@@ -95,10 +95,10 @@ class MainShow extends PureComponent{
     // get URL param
     const id = this.props.match.params.id;
     const keys = Object.keys(this.state.foreignKeys);
-    const permission = localStorage.getItem('permission');
+    const login_permission = localStorage.getItem('login_permission');
 
     let buttons = null;
-    if(permission === 'administrator' || performance === 'member'){
+    if(login_permission === 'administrator' || performance === 'member'){
       buttons = (
         <div className={classes.buttons}>
           <NavLink to='./'>

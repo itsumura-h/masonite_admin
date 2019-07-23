@@ -130,10 +130,10 @@ class MainIndex extends PureComponent {
     // pagenation
     // set range of array
     const rowsPerPage = store.get('rowsPerPage');
-    const permission = localStorage.getItem('permission');
+    const login_permission = localStorage.getItem('login_permission');
 
     let newButton = null;
-    if(permission === 'administrator' || permission === 'member'){
+    if(login_permission === 'administrator' || login_permission === 'member'){
       newButton = (
         <NavLink to={'/admin/'+model+'/create'}>
           <Button variant="contained" className={classes.newButton}>
@@ -148,7 +148,7 @@ class MainIndex extends PureComponent {
     if(this.state.indexData && this.state.indexData[0]){
       const td_key = Object.keys(this.state.indexData[0]).length;
       headers = Object.keys(this.state.indexData[0]);
-      if(permission === 'user'){
+      if(login_permission === 'user'){
         headers.push('show');
       }else{
         headers.push('show', 'edit', 'delete');
@@ -161,7 +161,7 @@ class MainIndex extends PureComponent {
           })
         ];
 
-        if(permission === 'user'){
+        if(login_permission === 'user'){
           row_html.push( // Button
             <TableCell key={td_key+1}>
               <Link to={'/admin/'+model+'/'+row.id}>
