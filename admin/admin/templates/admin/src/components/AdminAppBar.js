@@ -37,7 +37,7 @@ const AdminAppBar=(props)=>{
   }
 
   const clickUserEditButton=()=>{
-    props.history.push('/admin/AdminUserEdit');
+    props.history.push('/admin/ManageAdminUser');
   }
 
   const UserEditButton=(props)=>{

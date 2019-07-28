@@ -30,6 +30,7 @@ class MainShow extends PureComponent{
     isOpenDelete: false
   }
 
+  //========================== API Access ==========================
   getSchema=(model)=>{
     const self = this;
     Util.getAPI(`/admin/api/schema/detail/${model}`)
@@ -49,6 +50,7 @@ class MainShow extends PureComponent{
     });
   }
 
+  //========================== Delete ==========================
   openDelete=(event)=>{
     if(event){
       const store = this.props.store;
@@ -75,6 +77,7 @@ class MainShow extends PureComponent{
     })
   }
 
+  //========================== React ==========================
   componentDidMount(){
     // get URL param
     const model = this.props.match.params.model;

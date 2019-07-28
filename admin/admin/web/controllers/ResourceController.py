@@ -6,7 +6,7 @@ from masonite.exceptions import InvalidRouteCompileException
 from masonite.request import Request
 from masonite.routes import BaseHttpRoute, Route
 
-from admin.web.Resource.ResourceDomainService import ResourceDomainService
+from ..domain.services.domain_services.ResourceService import ResourceService
 
 
 class ResourceController(BaseHttpRoute, JSONSerializer):
@@ -14,7 +14,9 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
                'show', 'update', 'delete', 'options']
     prefix = ''
 
-    def __init__(self, model, url='', create_display=[], list_display=[], detail_display=[], without=[], method_type=['GET'], request=Request):
+    def __init__(self, model, url='', create_display=[], list_display=[],
+                 detail_display=[], without=[], method_type=['GET'],
+                 request=Request):
         self.base_url = model.__doc__.split(' ')[0]  # Model name
         self.route_url = '/api/' + url  # /api/model_name/ /api/model_name/@id
         self.method_type = method_type
@@ -41,23 +43,54 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
         #     routes.append(self.__class__(self.model, self.base_url + '/@id', method_type=['DELETE']))
 
         if 'create' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url,
-                                        method_type=['POST']))
+            routes.append(
+                self.__class__(
+                    self.model, url=self.base_url, method_type=['POST']
+                )
+            )
         if 'index' in self.methods:
-            routes.append(self.__class__(self.model, url=self.base_url,
-                                        list_display=self.list_display, method_type=['GET']))
+            routes.append(
+                self.__class__(
+                    self.model,
+                    url=self.base_url,
+                    list_display=self.list_display,
+                    method_type=['GET']
+                )
+            )
         if 'count' in self.methods:
-            routes.append(self.__class__(self.model, url=f'{self.base_url}/count',
-                                        list_display=self.list_display, method_type=['GET']))
+            routes.append(
+                self.__class__(
+                    self.model,
+                    url=f'{self.base_url}/count',
+                    list_display=self.list_display,
+                    method_type=['GET']
+                )
+            )
         if 'show' in self.methods:
-            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id',
-                                        detail_display=self.detail_display, method_type=['GET']))
+            routes.append(
+                self.__class__(
+                    self.model,
+                    url=f'{self.base_url}/@id',
+                    detail_display=self.detail_display,
+                    method_type=['GET']
+                )
+            )
         if 'update' in self.methods:
-            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id/put',
-                                        method_type=['POST']))
+            routes.append(
+                self.__class__(
+                    self.model,
+                    url=f'{self.base_url}/@id/put',
+                    method_type=['POST']
+                )
+            )
         if 'delete' in self.methods:
-            routes.append(self.__class__(self.model, url=f'{self.base_url}/@id/delete',
-                                        method_type=['POST']))
+            routes.append(
+                self.__class__(
+                    self.model,
+                    url=f'{self.base_url}/@id/delete',
+                    method_type=['POST']
+                )
+            )
         # if 'options' in self.methods:
         #     routes.append(self.__class__(self.model, url=f'{self.base_url}/@id',
         #                                 method_type=['OPTIONS']))
@@ -98,22 +131,36 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
                 'detail_display': self.detail_display
             }
 
-            respurce_domain_service = ResourceDomainService(**resource_args)
+            respurce_service = ResourceService(**resource_args)
 
             if 'POST' in self.method_type and 'put' in self.route_url:
-                response = self.request.app().resolve(getattr(respurce_domain_service, 'update'))
+                response = self.request.app().resolve(
+                    getattr(respurce_service, 'update')
+                )
             elif 'POST' in self.method_type and 'delete' in self.route_url:
-                response = self.request.app().resolve(getattr(respurce_domain_service, 'delete'))
+                response = self.request.app().resolve(
+                    getattr(respurce_service, 'delete')
+                )
             elif 'POST' in self.method_type:
-                response = self.request.app().resolve(getattr(respurce_domain_service, 'create'))
+                response = self.request.app().resolve(
+                    getattr(respurce_service, 'create')
+                )
             elif 'GET' in self.method_type and '@' in self.route_url:
-                response = self.request.app().resolve(getattr(respurce_domain_service, 'show'))
+                response = self.request.app().resolve(
+                    getattr(respurce_service, 'show')
+                )
             elif 'GET' in self.method_type and 'count' in self.route_url:
-                response = self.request.app().resolve(getattr(respurce_domain_service, 'count'))
+                response = self.request.app().resolve(
+                    getattr(respurce_service, 'count')
+                )
             elif 'GET' in self.method_type:
-                response = self.request.app().resolve(getattr(respurce_domain_service, 'index'))
+                response = self.request.app().resolve(
+                    getattr(respurce_service, 'index')
+                )
             elif 'OPTIONS' in self.method_type:
-                response = self.request.app().resolve(getattr(respurce_domain_service, 'options'))
+                response = self.request.app().resolve(
+                    getattr(respurce_service, 'options')
+                )
 
         # If the resource needs it's own serializer method
         if hasattr(self, 'serialize'):

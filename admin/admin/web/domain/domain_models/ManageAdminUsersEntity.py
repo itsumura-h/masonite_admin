@@ -1,5 +1,6 @@
 from masonite.helpers import password as bcrypt_password
 
+
 class PermissionValueObject:
     def __init__(self, value):
         if value == '1' or value == '2' or value == '3':
@@ -38,9 +39,10 @@ class HashPasswordValueObject:
         return self.value
 
 
-class AdminUserEntity:
-    def __init__(self, id: int = None, name: str = None, email: str = None, password: str = None, permission=None,
-                 created_at: str = None, updated_at: str = None):
+class ManageAdminUsersEntity:
+    def __init__(self, id: int = None, name: str = None, email: str = None,
+                 password: str = None, permission=None, created_at: str = None,
+                 updated_at: str = None):
         self.id = id
         self.name = name
         self.email = email

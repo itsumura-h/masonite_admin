@@ -1,0 +1,245 @@
+import React, {PureComponent} from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import { withStore } from '../../common/store';
+
+import { withRouter } from 'react-router';
+import {NavLink} from 'react-router-dom';
+
+import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import TextField from '@material-ui/core/TextField';
+
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+
+import List from '@material-ui/icons/List';
+import Save from '@material-ui/icons/Save';
+import Delete from '@material-ui/icons/Delete';
+
+import Util from '../../common/util';
+import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
+
+class ManagedminUserEdit extends PureComponent{
+  state = {
+    showData: {},
+    params: {}
+  }
+
+  //========================== API Access ==========================
+  getShow=()=>{
+    const self = this;
+    const id = this.props.match.params.id;
+    Util.getAPI(`/admin/api/manage_admin_users/${id}`)
+    .then(response=>{
+      self.setState({showData: response.data});
+    });
+  }
+
+  //========================== Save ==========================
+  setParam=(event)=>{
+    let new_params = this.state.params;
+    const key = event.currentTarget.name;
+    new_params[key] = event.currentTarget.value;
+    console.log(new_params);
+    this.setState({params: new_params});
+    this.forceUpdate();
+  }
+
+  save=(event)=>{
+    const id = event.currentTarget.dataset.id;
+    const url = `/admin/api/manage_admin_user/${id}/update`;
+
+    Util.putAPI(url, this.state.params)
+    .then(response=>{
+      if(!response.data.error){
+        this.props.history.push(`../${id}`);
+      }else{
+        this.setState({error: response.data.error});
+      }
+    })
+    .catch(err=>{
+      // if(err){this.setState({error: err})}
+      // console.error(err);
+      ;
+    })
+  }
+
+  //========================== React ==========================
+  componentDidMount(){
+    this.getShow()
+  }
+
+  render(){
+    const { classes, store } = this.props;
+    if(Object.keys(this.state.showData).length > 0){
+      return(
+        <div>
+          <h1>Admin Users</h1>
+          <p className={classes.error}>{this.state.error}</p>
+          <Card>
+            <CardContent>
+              <div className={classes.flex}>
+                <p>Edit</p>
+                <div className={classes.buttons}>
+                  <NavLink to='../'>
+                    <Button variant="contained" className={classes.listButton}>
+                      <List/>list
+                    </Button>
+                  </NavLink>
+                  <Button variant="contained"
+                    className={classes.saveButton}
+                    data-id={this.props.match.params.id}
+                    onClick={this.save}
+                    disabled={Object.keys(this.state.params).length === 0? true: false}
+                  >
+                    <Save/>save
+                  </Button>
+                  <Button variant="contained"
+                    onClick={this.openDelete}
+                    data-id={this.props.match.params.id}
+                    className={classes.deleteButton}
+                  >
+                    <Delete/>delete
+                  </Button>
+                </div>
+              </div>
+              <Divider />
+              <div className={classes.scroll}>
+                <Table>
+                  <TableBody>
+                    <TableRow key={1}>
+                      <TableCell>
+                        ID
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          value={this.state.showData.id}
+                          name='id'
+                          multiline
+                          className={classes.textarea + ' params'}
+                          InputProps={{
+                            readOnly: true,
+                          }}
+                        />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow key={2}>
+                      <TableCell>
+                        name
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          defaultValue={this.state.showData.name}
+                          onChange={this.setParam}
+                          name='name'
+                          multiline
+                          className={classes.textarea + ' params'}
+                        />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow key={3}>
+                      <TableCell>
+                        email
+                      </TableCell>
+                      <TableCell>
+                        <TextField
+                          defaultValue={this.state.showData.email}
+                          onChange={this.setParam}
+                          name='email'
+                          multiline
+                          className={classes.textarea + ' params'}
+                        />
+                      </TableCell>
+                    </TableRow>
+                    <TableRow key={4}>
+                      <TableCell>
+                      permission
+                      </TableCell>
+                      <TableCell>
+                        <FormControl fullWidth className={classes.formControl}>
+                          <Select
+                            defaultValue={this.state.showData.permission}
+                            onChange={this.setParam}
+                            name='permission'
+                            className='params'
+                            autoWidth
+                            native
+                          >
+                            <option key={0} value="administrator">administrator</option>
+                            <option key={1} value="member">member</option>
+                            <option key={2} value="user">user</option>
+                          </Select>
+                        </FormControl>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow key={5}>
+                      <TableCell>
+                        password reset
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="contained" className={classes.listButton}>
+                          Reset
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+          <DeleteConfirmDialog
+            isOpen={this.state.isOpenDelete}
+            openDelete={this.openDelete}
+            handleOkMethod={this.delete}
+          />
+      </div>
+      );
+    }else{
+      return null;
+    }
+  }
+}
+
+const styles = {
+  scroll: {
+    overflow: 'auto'
+  },
+  error: {
+    backgroundColor: 'yellow'
+  },
+  textarea: {
+    width: '90%'
+  },
+  flex: {
+    display: 'flex'
+  },
+  buttons: {
+    margin: '0 0 0 auto'
+  },
+  listButton: {
+    color: 'black',
+    backgroundColor: '#ECF0F5'
+  },
+  saveButton: {
+    color: 'white',
+    backgroundColor: '#3C8DBC',
+    '&:hover': {
+      backgroundColor: '#2C7DAC',
+    },
+  },
+  deleteButton: {
+    color: 'white',
+    backgroundColor: '#DD4B39',
+    '&:hover': {
+      backgroundColor: '#CD3B29',
+    },
+  }
+}
+
+export default withStyles(styles)(withRouter(withStore(ManagedminUserEdit)));

@@ -1,18 +1,18 @@
 from datetime import date, datetime, time, timedelta
-from app.http.middleware.AdminMiddleware import AdminMiddleware
 from typing import Dict
 
-class ResourceAppService:
-    # ==================================================
-    # Application Service
-    # ==================================================
+from app.http.middleware.AdminMiddleware import AdminMiddleware
 
+
+class ApplicationService:
     def arr_iso_format(self, _obj):
         if isinstance(_obj, datetime) or isinstance(_obj, date):
             return _obj.isoformat()
         elif isinstance(_obj, timedelta):
-            _obj = str(_obj).split(' ')[2] # "7138 days, 14:32:46.649462"→"14:32:46.649462"
-            _obj_arr = str(_obj).split(':') # "14:32:46.649462"→[14, 32, 46.649462]
+            # "7138 days, 14:32:46.649462"→"14:32:46.649462"
+            _obj = str(_obj).split(' ')[2]
+            # "14:32:46.649462"→[14, 32, 46.649462]
+            _obj_arr = str(_obj).split(':')
             _h = int(_obj_arr[0])
             _m = int(_obj_arr[1])
             _s = int(_obj_arr[2].split('.')[0])
@@ -38,19 +38,19 @@ class ResourceAppService:
         if request.method != 'GET' and login_permission == 'user':
             return False
 
-    # @staticmethod
-    # def delete_login_params(params: Dict) -> Dict:
-    #     """delete login params from request params
+    @staticmethod
+    def delete_login_params(params: Dict) -> Dict:
+        """delete login params from request params
 
-    #     Args:
-    #         params (Dict{str: str}): including login_id, login_token and login_permission
+        Args:
+            params (Dict{str: str}): including login_id, login_token and login_permission
 
-    #     Returns:
-    #         Dict: params which is not contain login_id, login_token and login_permission
-    #     """
-    #     del params['login_id'], params['login_token'], params['login_permission']
+        Returns:
+            Dict: params which is not contain login_id, login_token and login_permission
+        """
+        del params['login_id'], params['login_token'], params['login_permission']
 
-    #     if '__token' in params:
-    #         del params['__token']
+        if '__token' in params:
+            del params['__token']
 
-    #     return params
+        return params

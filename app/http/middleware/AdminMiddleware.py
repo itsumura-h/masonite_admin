@@ -1,13 +1,11 @@
-
 import datetime
-import pickle
+# import pickle
 
 from masonite.request import Request
 from masonite.response import Response
 
-from admin.web.Login.LoginRepository import LoginRepository
-from admin.web.Login.LoginService import LoginService
-
+from admin.web.domain.services.domain_services.LoginService import LoginService
+from admin.web.reositories.LoginRepository import LoginRepository
 from config.admin import LOGIN_CONF
 
 timeout = datetime.timedelta(hours=1)
@@ -31,7 +29,7 @@ class AdminMiddleware:
         self.request.request_variables = {}
 
     def checkpw(self):
-        if self.checkpw_resource() == False:
+        if self.checkpw_resource() is False:
             return self.response.json(None, status=403)
 
     def checkpw_resource(self):
@@ -47,7 +45,7 @@ class AdminMiddleware:
 
             # check token is exists
             db_token = login_data['token']
-            if db_token == None or input_token != db_token:
+            if db_token is None or input_token != db_token:
                 return False
 
             # check whther admin is not edited

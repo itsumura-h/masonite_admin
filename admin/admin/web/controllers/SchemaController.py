@@ -1,5 +1,6 @@
 from masonite.request import Request
-from admin.web.Schema.SchemaService import SchemaService
+
+from ..domain.services.domain_services.SchemaService import SchemaService
 
 
 class SchemaController:
@@ -12,11 +13,15 @@ class SchemaController:
         config_model = SchemaService.get_model_row_by_model_name(model_name)
 
         if 'create_display' in config_model:
-            new_schema = [v for i, v in enumerate(schema['schema'])
-                if v['column'] in config_model['create_display']]
+            new_schema = [
+                v for i, v in enumerate(schema['schema'])
+                if v['column'] in config_model['create_display']
+            ]
         else:
-            new_schema = [v for i, v in enumerate(schema['schema'])
-                if v['column'] not in ['id', 'created_at', 'updated_at']]
+            new_schema = [
+                v for i, v in enumerate(schema['schema'])
+                if v['column'] not in ['id', 'created_at', 'updated_at']
+            ]
 
         return {
             'schema': new_schema,
@@ -31,11 +36,15 @@ class SchemaController:
             config_model['detail_display'].insert(0, 'id')
 
         if 'detail_display' in config_model:
-            new_schema = [v for i, v in enumerate(schema['schema'])
-                if v['column'] in config_model['detail_display']]
+            new_schema = [
+                v for i, v in enumerate(schema['schema'])
+                if v['column'] in config_model['detail_display']
+            ]
         else:
-            new_schema = [v for i, v in enumerate(schema['schema'])
-                if v['column'] not in ['created_at', 'updated_at']]
+            new_schema = [
+                v for i, v in enumerate(schema['schema'])
+                if v['column'] not in ['created_at', 'updated_at']
+            ]
 
         return {
             'schema': new_schema,

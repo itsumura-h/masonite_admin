@@ -25,7 +25,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class UserEditIndex extends PureComponent{
+class ManageAdminUserIndex extends PureComponent{
   state = {
     indexData: [],
     isOpenDeleteConfirm: false,
@@ -37,7 +37,7 @@ class UserEditIndex extends PureComponent{
   getIndex=(page=this.state.page)=>{
     const self = this;
     const params = {p: page+1, i: this.props.store.get('rowsPerPage')};
-    Util.getAPI('/admin/api/admin_users', params)
+    Util.getAPI('/admin/api/manage_admin_users', params)
     .then(response=>{
       self.setState({
         count: response.data.count,
@@ -59,7 +59,7 @@ class UserEditIndex extends PureComponent{
   delete=(event)=>{
     // get URL param
     const id = this.props.store.get('targetId');
-    const url = `/admin/api/admin_users/${id}/delete`;
+    const url = `/admin/api/manage_admin_users/${id}/delete`;
 
     Util.deleteAPI(url)
     .then(response=>{
@@ -98,11 +98,6 @@ class UserEditIndex extends PureComponent{
   render(){
     const { classes, store } = this.props;
     const rowsPerPage = store.get('rowsPerPage');
-    // if(this.state.indexData.length > 0){
-    //   console.log(this.state.indexData);
-    //   console.log(this.state.indexData[0]);
-    //   console.log(this.state.indexData[0].name);
-    // }
 
     return(
       <div>
@@ -112,7 +107,7 @@ class UserEditIndex extends PureComponent{
             <div className={classes.flex}>
               <p>index</p>
               <div className={classes.buttons}>
-                <NavLink to={'/admin/AdminUserEdit/create'}>
+                <NavLink to={'/admin/ManageAdminUserEdit/create'}>
                   <Button variant="contained" className={classes.newButton}>
                     <Add/>New
                   </Button>
@@ -167,14 +162,14 @@ class UserEditIndex extends PureComponent{
                             {row.permission}
                           </TableCell>
                           <TableCell key={key+4}>
-                            <Link to={`/admin/AdminUserEdit/${row.id}`}>
+                            <Link to={`/admin/ManageAdminUser/${row.id}`}>
                               <Fab aria-label="show">
                                 <Details />
                               </Fab>
                             </Link>
                           </TableCell>
                           <TableCell key={key+5}>
-                            <Link to={`/admin/AdminUserEdit/${row.id}/edit`}>
+                            <Link to={`/admin/ManageAdminUser/${row.id}/edit`}>
                               <Fab aria-label="edit" className={classes.editButton}>
                                 <Edit />
                               </Fab>
@@ -242,4 +237,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withStore(UserEditIndex));
+export default withStyles(styles)(withStore(ManageAdminUserIndex));

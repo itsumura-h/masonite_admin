@@ -44,3 +44,5 @@ ROUTE_MIDDLEWARE = {
 
 from app.http.middleware.AdminMiddleware import AdminMiddleware
 ROUTE_MIDDLEWARE['admin'] = AdminMiddleware
+from app.http.middleware.AdministratorMiddleware import AdministratorMiddleware
+ROUTE_MIDDLEWARE['administrator'] = AdministratorMiddleware

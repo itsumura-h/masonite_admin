@@ -39,6 +39,7 @@ class MainEdit extends PureComponent{
     error: '',
   }
 
+  //========================== API Access ==========================
   getSchema=(model)=>{
     const self = this;
     Util.getAPI(`/admin/api/schema/detail/${model}`)
@@ -58,7 +59,7 @@ class MainEdit extends PureComponent{
     });
   }
 
-  //============ Delete ============
+  //========================== Delete ==========================
   openDelete=(event)=>{
     if(event){
       const store = this.props.store;
@@ -131,6 +132,7 @@ class MainEdit extends PureComponent{
     })
   }
 
+  //========================== React ==========================
   componentDidMount(){
     // get URL param
     const model = this.props.match.params.model;

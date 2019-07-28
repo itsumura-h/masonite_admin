@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 import AdminAppBar from '../components/AdminAppBar';
 import AdminMain from '../components/AdminMain';
 import AdminDrawer from '../components/AdminDrawer';
@@ -6,7 +6,7 @@ import AdminDrawer from '../components/AdminDrawer';
 import {withStore} from '../common/store';
 import Util from '../common/util';
 
-class Admin extends React.Component {
+class Admin extends Component {
   getInfo=()=>{
     Util.getAPI('/admin/api/info')
     .then(response=>{

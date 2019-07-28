@@ -3,18 +3,15 @@ from app.http.middleware.AdminMiddleware import AdminMiddleware
 from masonite.request import Request
 from masonite.response import Response
 from masonite import env
-from admin.web.Resource.ResourceRepository import ResourceRepository
-from admin.web.Resource.ResourceAppService import ResourceAppService
-from admin.web.ApplicationService import ApplicationService
+from ....reositories.ResourceRepository import ResourceRepository
+from ..ApplicationService import ApplicationService
+
 from masonite.helpers import config  #
 
 
-class ResourceDomainService:
-    # ==================================================
-    # Domain Service
-    # ==================================================
-
-    def __init__(self, model=None, create_display=None, list_display=None, detail_display=None):
+class ResourceService:
+    def __init__(self, model=None, create_display=None, list_display=None,
+                 detail_display=None):
         self.model = model
         self.create_display = create_display
         self.list_display = list_display
@@ -22,7 +19,7 @@ class ResourceDomainService:
 
     def create(self, request: Request, response: Response):
         """Logic to create data from a given model."""
-        if ResourceAppService().before_crud_check(request, response) is False:
+        if ApplicationService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         try:
@@ -32,12 +29,13 @@ class ResourceDomainService:
 
             ResourceRepository.create(params, new_model)
         except Exception as e:
-            return {'error': str(e)}
+            # return {'error': str(e)}
+            return response.json({'error': str(e)}, status=400)
         return new_model
 
     def index(self, request: Request, response: Response):
         """Logic to read data from several models."""
-        if ResourceAppService().before_crud_check(request, response) is False:
+        if ApplicationService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         # pagenagion
@@ -47,17 +45,17 @@ class ResourceDomainService:
 
         results = ResourceRepository.index(
             self.model, self.list_display, offset, items)
-        return ResourceAppService().arr_iso_format(results)
+        return ApplicationService().arr_iso_format(results)
 
     def count(self, request: Request, response: Response):
-        if ResourceAppService().before_crud_check(request, response) is False:
+        if ApplicationService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         return {'count': self.model.count()}
 
     def show(self, request: Request, response: Response):
         """Logic to read data from 1 model."""
-        if ResourceAppService().before_crud_check(request, response) is False:
+        if ApplicationService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         id = request.param('id')
@@ -68,13 +66,13 @@ class ResourceDomainService:
         )
 
         if new_result:
-            return ResourceAppService().arr_iso_format(new_result)
+            return ApplicationService().arr_iso_format(new_result)
         else:
             return response.view('', status=404)
 
     def update(self, request: Request, response: Response):
         """Logic to update data from a given model."""
-        if ResourceAppService().before_crud_check(request, response) is False:
+        if ApplicationService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         try:
@@ -84,7 +82,10 @@ class ResourceDomainService:
             is_success = ResourceRepository.update(record, params)
 
             if is_success == 0:
-                return response.json({'error': 'data is not exist'}, status=400)
+                return response.json(
+                    {'error': 'data is not exist'},
+                    status=400
+                )
         except Exception as e:
             return response.json({'error': str(e)}, status=400)
 
@@ -92,7 +93,7 @@ class ResourceDomainService:
 
     def delete(self, request: Request, response: Response):
         """Logic to delete data from a given model."""
-        if ResourceAppService().before_crud_check(request, response) is False:
+        if ApplicationService().before_crud_check(request, response) is False:
             return response.json(None, status=403)
 
         id = request.param('id')

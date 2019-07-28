@@ -1,15 +1,17 @@
 from masonite.request import Request
 from masonite.response import Response
 
-from admin.web.AdminUsers.AdminUsersService import AdminUsersService
-from admin.web.ApplicationService import ApplicationService
+from ..domain.services.domain_services.ManageAdminUsersService import (
+    ManageAdminUsersService
+)
+from ..domain.services.ApplicationService import ApplicationService
 
 
-class AdminUsersController:
+class ManageAdminUsersController:
     def create(self, request: Request, response: Response):
         params = request.all()
         params = ApplicationService.delete_login_params(params)
-        result = AdminUsersService.create(params)
+        result = ManageAdminUsersService.create(params)
         if isinstance(result, str):
             return response.json(result, status=400)
         else:
@@ -21,7 +23,7 @@ class AdminUsersController:
         page = int(request.input('p')) if request.input('p') else 1
         offset = items * (page - 1)
 
-        admin_users, count = AdminUsersService.index(offset, items)
+        admin_users, count = ManageAdminUsersService.index(offset, items)
         return {
             'count': count,
             'admin_users': [
@@ -38,7 +40,7 @@ class AdminUsersController:
 
     def show(self, request: Request, response: Response):
         id = request.param('id')
-        admin_user = AdminUsersService.show(id)
+        admin_user = ManageAdminUsersService.show(id)
         return {
             'id': admin_user.id,
             'name': admin_user.name,
@@ -47,3 +49,6 @@ class AdminUsersController:
             'created_at': admin_user.created_at,
             'updated_at': admin_user.updated_at
         }
+
+    def update(self, request:Request, response:Response):
+        pass

@@ -14,8 +14,9 @@ class PermissionValueObject:
 
 
 class LoginUserEntity:
-    def __init__(self, id: int = None, name: str = None, email: str = None, password: str = None, permission=None,
-                 created_at: str = None, updated_at: str = None):
+    def __init__(self, id: int = None, name: str = None, email: str = None,
+                 password: str = None, permission=None, created_at: str = None,
+                 updated_at: str = None):
         self.id = id
         self.name = name
         self.email = email

@@ -3,7 +3,7 @@ from masonite.controllers import Controller
 from masonite.request import Request
 from masonite.response import Response
 
-from admin.web.Login.LoginService import LoginService
+from ..domain.services.domain_services.LoginService import LoginService
 
 
 class LoginController(Controller):

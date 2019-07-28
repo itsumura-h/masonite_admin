@@ -1,17 +1,18 @@
 import secrets
 from datetime import datetime
 
-from config.admin import LOGIN_CONF
-from admin.web.Login.LoginRepository import LoginRepository
-from admin.web.Login.LoginEntity import LoginUserEntity
+# from config.admin import LOGIN_CONF
 
-token_path = 'databases/login.bin'
+from ....reositories.LoginRepository import LoginRepository
+from ...domain_models.LoginEntity import LoginUserEntity
+
+# token_path = 'databases/login.bin'
 
 
 class LoginService:
-    def __init__(self):
-        self.token_path = LOGIN_CONF['file_path'] \
-            if 'file_path' in LOGIN_CONF else token_path
+    # def __init__(self):
+    #     self.token_path = LOGIN_CONF['file_path'] \
+    #         if 'file_path' in LOGIN_CONF else token_path
 
     def get_user(self, email):
         user = LoginRepository().get_user(email)
