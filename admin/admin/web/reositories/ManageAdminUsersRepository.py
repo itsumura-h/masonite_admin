@@ -30,3 +30,9 @@ class ManageAdminUsersRepository:
         return AUTH['model'] \
             .find(id) \
             .serialize()
+
+    @staticmethod
+    def update(id, params):
+        return AUTH['model'] \
+            .where('id', id) \
+            .update(**params)

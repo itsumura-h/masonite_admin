@@ -1,6 +1,7 @@
 from ....reositories.ManageAdminUsersRepository import \
     ManageAdminUsersRepository
 from ...domain_models.ManageAdminUsersEntity import ManageAdminUsersEntity
+from ..ApplicationService import ApplicationService
 
 
 class ManageAdminUsersService:
@@ -27,3 +28,9 @@ class ManageAdminUsersService:
         admin_user = ManageAdminUsersRepository.show(id)
         admin_user = ManageAdminUsersEntity(**admin_user)
         return admin_user
+
+    @staticmethod
+    def update(id, params):
+        params = ApplicationService.delete_login_params(params)
+        is_success = ManageAdminUsersRepository.update(id, params)
+        return is_success

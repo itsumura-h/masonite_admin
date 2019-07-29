@@ -28,7 +28,8 @@ import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 class ManagedminUserEdit extends PureComponent{
   state = {
     showData: {},
-    params: {}
+    params: {},
+    error: '',
   }
 
   //========================== API Access ==========================
@@ -53,7 +54,7 @@ class ManagedminUserEdit extends PureComponent{
 
   save=(event)=>{
     const id = event.currentTarget.dataset.id;
-    const url = `/admin/api/manage_admin_user/${id}/update`;
+    const url = `/admin/api/manage_admin_users/${id}/update`;
 
     Util.putAPI(url, this.state.params)
     .then(response=>{
@@ -64,9 +65,7 @@ class ManagedminUserEdit extends PureComponent{
       }
     })
     .catch(err=>{
-      // if(err){this.setState({error: err})}
-      // console.error(err);
-      ;
+      console.log(err);
     })
   }
 
@@ -77,63 +76,65 @@ class ManagedminUserEdit extends PureComponent{
 
   render(){
     const { classes, store } = this.props;
-    if(Object.keys(this.state.showData).length > 0){
-      return(
-        <div>
-          <h1>Admin Users</h1>
-          <p className={classes.error}>{this.state.error}</p>
-          <Card>
-            <CardContent>
-              <div className={classes.flex}>
-                <p>Edit</p>
-                <div className={classes.buttons}>
-                  <NavLink to='../'>
-                    <Button variant="contained" className={classes.listButton}>
-                      <List/>list
-                    </Button>
-                  </NavLink>
-                  <Button variant="contained"
-                    className={classes.saveButton}
-                    data-id={this.props.match.params.id}
-                    onClick={this.save}
-                    disabled={Object.keys(this.state.params).length === 0? true: false}
-                  >
-                    <Save/>save
+    console.log(this.state.error);
+    return(
+      <div>
+        <h1>Admin Users</h1>
+        <p className={classes.error}>{this.state.error}</p>
+        <Card>
+          <CardContent>
+            <div className={classes.flex}>
+              <p>Edit</p>
+              <div className={classes.buttons}>
+                <NavLink to='../'>
+                  <Button variant="contained" className={classes.listButton}>
+                    <List/>list
                   </Button>
-                  <Button variant="contained"
-                    onClick={this.openDelete}
-                    data-id={this.props.match.params.id}
-                    className={classes.deleteButton}
-                  >
-                    <Delete/>delete
-                  </Button>
-                </div>
+                </NavLink>
+                <Button variant="contained"
+                  className={classes.saveButton}
+                  data-id={this.props.match.params.id}
+                  onClick={this.save}
+                  disabled={Object.keys(this.state.params).length === 0? true: false}
+                >
+                  <Save/>save
+                </Button>
+                <Button variant="contained"
+                  onClick={this.openDelete}
+                  data-id={this.props.match.params.id}
+                  className={classes.deleteButton}
+                >
+                  <Delete/>delete
+                </Button>
               </div>
-              <Divider />
-              <div className={classes.scroll}>
-                <Table>
-                  <TableBody>
-                    <TableRow key={1}>
-                      <TableCell>
-                        ID
-                      </TableCell>
-                      <TableCell>
-                        <TextField
-                          value={this.state.showData.id}
-                          name='id'
-                          multiline
-                          className={classes.textarea + ' params'}
-                          InputProps={{
-                            readOnly: true,
-                          }}
-                        />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow key={2}>
-                      <TableCell>
-                        name
-                      </TableCell>
-                      <TableCell>
+            </div>
+            <Divider />
+            <div className={classes.scroll}>
+              <Table>
+                <TableBody>
+                  <TableRow key={1}>
+                    <TableCell>
+                      ID
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        value={this.state.showData.id}
+                        name='id'
+                        multiline
+                        className={classes.textarea + ' params'}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key={2}>
+                    <TableCell>
+                      name
+                    </TableCell>
+                    <TableCell>
+                      {
+                        Object.keys(this.state.showData).length > 0 &&
                         <TextField
                           defaultValue={this.state.showData.name}
                           onChange={this.setParam}
@@ -141,13 +142,16 @@ class ManagedminUserEdit extends PureComponent{
                           multiline
                           className={classes.textarea + ' params'}
                         />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow key={3}>
-                      <TableCell>
-                        email
-                      </TableCell>
-                      <TableCell>
+                      }
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key={3}>
+                    <TableCell>
+                      email
+                    </TableCell>
+                    <TableCell>
+                      {
+                        Object.keys(this.state.showData).length > 0 &&
                         <TextField
                           defaultValue={this.state.showData.email}
                           onChange={this.setParam}
@@ -155,14 +159,17 @@ class ManagedminUserEdit extends PureComponent{
                           multiline
                           className={classes.textarea + ' params'}
                         />
-                      </TableCell>
-                    </TableRow>
-                    <TableRow key={4}>
-                      <TableCell>
-                      permission
-                      </TableCell>
-                      <TableCell>
-                        <FormControl fullWidth className={classes.formControl}>
+                      }
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key={4}>
+                    <TableCell>
+                    permission
+                    </TableCell>
+                    <TableCell>
+                      <FormControl fullWidth className={classes.formControl}>
+                        {
+                          Object.keys(this.state.showData).length > 0 &&
                           <Select
                             defaultValue={this.state.showData.permission}
                             onChange={this.setParam}
@@ -175,34 +182,32 @@ class ManagedminUserEdit extends PureComponent{
                             <option key={1} value="member">member</option>
                             <option key={2} value="user">user</option>
                           </Select>
-                        </FormControl>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow key={5}>
-                      <TableCell>
-                        password reset
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="contained" className={classes.listButton}>
-                          Reset
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-          <DeleteConfirmDialog
-            isOpen={this.state.isOpenDelete}
-            openDelete={this.openDelete}
-            handleOkMethod={this.delete}
-          />
-      </div>
-      );
-    }else{
-      return null;
-    }
+                        }
+                      </FormControl>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow key={5}>
+                    <TableCell>
+                      password reset
+                    </TableCell>
+                    <TableCell>
+                      <Button variant="contained" className={classes.listButton}>
+                        Reset
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </CardContent>
+        </Card>
+        <DeleteConfirmDialog
+          isOpen={this.state.isOpenDelete}
+          openDelete={this.openDelete}
+          handleOkMethod={this.delete}
+        />
+    </div>
+    );
   }
 }
 

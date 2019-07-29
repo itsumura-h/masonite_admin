@@ -42,8 +42,7 @@ export default class Util extends React.Component{
       })
       .catch(err=>{
         this.loginFale(err);
-        console.error(err);
-        return [];
+        return err.response;
       })
   }
 
@@ -62,8 +61,7 @@ export default class Util extends React.Component{
       })
       .catch(err=>{
         this.loginFale(err);
-        console.error(err);
-        return [];
+        return err.response;
       })
   }
 
@@ -82,8 +80,7 @@ export default class Util extends React.Component{
       })
       .catch(err=>{
         this.loginFale(err);
-        console.error(err);
-        return [];
+        return err.response;
       })
   }
 
@@ -101,7 +98,7 @@ export default class Util extends React.Component{
       })
       .catch(err=>{
         console.error(err);
-        return [];
+        return err.response;
       })
   }
 
@@ -118,7 +115,7 @@ export default class Util extends React.Component{
       })
       .catch(err=>{
         console.error(err);
-        return [];
+        return err.response;
       })
   }
 

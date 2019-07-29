@@ -6,14 +6,16 @@ from subprocess import check_output
 # add routes
 from masonite.packages import append_web_routes
 
+
 class Install(Command):
     """
     Install admin package
 
     admin:install
     """
+
     def handle(self):
-        #==================== Create config ====================
+        # ==================== Create config ====================
         filedata = '''"""
 admin conf
 
@@ -104,16 +106,17 @@ LOGIN_CONF = {
         else:
             self.line('<info>'+config_path+' Already Exists!</info>')
 
-        #==================== Create model ====================
-        #whether models dir is exists
+        # ==================== Create model ====================
+        # whether models dir is exists
         is_dir = os.path.isdir('app/models')
 
         if(is_dir):
             admin_user_model_path = 'app/models/AdminUser.py'
             admin_user_output = bytes(check_output(
-                    ['craft', 'model', 'models/AdminUser']
-                )).decode('utf-8')
-            admin_user_output = ''.join(admin_user_output.splitlines()) # to delete new line
+                ['craft', 'model', 'models/AdminUser']
+            )).decode('utf-8')
+            admin_user_output = ''.join(
+                admin_user_output.splitlines())  # to delete new line
 
             # login_token_model_path = 'app/models/LoginToken.py'
             # login_token_output = bytes(check_output(
@@ -123,8 +126,8 @@ LOGIN_CONF = {
         else:
             admin_user_model_path = 'app/AdminUser.py'
             admin_user_output = bytes(check_output(
-                    ['craft', 'model', 'AdminUser']
-                )).decode('utf-8')
+                ['craft', 'model', 'AdminUser']
+            )).decode('utf-8')
 
             # login_token_model_path = 'app/LoginToken.py'
             # login_token_output = bytes(check_output(
@@ -134,17 +137,15 @@ LOGIN_CONF = {
         self.line('<info>AdminUser '+admin_user_output+'</info>')
         # self.line('<info>LoginToken '+login_token_output+'</info>')
 
-        #==================== Create AdminMiddleware ====================
-        filedata = '''
-
-import datetime
+        # ==================== Create AdminMiddleware ====================
+        filedata = '''import datetime
 import pickle
 
 from masonite.request import Request
 from masonite.response import Response
 
-from admin.web.Login.LoginRepository import LoginRepository
-from admin.web.Login.LoginService import LoginService
+from admin.web.reositories.LoginRepository import LoginRepository
+from admin.web.domain.services.domain_services.LoginService import LoginService
 
 from config.admin import LOGIN_CONF
 
@@ -169,7 +170,7 @@ class AdminMiddleware:
         self.request.request_variables = {}
 
     def checkpw(self):
-        if self.checkpw_resource() == False:
+        if self.checkpw_resource() is False:
             return self.response.json(None, status=403)
 
     def checkpw_resource(self):
@@ -182,18 +183,21 @@ class AdminMiddleware:
 
             # check token is exists
             db_token = login_data['token']
-            if db_token == None or input_token != db_token:
+            if db_token is None or input_token != db_token:
+                print('token')
                 return False
 
             # check whther admin is not edited
-            permission = self.request.input('permission')
-            if int(login_data['permission']) != int(permission):
+            permission = self.request.input('login_permission')
+            if login_data['permission'] != permission:
+                print('permission')
                 return False
 
             # check timeout
             diff = datetime.datetime.now() - login_data['last_access']
             if diff > self.timeout:
                 LoginService().logout(admin_user_id, db_token)
+                print('timeout')
                 return False
             else:
                 LoginService().update_last_access(int(admin_user_id))
@@ -201,50 +205,101 @@ class AdminMiddleware:
             return True
 
         except Exception as e:
+            print(str(e))
             return False
 
 '''
-        admin_middleware_path = 'app/http/middleware/AdminMiddleware.py'
-        with open(admin_middleware_path, 'w') as f:
-            f.write(filedata)
-
         admin_middleware_path = 'app/http/middleware/AdminMiddleware.py'
         is_exists = os.path.exists(admin_middleware_path)
         if not is_exists:
             with open(admin_middleware_path, 'w') as f:
                 f.write(filedata)
-            self.line('<info>'+admin_middleware_path+' Created Successfully!</info>')
+            self.line('<info>'+admin_middleware_path +
+                      ' Created Successfully!</info>')
         else:
             self.line('<info>'+admin_middleware_path+' Already Exists!</info>')
 
+        # ==================== Create Administrator Middleware ====================
+        filedata = '''"""Administrator Middleware."""
 
-        #==================== Edit Middleware Config ====================
+from masonite.request import Request
+from masonite.response import Response
+
+
+class AdministratorMiddleware:
+    """Administrator Middleware."""
+
+    def __init__(self, request: Request, response: Response):
+        """Inject Any Dependencies From The Service Container.
+
+        Arguments:
+            Request {masonite.request.Request} -- The Masonite request object
+        """
+        self.request = request
+        self.response = response
+
+    def before(self):
+        """Run This Middleware Before The Route Executes."""
+        self.check_administrator()
+
+    def after(self):
+        """Run This Middleware After The Route Executes."""
+        pass
+
+    def check_administrator(self):
+        permission = self.request.input('login_permission')
+        if permission != 'administrator':
+            return self.response.json(None, status=403)
+
+'''
+
+        # ==================== Edit Middleware Config ====================
         middleware_conf_path = 'config/middleware.py'
         with open(middleware_conf_path, 'r') as f:
             filedata = f.read()
 
+        admininistrator_middleware_path = 'app/http/middleware/AdministratorMiddleware.py'
+        is_exists = os.path.exists(admininistrator_middleware_path)
+        if not is_exists:
+            with open(admininistrator_middleware_path, 'w') as f:
+                f.write(filedata)
+            self.line(
+                f'<info>{admininistrator_middleware_path} Created Successfully!</info>'
+            )
+        else:
+            self.line(
+                f'<info>{admininistrator_middleware_path} Already Exists!</info>'
+            )
+
         if "ROUTE_MIDDLEWARE['admin'] = AdminMiddleware" in filedata or \
-        "'admin': AdminMiddleware" in filedata:
-            self.line('<info>'+middleware_conf_path+' Is Already Edited!</info>')
+                "'admin': AdminMiddleware" in filedata:
+            self.line(
+                f'<info>{middleware_conf_path} Is Already Edited!</info>'
+            )
         else:
             lines = [
                 "",
                 "from app.http.middleware.AdminMiddleware import AdminMiddleware",
                 "ROUTE_MIDDLEWARE['admin'] = AdminMiddleware",
+                "from app.http.middleware.AdministratorMiddleware import AdministratorMiddleware",
+                "ROUTE_MIDDLEWARE['administrator'] = AdministratorMiddleware",
                 "",
             ]
             with open(middleware_conf_path, 'a') as f:
                 f.write('\n'.join(lines))
-            self.line('<info>Edit '+middleware_conf_path+' Successfully!</info>')
+            self.line(
+                f'<info>Edit {middleware_conf_path} Successfully!</info>'
+            )
 
-        #==================== Edit CSRF Middleware ====================
+        # ==================== Edit CSRF Middleware ====================
         csrf_middleware_path = 'app/http/middleware/CsrfMiddleware.py'
 
         with open(csrf_middleware_path, 'r') as f:
             filedata = f.read()
 
         if 'admin/*' in filedata:
-            self.line('<info>'+csrf_middleware_path+' Is Already Edited!</info>')
+            self.line('<info>'+csrf_middleware_path +
+                      ' Is Already Edited!</info>')
         else:
             lines = [
                 "",
@@ -252,20 +307,29 @@ class AdminMiddleware:
             ]
             with open(csrf_middleware_path, 'a') as f:
                 f.write('\n'.join(lines))
-            self.line('<info>Edit '+csrf_middleware_path+' Successfully!</info>')
+            self.line(
+                f'<info>Edit {csrf_middleware_path} Successfully!</info>'
+            )
 
-        #==================== Edit Auth ====================
+        # ==================== Edit Auth ====================
         auth_path = 'config/auth.py'
         with open(auth_path, 'r') as f:
             filedata = f.read()
 
         if "'model': User," in filedata:
             if is_dir:
-                filedata = filedata.replace("from app.User import User", "from app.models.AdminUser import AdminUser")
+                filedata = filedata.replace(
+                    "from app.User import User",
+                    "from app.models.AdminUser import AdminUser"
+                )
             else:
-                filedata = filedata.replace("from app.User import User", "from app.AdminUser import AdminUser")
+                filedata = filedata.replace(
+                    "from app.User import User",
+                    "from app.AdminUser import AdminUser"
+                )
 
-            filedata = filedata.replace("'model': User,", "'model': AdminUser,")
+            filedata = filedata.replace(
+                "'model': User,", "'model': AdminUser,")
 
             with open(auth_path, 'w') as f:
                 f.write(filedata)
@@ -274,7 +338,7 @@ class AdminMiddleware:
         else:
             self.line('<info>'+auth_path+' Is Already Edited!</info>')
 
-        #==================== Add routes ====================
+        # ==================== Add routes ====================
         content = None
         route_path = 'routes/web.py'
         with open(route_path, 'r') as f:
@@ -282,26 +346,61 @@ class AdminMiddleware:
         if "ADMIN_ROUTES" in content:
             self.line('<info>Admin Routes Already Exists!</info>')
         else:
-            lines = [
-                "",
-                "from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, MODEL_ROUTES",
-                "",
-                "ROUTES += [",
-                "    RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',), add_methods=['OPTIONS']),",
-                "    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',), add_methods=['OPTIONS']), #middleware not working",
-                "    RouteGroup(ADMIN_ROUTES, prefix='/admin', add_methods=['OPTIONS']),",
-                "]",
-                ""
-            ]
+            # lines = [
+            #     "",
+            #     "from admin.web.admin_routes import ADMIN_ROUTES, ADMIN_ROUTES_WITH_MIDDLEWARE, MODEL_ROUTES",
+            #     "",
+            #     "ROUTES += [",
+            #     "    RouteGroup(ADMIN_ROUTES_WITH_MIDDLEWARE, prefix='/admin', middleware=('admin',), add_methods=['OPTIONS']),",
+            #     "    RouteGroup(MODEL_ROUTES, prefix='/admin', middleware=('admin_model',), add_methods=['OPTIONS']), #middleware not working",
+            #     "    RouteGroup(ADMIN_ROUTES, prefix='/admin', add_methods=['OPTIONS']),",
+            #     "]",
+            #     ""
+            # ]
+            lines = """from admin.web.admin_routes import (
+    ADMIN_ROUTES,
+    ADMIN_ROUTES_WITH_MIDDLEWARE,
+    ADMIN_ROUTES_ONLY_ADMINISTRATOR,
+    MODEL_ROUTES
+)
+
+ROUTES += [
+    RouteGroup(
+        ADMIN_ROUTES_WITH_MIDDLEWARE,
+        prefix='/admin',
+        middleware=('admin',),
+        add_methods=['OPTIONS']
+    ),
+    RouteGroup(
+        ADMIN_ROUTES_ONLY_ADMINISTRATOR,
+        prefix='/admin',
+        middleware=('admin','administrator',),
+        add_methods=['OPTIONS']
+    ),
+    RouteGroup(
+        MODEL_ROUTES,
+        prefix='/admin',
+        middleware=('admin_model',),
+        add_methods=['OPTIONS']
+    ),  # middleware not working
+    RouteGroup(
+        ADMIN_ROUTES,
+        prefix='/admin',
+        add_methods=['OPTIONS']
+    ),
+]
+"""
             with open(route_path, 'a') as f:
-                f.write('\n'.join(lines))
+                f.write(lines)
             self.line('<info>Admin Routes Appended Successfully!</info>')
 
-        #==================== Last message ====================
+        # ==================== Last message ====================
         self.line('<info>Install Compleated for...</info>')
         self.line('    <comment>'+config_path+'</comment>')
         self.line('    <comment>'+auth_path+'</comment>')
         self.line('    <comment>'+middleware_conf_path+'</comment>')
+        self.line('    <comment>'+admin_middleware_path+'</comment>')
+        self.line('    <comment>'+admininistrator_middleware_path+'</comment>')
         self.line('    <comment>'+csrf_middleware_path+'</comment>')
         self.line('    <comment>'+admin_user_model_path+'</comment>')
         # self.line('    <comment>'+login_token_model_path+'</comment>')

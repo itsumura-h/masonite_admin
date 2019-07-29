@@ -51,4 +51,11 @@ class ManageAdminUsersController:
         }
 
     def update(self, request:Request, response:Response):
-        pass
+        try:
+            id = request.param('id')
+            params = request.all()
+            is_success = ManageAdminUsersService.update(id, params)
+            if is_success:
+                return ''
+        except Exception as e:
+            return response.json({'error': str(e)}, status=400)

@@ -126,9 +126,7 @@ class MainEdit extends PureComponent{
       }
     })
     .catch(err=>{
-      // if(err){this.setState({error: err})}
-      // console.error(err);
-      ;
+      console.error(err);
     })
   }
 

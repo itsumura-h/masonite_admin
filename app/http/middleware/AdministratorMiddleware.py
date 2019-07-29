@@ -7,7 +7,7 @@ from masonite.response import Response
 class AdministratorMiddleware:
     """Administrator Middleware."""
 
-    def __init__(self, request: Request, response:Response):
+    def __init__(self, request: Request, response: Response):
         """Inject Any Dependencies From The Service Container.
 
         Arguments:
