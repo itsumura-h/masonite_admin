@@ -25,6 +25,8 @@ import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 class ManageAdminUsersShow extends PureComponent{
   state = {
     showData: {},
+    isOpenDeleteConfirm: false,
+    targetId: 0,
   }
 
   //========================== API Access ==========================
@@ -39,20 +41,16 @@ class ManageAdminUsersShow extends PureComponent{
   //========================== Delete ==========================
   openDelete=(event)=>{
     if(event){
-      const store = this.props.store;
-      store.set('targetId')(event.currentTarget.dataset.id);
+      this.setState({targetId: event.currentTarget.dataset.id});
     }
 
-    const newIsOpenDelete = this.state.isOpenDelete? false: true;
-    this.setState({isOpenDelete: newIsOpenDelete});
+    const newIsOpenDelete = this.state.isOpenDeleteConfirm? false: true;
+    this.setState({isOpenDeleteConfirm: newIsOpenDelete});
   }
 
   delete=(event)=>{
-    // get URL param
-    const model = this.props.match.params.model;
-
-    const id = this.props.store.state.targetId;
-    const url = `/admin/api/${model}/${id}/delete`;
+    const id = this.state.targetId;
+    const url = `/admin/api/manage_admin_users/${id}/delete`;
 
     Util.deleteAPI(url)
     .then(response=>{
@@ -132,7 +130,8 @@ class ManageAdminUsersShow extends PureComponent{
           </CardContent>
         </Card>
         <DeleteConfirmDialog
-          isOpen={this.state.isOpenDelete}
+          isOpen={this.state.isOpenDeleteConfirm}
+          id={this.state.targetId}
           openDelete={this.openDelete}
           handleOkMethod={this.delete}
         />

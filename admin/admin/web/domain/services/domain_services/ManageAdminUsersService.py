@@ -32,3 +32,7 @@ class ManageAdminUsersService:
         params = ApplicationService.delete_login_params(params)
         is_success = ManageAdminUsersRepository.update(id, params)
         return is_success
+
+    @staticmethod
+    def destroy(id):
+        return ManageAdminUsersRepository.destroy(id)

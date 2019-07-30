@@ -29,6 +29,7 @@ class ManageAdminUsersIndex extends PureComponent{
   state = {
     indexData: [],
     isOpenDeleteConfirm: false,
+    targetId: 0,
     page: 0,
     count: 0,
   }
@@ -49,7 +50,7 @@ class ManageAdminUsersIndex extends PureComponent{
   //========================== Delete ==========================
   openDelete=(event)=>{
     if(event){
-      this.props.store.set('targetId')(event.currentTarget.dataset.id);
+      this.setState({targetId: event.currentTarget.dataset.id})
     }
 
     const newIsOpenDelete = this.state.isOpenDeleteConfirm? false: true;
@@ -58,7 +59,7 @@ class ManageAdminUsersIndex extends PureComponent{
 
   delete=(event)=>{
     // get URL param
-    const id = this.props.store.get('targetId');
+    const id = this.state.targetId;
     const url = `/admin/api/manage_admin_users/${id}/delete`;
 
     Util.deleteAPI(url)
@@ -76,12 +77,12 @@ class ManageAdminUsersIndex extends PureComponent{
     this.setState({page: Number(page)});
     this.getIndex(page);
     window.scrollTo(0,0); // scroll to the top
-  };
+  }
 
   handleChangeRowsPerPage=(event)=>{
     this.setState({page: 0});
     this.props.store.set('rowsPerPage')(Number(event.target.value));
-  };
+  }
 
   //========================== React ==========================
   componentDidMount(){
@@ -196,6 +197,7 @@ class ManageAdminUsersIndex extends PureComponent{
         </Card>
         <DeleteConfirmDialog
           isOpen={this.state.isOpenDeleteConfirm}
+          id={this.state.targetId}
           openDelete={this.openDelete}
           handleOkMethod={this.delete}
         />

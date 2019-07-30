@@ -32,3 +32,7 @@ class ManageAdminUsersRepository:
         return AUTH['model'] \
             .where('id', id) \
             .update(**params)
+
+    @staticmethod
+    def destroy(id):
+        return AUTH['model'].find(id).delete()

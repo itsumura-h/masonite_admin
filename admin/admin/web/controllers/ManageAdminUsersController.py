@@ -8,15 +8,6 @@ from ..domain.services.ApplicationService import ApplicationService
 
 
 class ManageAdminUsersController:
-    def store(self, request: Request, response: Response):
-        try:
-            params = request.all()
-            params = ApplicationService.delete_login_params(params)
-            ManageAdminUsersService.store(params)
-            return ''
-        except Exception as e:
-            return response.json({'error': str(e)}, status=400)
-
     def index(self, request: Request):
         # pagenagion
         items = int(request.input('i')) if request.input('i') else 10
@@ -50,12 +41,29 @@ class ManageAdminUsersController:
             'updated_at': admin_user.updated_at
         }
 
-    def update(self, request:Request, response:Response):
+    def store(self, request: Request, response: Response):
+        try:
+            params = request.all()
+            params = ApplicationService.delete_login_params(params)
+            ManageAdminUsersService.store(params)
+            return ''
+        except Exception as e:
+            return response.json({'error': str(e)}, status=400)
+
+    def update(self, request: Request, response: Response):
         try:
             id = request.param('id')
             params = request.all()
             is_success = ManageAdminUsersService.update(id, params)
             if is_success:
                 return ''
+        except Exception as e:
+            return response.json({'error': str(e)}, status=400)
+
+    def destroy(self, request: Request, response: Response):
+        try:
+            id = request.param('id')
+            ManageAdminUsersService.destroy(id)
+            return ''
         except Exception as e:
             return response.json({'error': str(e)}, status=400)

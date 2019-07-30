@@ -42,6 +42,10 @@ ADMIN_ROUTES_ONLY_ADMINISTRATOR = [
         '/api/manage_admin_users/@id/update',
         ManageAdminUsersController.update
     ),
+    Post().route(
+        '/api/manage_admin_users/@id/delete',
+        ManageAdminUsersController.destroy
+    )
 ]
 
 MODEL_ROUTES = []
