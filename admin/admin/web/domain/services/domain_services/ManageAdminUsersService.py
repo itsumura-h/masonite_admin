@@ -6,16 +6,12 @@ from ..ApplicationService import ApplicationService
 
 class ManageAdminUsersService:
     @staticmethod
-    def store(params):
-        params['password'] = f"{params['name']}_password"
-        new_user = ManageAdminUsersEntity(**params).get_store_user()
-        result = ManageAdminUsersRepository.store(new_user)
-        return result
-
-    @staticmethod
     def index(offset, items):
         admin_users = ManageAdminUsersRepository.index(offset, items)
-        admin_users = [ManageAdminUsersEntity(**val) for val in admin_users]
+        admin_users = [
+            ManageAdminUsersEntity(**val).get_index_dict()
+            for val in admin_users
+        ]
 
         count = ManageAdminUsersRepository.count()
 
@@ -24,8 +20,15 @@ class ManageAdminUsersService:
     @staticmethod
     def show(id):
         admin_user = ManageAdminUsersRepository.show(id)
-        admin_user = ManageAdminUsersEntity(**admin_user)
+        admin_user = ManageAdminUsersEntity(**admin_user).get_show_dict()
         return admin_user
+
+    @staticmethod
+    def store(params):
+        params['password'] = f"{params['name']}_password"
+        new_user = ManageAdminUsersEntity(**params).get_store_dict()
+        result = ManageAdminUsersRepository.store(new_user)
+        return result
 
     @staticmethod
     def update(id, params):

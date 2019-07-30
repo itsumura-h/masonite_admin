@@ -17,29 +17,13 @@ class ManageAdminUsersController:
         admin_users, count = ManageAdminUsersService.index(offset, items)
         return {
             'count': count,
-            'admin_users': [
-                {
-                    'id': val.id,
-                    'name': val.name,
-                    'email': val.email,
-                    'permission': val.permission.get_label(),
-                    'created_at': val.created_at,
-                    'updated_at': val.updated_at
-                } for val in admin_users
-            ]
+            'admin_users': admin_users
         }
 
     def show(self, request: Request, response: Response):
         id = request.param('id')
         admin_user = ManageAdminUsersService.show(id)
-        return {
-            'id': admin_user.id,
-            'name': admin_user.name,
-            'email': admin_user.email,
-            'permission': admin_user.permission.get_label(),
-            'created_at': admin_user.created_at,
-            'updated_at': admin_user.updated_at
-        }
+        return admin_user
 
     def store(self, request: Request, response: Response):
         try:

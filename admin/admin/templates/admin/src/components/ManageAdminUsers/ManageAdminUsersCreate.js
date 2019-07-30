@@ -37,7 +37,6 @@ class ManageAdminUsersCreate extends PureComponent {
     let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
-    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }

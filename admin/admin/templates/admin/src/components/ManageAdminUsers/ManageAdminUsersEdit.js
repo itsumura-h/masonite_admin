@@ -30,6 +30,8 @@ class ManageAdminUsersEdit extends PureComponent{
     showData: {},
     params: {},
     error: '',
+    isOpenDeleteConfirm: false,
+    targetId: 0,
   }
 
   //========================== API Access ==========================
@@ -47,7 +49,6 @@ class ManageAdminUsersEdit extends PureComponent{
     let new_params = this.state.params;
     const key = event.currentTarget.name;
     new_params[key] = event.currentTarget.value;
-    console.log(new_params);
     this.setState({params: new_params});
     this.forceUpdate();
   }
@@ -69,6 +70,29 @@ class ManageAdminUsersEdit extends PureComponent{
     })
   }
 
+  //========================== Delete ==========================
+  openDelete=(event)=>{
+    if(event){
+      this.setState({targetId: event.currentTarget.dataset.id});
+    }
+
+    const newIsOpenDelete = this.state.isOpenDeleteConfirm? false: true;
+    this.setState({isOpenDeleteConfirm: newIsOpenDelete});
+  }
+
+  delete=(event)=>{
+    const id = this.state.targetId;
+    const url = `/admin/api/manage_admin_users/${id}/delete`;
+
+    Util.deleteAPI(url)
+    .then(response=>{
+      this.props.history.push('../');
+    })
+    .catch(err=>{
+      console.error(err);
+    })
+  }
+
   //========================== React ==========================
   componentDidMount(){
     this.getShow()
@@ -76,7 +100,6 @@ class ManageAdminUsersEdit extends PureComponent{
 
   render(){
     const { classes, store } = this.props;
-    console.log(this.state.error);
     return(
       <div>
         <h1>Admin Users</h1>
@@ -99,9 +122,10 @@ class ManageAdminUsersEdit extends PureComponent{
                 >
                   <Save/>save
                 </Button>
-                <Button variant="contained"
+                <Button
                   onClick={this.openDelete}
                   data-id={this.props.match.params.id}
+                  variant="contained"
                   className={classes.deleteButton}
                 >
                   <Delete/>delete
@@ -202,7 +226,8 @@ class ManageAdminUsersEdit extends PureComponent{
           </CardContent>
         </Card>
         <DeleteConfirmDialog
-          isOpen={this.state.isOpenDelete}
+          isOpen={this.state.isOpenDeleteConfirm}
+          id={this.state.targetId}
           openDelete={this.openDelete}
           handleOkMethod={this.delete}
         />
