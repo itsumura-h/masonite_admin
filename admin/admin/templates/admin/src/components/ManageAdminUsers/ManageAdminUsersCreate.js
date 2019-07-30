@@ -24,7 +24,7 @@ import Save from '@material-ui/icons/Save';
 import Util from '../../common/util';
 
 
-class ManageAdminUserCreate extends PureComponent {
+class ManageAdminUsersCreate extends PureComponent {
   state = {
     schema: [],
     foreignKeys: [],
@@ -175,4 +175,4 @@ const styles = {
   },
 }
 
-export default withStyles(styles)(withRouter(withStore(ManageAdminUserCreate)));
+export default withStyles(styles)(withRouter(withStore(ManageAdminUsersCreate)));

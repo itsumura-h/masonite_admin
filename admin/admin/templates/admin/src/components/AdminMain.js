@@ -7,10 +7,10 @@ import MainCreate from './Main/MainCreate';
 import MainEdit from './Main/MainEdit';
 import MainShow from './Main/MainShow';
 
-import ManageAdminUserIndex from './ManageAdminUser/ManageAdminUserIndex';
-import ManageAdminUserShow from './ManageAdminUser/ManageAdminUserShow';
-import ManageAdminUserEdit from './ManageAdminUser/ManageAdminUserEdit';
-import MainAdminUserCreate from './ManageAdminUser/ManageAdminUserCreate';
+import ManageAdminUsersIndex from './ManageAdminUsers/ManageAdminUserIndex';
+import ManageAdminUsersShow from './ManageAdminUsers/ManageAdminUsersShow';
+import ManageAdminUsersEdit from './ManageAdminUsers/ManageAdminUsersEdit';
+import ManageAdminUsersCreate from './ManageAdminUsers/ManageAdminUsersCreate';
 
 import NotFound from '../common/404';
 import CONST from '../common/const';
@@ -22,10 +22,10 @@ const AdminMain=(props)=>{
     <div className={classes.main}>
       <Switch>
         <Route exact path="/admin" component={MainToppage} />
-        <Route exact path="/admin/ManageAdminUser" component={ManageAdminUserIndex} />
-        <Route exact path="/admin/ManageAdminUser/create" component={MainAdminUserCreate} />
-        <Route exact path="/admin/ManageAdminUser/:id" component={ManageAdminUserShow} />
-        <Route exact path="/admin/ManageAdminUser/:id/edit" component={ManageAdminUserEdit} />
+        <Route exact path="/admin/ManageAdminUser" component={ManageAdminUsersIndex} />
+        <Route exact path="/admin/ManageAdminUser/create" component={ManageAdminUsersCreate} />
+        <Route exact path="/admin/ManageAdminUser/:id" component={ManageAdminUsersShow} />
+        <Route exact path="/admin/ManageAdminUser/:id/edit" component={ManageAdminUsersEdit} />
         <Route exact path="/admin/:model" component={MainIndex} />
         <Route exact path="/admin/:model/create" component={MainCreate} />
         <Route exact path="/admin/:model/:id" component={MainShow} />

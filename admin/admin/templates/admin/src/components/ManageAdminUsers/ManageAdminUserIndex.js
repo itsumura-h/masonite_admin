@@ -25,7 +25,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class ManageAdminUserIndex extends PureComponent{
+class ManageAdminUsersIndex extends PureComponent{
   state = {
     indexData: [],
     isOpenDeleteConfirm: false,
@@ -237,4 +237,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withStore(ManageAdminUserIndex));
+export default withStyles(styles)(withStore(ManageAdminUsersIndex));

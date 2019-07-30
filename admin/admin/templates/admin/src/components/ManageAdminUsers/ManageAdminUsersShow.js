@@ -22,7 +22,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class ManageAdminUserShow extends PureComponent{
+class ManageAdminUsersShow extends PureComponent{
   state = {
     showData: {},
   }
@@ -174,4 +174,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withRouter(withStore(ManageAdminUserShow)));
+export default withStyles(styles)(withRouter(withStore(ManageAdminUsersShow)));
