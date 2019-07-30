@@ -8,14 +8,14 @@ from ..domain.services.ApplicationService import ApplicationService
 
 
 class ManageAdminUsersController:
-    def create(self, request: Request, response: Response):
-        params = request.all()
-        params = ApplicationService.delete_login_params(params)
-        result = ManageAdminUsersService.create(params)
-        if isinstance(result, str):
-            return response.json(result, status=400)
-        else:
-            return result
+    def store(self, request: Request, response: Response):
+        try:
+            params = request.all()
+            params = ApplicationService.delete_login_params(params)
+            ManageAdminUsersService.store(params)
+            return ''
+        except Exception as e:
+            return response.json({'error': str(e)}, status=400)
 
     def index(self, request: Request):
         # pagenagion

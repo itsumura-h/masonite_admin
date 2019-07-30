@@ -6,13 +6,11 @@ from ..ApplicationService import ApplicationService
 
 class ManageAdminUsersService:
     @staticmethod
-    def create(params):
-        new_user = ManageAdminUsersEntity(**params).new()
-        try:
-            result = ManageAdminUsersRepository.create(new_user)
-        except Exception as e:
-            return str(e)
-        return result.id
+    def store(params):
+        params['password'] = f"{params['name']}_password"
+        new_user = ManageAdminUsersEntity(**params).get_store_user()
+        result = ManageAdminUsersRepository.store(new_user)
+        return result
 
     @staticmethod
     def index(offset, items):

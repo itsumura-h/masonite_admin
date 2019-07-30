@@ -107,7 +107,7 @@ class ManageAdminUserIndex extends PureComponent{
             <div className={classes.flex}>
               <p>index</p>
               <div className={classes.buttons}>
-                <NavLink to={'/admin/ManageAdminUserEdit/create'}>
+                <NavLink to={'/admin/ManageAdminUser/create'}>
                   <Button variant="contained" className={classes.newButton}>
                     <Add/>New
                   </Button>

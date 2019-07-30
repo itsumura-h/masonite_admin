@@ -28,15 +28,12 @@ class PermissionValueObject:
             return 'user'
 
 
-class HashPasswordValueObject:
+class PasswordValueObject:
     def __init__(self, value):
-        if value:
-            self.value = bcrypt_password(value)
-        else:
-            self.value = None
+        self.__value = value
 
-    def get_value(self):
-        return self.value
+    def get_hashed_value(self):
+        return bcrypt_password(self.__value)
 
 
 class ManageAdminUsersEntity:
@@ -46,16 +43,15 @@ class ManageAdminUsersEntity:
         self.id = id
         self.name = name
         self.email = email
-        self.password = password
-        self.hash_password = HashPasswordValueObject(password).get_value()
+        self.password = PasswordValueObject(password)
         self.permission = PermissionValueObject(permission)
         self.created_at = created_at
         self.updated_at = updated_at
 
-    def new(self):
+    def get_store_user(self):
         return {
             'name': self.name,
             'email': self.email,
-            'password': self.hash_password,
+            'password': self.password.get_hashed_value(),
             'permission': self.permission.value
         }

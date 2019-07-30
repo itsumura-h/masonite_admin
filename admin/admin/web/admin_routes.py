@@ -31,8 +31,8 @@ ADMIN_ROUTES_WITH_MIDDLEWARE = [
 ADMIN_ROUTES_ONLY_ADMINISTRATOR = [
     Get().route('/api/manage_admin_users', ManageAdminUsersController.index),
     Post().route(
-        '/api/manage_admin_users/create',
-        ManageAdminUsersController.create
+        '/api/manage_admin_users',
+        ManageAdminUsersController.store
     ),
     Get().route(
         '/api/manage_admin_users/@id',

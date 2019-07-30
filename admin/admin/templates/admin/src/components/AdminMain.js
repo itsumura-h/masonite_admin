@@ -10,6 +10,7 @@ import MainShow from './Main/MainShow';
 import ManageAdminUserIndex from './ManageAdminUser/ManageAdminUserIndex';
 import ManageAdminUserShow from './ManageAdminUser/ManageAdminUserShow';
 import ManageAdminUserEdit from './ManageAdminUser/ManageAdminUserEdit';
+import MainAdminUserCreate from './ManageAdminUser/ManageAdminUserCreate';
 
 import NotFound from '../common/404';
 import CONST from '../common/const';
@@ -22,6 +23,7 @@ const AdminMain=(props)=>{
       <Switch>
         <Route exact path="/admin" component={MainToppage} />
         <Route exact path="/admin/ManageAdminUser" component={ManageAdminUserIndex} />
+        <Route exact path="/admin/ManageAdminUser/create" component={MainAdminUserCreate} />
         <Route exact path="/admin/ManageAdminUser/:id" component={ManageAdminUserShow} />
         <Route exact path="/admin/ManageAdminUser/:id/edit" component={ManageAdminUserEdit} />
         <Route exact path="/admin/:model" component={MainIndex} />

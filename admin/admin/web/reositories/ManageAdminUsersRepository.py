@@ -9,14 +9,6 @@ class ManageAdminUsersRepository:
         return AUTH['model'].count()
 
     @staticmethod
-    def create(params):
-        new_user = AUTH['model']()
-        for key, value in params.items():
-            setattr(new_user, key, value)
-        new_user.save()
-        return new_user
-
-    @staticmethod
     def index(offset, items):
         return AUTH['model'] \
             .select('id', 'name', 'email', 'permission', 'created_at', 'updated_at') \
@@ -30,6 +22,10 @@ class ManageAdminUsersRepository:
         return AUTH['model'] \
             .find(id) \
             .serialize()
+
+    @staticmethod
+    def store(params):
+        return AUTH['model'].insert(**params)
 
     @staticmethod
     def update(id, params):
