@@ -22,7 +22,7 @@ import Delete from '@material-ui/icons/Delete';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 import Util from '../../common/util';
 
-class MainShow extends PureComponent{
+class ResourceShow extends PureComponent{
   state = {
     schema: [],
     foreignKeys: [],
@@ -33,7 +33,7 @@ class MainShow extends PureComponent{
   //========================== API Access ==========================
   getSchema=(model)=>{
     const self = this;
-    Util.getAPI(`/admin/api/schema/detail/${model}`)
+    Util.getApi(`/admin/api/schema/detail/${model}`)
     .then(response=>{
       self.setState({
         schema: response.data.schema,
@@ -44,7 +44,7 @@ class MainShow extends PureComponent{
 
   getShow=(model, id)=>{
     const self = this;
-    Util.getAPI('/admin/api/'+model+'/'+id)
+    Util.getApi('/admin/api/'+model+'/'+id)
     .then(response=>{
       self.setState({showData: response.data});
     });
@@ -68,7 +68,7 @@ class MainShow extends PureComponent{
     const id = this.props.store.state.targetId;
     const url = `/admin/api/${model}/${id}/delete`;
 
-    Util.deleteAPI(url)
+    Util.deleteApi(url)
     .then(response=>{
       this.props.history.push('./');
     })
@@ -291,4 +291,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withRouter(withStore(MainShow)));
+export default withStyles(styles)(withRouter(withStore(ResourceShow)));

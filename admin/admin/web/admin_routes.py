@@ -10,7 +10,7 @@ from .controllers.DisplayStaticController import (ADMIN_STATIC_DIR_PATH,
                                                   DisplayStaticController)
 from .controllers.InfoController import InfoController
 from .controllers.LoginController import LoginController
-from .controllers.ManageAdminUsersController import ManageAdminUsersController
+from .controllers.ManageAuthController import ManageAuthController
 from .controllers.SchemaController import SchemaController
 
 STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
@@ -29,22 +29,22 @@ ADMIN_ROUTES_WITH_MIDDLEWARE = [
 ]
 
 ADMIN_ROUTES_ONLY_ADMINISTRATOR = [
-    Get().route('/api/manage_admin_users', ManageAdminUsersController.index),
+    Get().route('/api/auth', ManageAuthController.index),
     Post().route(
-        '/api/manage_admin_users',
-        ManageAdminUsersController.store
+        '/api/auth',
+        ManageAuthController.store
     ),
     Get().route(
-        '/api/manage_admin_users/@id',
-        ManageAdminUsersController.show
+        '/api/auth/@id',
+        ManageAuthController.show
     ),
     Post().route(
-        '/api/manage_admin_users/@id/update',
-        ManageAdminUsersController.update
+        '/api/auth/@id/update',
+        ManageAuthController.update
     ),
     Post().route(
-        '/api/manage_admin_users/@id/delete',
-        ManageAdminUsersController.destroy
+        '/api/auth/@id/delete',
+        ManageAuthController.destroy
     )
 ]
 

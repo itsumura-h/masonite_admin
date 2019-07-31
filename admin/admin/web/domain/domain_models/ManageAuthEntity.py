@@ -51,7 +51,7 @@ class PasswordValueObject:
         return bcrypt_password(self.__value)
 
 
-class ManageAdminUsersEntity:
+class ManageAuthEntity:
     def __init__(self, id: int = None, name: str = None, email: str = None,
                  password: str = None, permission=None, created_at: str = None,
                  updated_at: str = None):

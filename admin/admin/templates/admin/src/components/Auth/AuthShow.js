@@ -22,7 +22,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class ManageAdminUsersShow extends PureComponent{
+class AuthShow extends PureComponent{
   state = {
     showData: {},
     isOpenDeleteConfirm: false,
@@ -32,7 +32,7 @@ class ManageAdminUsersShow extends PureComponent{
   //========================== API Access ==========================
   getShow=(id)=>{
     const self = this;
-    Util.getAPI(`/admin/api/manage_admin_users/${id}`)
+    Util.getApi(`/admin/api/auth/${id}`)
     .then(response=>{
       self.setState({showData: response.data});
     });
@@ -50,9 +50,9 @@ class ManageAdminUsersShow extends PureComponent{
 
   delete=(event)=>{
     const id = this.state.targetId;
-    const url = `/admin/api/manage_admin_users/${id}/delete`;
+    const url = `/admin/api/auth/${id}/delete`;
 
-    Util.deleteAPI(url)
+    Util.deleteApi(url)
     .then(response=>{
       this.props.history.push('./');
     })
@@ -173,4 +173,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withRouter(withStore(ManageAdminUsersShow)));
+export default withStyles(styles)(withRouter(withStore(AuthShow)));

@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
-import AdminAppBar from '../components/AdminAppBar';
-import AdminMain from '../components/AdminMain';
-import AdminDrawer from '../components/AdminDrawer';
+import AppBar from './AppBar';
+import Main from './Main';
+import Drawer from './Drawer';
 
 import {withStore} from '../common/store';
 import Util from '../common/util';
 
 class Admin extends Component {
   getInfo=()=>{
-    Util.getAPI('/admin/api/info')
+    Util.getApi('/admin/api/info')
     .then(response=>{
       this.props.store.set('info')(response.data);
     });
@@ -25,15 +25,10 @@ class Admin extends Component {
 
     return (
       <div>
-        {/* <AdminDrawer/>
+        <AppBar/>
+        <Drawer/>
         <div className='rightContents' style={{marginLeft: store.get('drawerWidth')}}>
-          <AdminAppBar/>
-          <AdminMain/>
-        </div> */}
-        <AdminAppBar/>
-        <AdminDrawer/>
-        <div className='rightContents' style={{marginLeft: store.get('drawerWidth')}}>
-          <AdminMain/>
+          <Main/>
         </div>
       </div>
     );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { withStore } from '../../common/store';
+import { withStore } from '../common/store';
 
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-const MainToppage=(props)=>{
+const Toppage=(props)=>{
   const {state} = props.store;
 
   return (
@@ -89,4 +89,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withStore(MainToppage));
+export default withStyles(styles)(withStore(Toppage));

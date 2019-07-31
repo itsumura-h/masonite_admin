@@ -21,11 +21,13 @@ import Add from '@material-ui/icons/Add';
 import Details from '@material-ui/icons/Details';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
+import PermIdentity from '@material-ui/icons/PermIdentity'
+import Person from '@material-ui/icons/Person'
 
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class ManageAdminUsersIndex extends PureComponent{
+class AuthIndex extends PureComponent{
   state = {
     indexData: [],
     isOpenDeleteConfirm: false,
@@ -38,7 +40,7 @@ class ManageAdminUsersIndex extends PureComponent{
   getIndex=(page=this.state.page)=>{
     const self = this;
     const params = {p: page+1, i: this.props.store.get('rowsPerPage')};
-    Util.getAPI('/admin/api/manage_admin_users', params)
+    Util.getApi('/admin/api/auth', params)
     .then(response=>{
       self.setState({
         count: response.data.count,
@@ -60,9 +62,9 @@ class ManageAdminUsersIndex extends PureComponent{
   delete=(event)=>{
     // get URL param
     const id = this.state.targetId;
-    const url = `/admin/api/manage_admin_users/${id}/delete`;
+    const url = `/admin/api/auth/${id}/delete`;
 
-    Util.deleteAPI(url)
+    Util.deleteApi(url)
     .then(response=>{
       this.setState({page: 0});
       this.getIndex(0);
@@ -108,7 +110,12 @@ class ManageAdminUsersIndex extends PureComponent{
             <div className={classes.flex}>
               <p>index</p>
               <div className={classes.buttons}>
-                <NavLink to={'/admin/ManageAdminUser/create'}>
+                <NavLink to={`/admin/auth/mypage`}>
+                  <Button variant="contained" className={classes.editButton}>
+                    <Person/>MyPage
+                  </Button>
+                </NavLink>
+                <NavLink to={'/admin/auth/create'}>
                   <Button variant="contained" className={classes.newButton}>
                     <Add/>New
                   </Button>
@@ -163,14 +170,14 @@ class ManageAdminUsersIndex extends PureComponent{
                             {row.permission}
                           </TableCell>
                           <TableCell key={key+4}>
-                            <Link to={`/admin/ManageAdminUser/${row.id}`}>
+                            <Link to={`/admin/auth/${row.id}`}>
                               <Fab aria-label="show">
                                 <Details />
                               </Fab>
                             </Link>
                           </TableCell>
                           <TableCell key={key+5}>
-                            <Link to={`/admin/ManageAdminUser/${row.id}/edit`}>
+                            <Link to={`/admin/auth/${row.id}/edit`}>
                               <Fab aria-label="edit" className={classes.editButton}>
                                 <Edit />
                               </Fab>
@@ -239,4 +246,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withStore(ManageAdminUsersIndex));
+export default withStyles(styles)(withStore(AuthIndex));

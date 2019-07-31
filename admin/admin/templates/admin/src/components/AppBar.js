@@ -3,7 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../common/store'
 import { withRouter } from 'react-router-dom'
 
-import AppBar from '@material-ui/core/AppBar';
+import MaterialAppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import {NavLink} from 'react-router-dom';
 import Util from '../common/util';
 
-const AdminAppBar=(props)=>{
+const AppBar=(props)=>{
   const { classes, store } = props;
 
   const drawerOpen=()=>{
@@ -37,7 +37,14 @@ const AdminAppBar=(props)=>{
   }
 
   const clickUserEditButton=()=>{
-    props.history.push('/admin/ManageAdminUser');
+    props.history.push('/admin/auth');
+
+    const login_permission = localStorage.getItem('login_permission');
+    if(login_permission === 'administrator'){
+      props.history.push('/admin/auth');
+    }else{
+      props.history.push('/admin/auth/mypage');
+    }
   }
 
   const UserEditButton=(props)=>{
@@ -45,13 +52,13 @@ const AdminAppBar=(props)=>{
     if(login_permission === 'administrator'){
       return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>user edit</Button>;
     }else{
-      return null;
+      return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>My Page</Button>;
     }
   }
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appbar}>
+      <MaterialAppBar position="fixed" className={classes.appbar}>
         <Toolbar>
           <IconButton onClick={drawerOpen} className={classes.menuButton} color="inherit" aria-label="Menu">
             <MenuIcon />
@@ -67,7 +74,7 @@ const AdminAppBar=(props)=>{
             <UserEditButton clickUserEditButton={clickUserEditButton} classes={classes}/>
           <Button color="inherit" onClick={logout} className={classes.logoutButton} >Log Out</Button>
         </Toolbar>
-      </AppBar>
+      </MaterialAppBar>
     </div>
   );
 }
@@ -104,4 +111,4 @@ const styles=(theme)=>({
   }
 });
 
-export default withStyles(styles, true)(withRouter(withStore(AdminAppBar)));
+export default withStyles(styles, true)(withRouter(withStore(AppBar)));

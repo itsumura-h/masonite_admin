@@ -24,7 +24,7 @@ import Save from '@material-ui/icons/Save';
 import Util from '../../common/util';
 
 
-class ManageAdminUsersCreate extends PureComponent {
+class AuthCreate extends PureComponent {
   state = {
     schema: [],
     foreignKeys: [],
@@ -42,8 +42,8 @@ class ManageAdminUsersCreate extends PureComponent {
   }
 
   save=()=>{
-    const url = '/admin/api/manage_admin_users'
-    Util.postAPI(url, this.state.params)
+    const url = '/admin/api/auth'
+    Util.postApi(url, this.state.params)
     .then(response=>{
       if(!response.data.error){
         this.props.history.push(`/admin/ManageAdminUser`);
@@ -174,4 +174,4 @@ const styles = {
   },
 }
 
-export default withStyles(styles)(withRouter(withStore(ManageAdminUsersCreate)));
+export default withStyles(styles)(withRouter(withStore(AuthCreate)));

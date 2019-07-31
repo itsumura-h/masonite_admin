@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withStore } from '../common/store'
 
-import Drawer from '@material-ui/core/Drawer';
+import ReactDrawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -11,11 +11,11 @@ import {Link} from 'react-router-dom';
 
 import CONST from '../common/const';
 
-const AdminDrawer=(props)=>{
+const Drawer=(props)=>{
   const { classes, store } = props;
 
   return (
-    <Drawer
+    <ReactDrawer
       container={props.container}
       variant="persistent"
       anchor="left"
@@ -41,7 +41,7 @@ const AdminDrawer=(props)=>{
           })
         }
       </List>
-    </Drawer>
+    </ReactDrawer>
   );
 }
 
@@ -57,4 +57,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withStore(AdminDrawer));
+export default withStyles(styles)(withStore(Drawer));

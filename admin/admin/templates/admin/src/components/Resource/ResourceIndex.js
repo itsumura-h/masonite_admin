@@ -25,7 +25,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class MainIndex extends PureComponent {
+class ResourceIndex extends PureComponent {
   state = {
     indexData: [],
     isOpenDeleteConfirm: false,
@@ -37,7 +37,7 @@ class MainIndex extends PureComponent {
   getIndex=(model, page=this.state.page)=>{
     const self = this;
     const params = {p: page+1, i: this.props.store.get('rowsPerPage')};
-    Util.getAPI('/admin/api/'+model, params)
+    Util.getApi('/admin/api/'+model, params)
     .then(response=>{
       self.setState({
         indexData: response.data,
@@ -47,7 +47,7 @@ class MainIndex extends PureComponent {
 
   getPages=(model)=>{
     const self = this;
-    Util.getAPI('/admin/api/'+model+'/count')
+    Util.getApi('/admin/api/'+model+'/count')
     .then(response=>{
       self.setState({count: Number(response.data.count)});
     })
@@ -70,7 +70,7 @@ class MainIndex extends PureComponent {
     const id = this.props.store.get('targetId');
     const url = `/admin/api/${model}/${id}/delete`;
 
-    Util.deleteAPI(url)
+    Util.deleteApi(url)
     .then(response=>{
       this.setState({page: 0});
       this.getPages(model);
@@ -291,4 +291,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withStore(MainIndex));
+export default withStyles(styles)(withStore(ResourceIndex));

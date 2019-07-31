@@ -3,7 +3,7 @@ from masonite.helpers import password as bcrypt_password
 from config.auth import AUTH
 
 
-class ManageAdminUsersRepository:
+class ManageAuthRepository:
     @staticmethod
     def count():
         return AUTH['model'].count()

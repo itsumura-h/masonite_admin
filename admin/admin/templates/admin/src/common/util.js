@@ -10,7 +10,7 @@ export default class Util extends React.Component{
     // return new URLSearchParams();
   }
 
-  static getAPI=(url, params={})=>{
+  static getApi=(url, params={})=>{
     url = CONST.APIHOST + url;
     params = this.setLoginParamas(params);
     const header = this.setCustomLoginHeader();
@@ -22,12 +22,11 @@ export default class Util extends React.Component{
       })
       .catch(err=>{
         this.loginFale(err);
-        console.error(err);
-        return [];
+        return err.response;
       })
   }
 
-  static postAPI=(url, params)=>{
+  static postApi=(url, params)=>{
     url = CONST.APIHOST + url;
     params = this.setLoginParamas(params);
 
@@ -46,7 +45,7 @@ export default class Util extends React.Component{
       })
   }
 
-  static putAPI=(url, params)=>{
+  static putApi=(url, params)=>{
     url = CONST.APIHOST + url;
     params = this.setLoginParamas(params);
 
@@ -65,7 +64,7 @@ export default class Util extends React.Component{
       })
   }
 
-  static deleteAPI=(url, params={})=>{
+  static deleteApi=(url, params={})=>{
     url = CONST.APIHOST + url;
     params = this.setLoginParamas(params);
 
@@ -84,8 +83,8 @@ export default class Util extends React.Component{
       })
   }
 
-  static loginApi=(url, params)=>{
-    url = CONST.APIHOST + url;
+  static loginApi=(params)=>{
+    const url = CONST.APIHOST + '/admin/api/login';
 
     const newParams = new FormData();
     Object.keys(params).forEach((key)=>{

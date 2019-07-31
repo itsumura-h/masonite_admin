@@ -25,7 +25,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
-class ManageAdminUsersEdit extends PureComponent{
+class AuthEdit extends PureComponent{
   state = {
     showData: {},
     params: {},
@@ -38,7 +38,7 @@ class ManageAdminUsersEdit extends PureComponent{
   getShow=()=>{
     const self = this;
     const id = this.props.match.params.id;
-    Util.getAPI(`/admin/api/manage_admin_users/${id}`)
+    Util.getApi(`/admin/api/auth/${id}`)
     .then(response=>{
       self.setState({showData: response.data});
     });
@@ -55,9 +55,9 @@ class ManageAdminUsersEdit extends PureComponent{
 
   save=(event)=>{
     const id = event.currentTarget.dataset.id;
-    const url = `/admin/api/manage_admin_users/${id}/update`;
+    const url = `/admin/api/auth/${id}/update`;
 
-    Util.putAPI(url, this.state.params)
+    Util.putApi(url, this.state.params)
     .then(response=>{
       if(!response.data.error){
         this.props.history.push(`../${id}`);
@@ -82,9 +82,9 @@ class ManageAdminUsersEdit extends PureComponent{
 
   delete=(event)=>{
     const id = this.state.targetId;
-    const url = `/admin/api/manage_admin_users/${id}/delete`;
+    const url = `/admin/api/auth/${id}/delete`;
 
-    Util.deleteAPI(url)
+    Util.deleteApi(url)
     .then(response=>{
       this.props.history.push('../');
     })
@@ -272,4 +272,4 @@ const styles = {
   }
 }
 
-export default withStyles(styles)(withRouter(withStore(ManageAdminUsersEdit)));
+export default withStyles(styles)(withRouter(withStore(AuthEdit)));

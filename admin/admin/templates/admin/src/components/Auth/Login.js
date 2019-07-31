@@ -31,8 +31,7 @@ class Login extends React.PureComponent {
   }
 
   submit=()=>{
-    const url = '/admin/api/login'
-    Util.loginApi(url, this.state.params)
+    Util.loginApi(this.state.params)
     .then(response=>{
       if(response.data.login === true){
         window.localStorage.setItem('login_id', response.data.id);

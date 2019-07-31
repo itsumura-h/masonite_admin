@@ -1,20 +1,20 @@
 from masonite.request import Request
 from masonite.response import Response
 
-from ..domain.services.domain_services.ManageAdminUsersService import (
-    ManageAdminUsersService
+from ..domain.services.domain_services.ManageAuthService import (
+    ManageAuthService
 )
 from ..domain.services.ApplicationService import ApplicationService
 
 
-class ManageAdminUsersController:
+class ManageAuthController:
     def index(self, request: Request):
         # pagenagion
         items = int(request.input('i')) if request.input('i') else 10
         page = int(request.input('p')) if request.input('p') else 1
         offset = items * (page - 1)
 
-        admin_users, count = ManageAdminUsersService.index(offset, items)
+        admin_users, count = ManageAuthService.index(offset, items)
         return {
             'count': count,
             'admin_users': admin_users
@@ -22,14 +22,14 @@ class ManageAdminUsersController:
 
     def show(self, request: Request, response: Response):
         id = request.param('id')
-        admin_user = ManageAdminUsersService.show(id)
+        admin_user = ManageAuthService.show(id)
         return admin_user
 
     def store(self, request: Request, response: Response):
         try:
             params = request.all()
             params = ApplicationService.delete_login_params(params)
-            ManageAdminUsersService.store(params)
+            ManageAuthService.store(params)
             return ''
         except Exception as e:
             return response.json({'error': str(e)}, status=400)
@@ -38,7 +38,7 @@ class ManageAdminUsersController:
         try:
             id = request.param('id')
             params = request.all()
-            is_success = ManageAdminUsersService.update(id, params)
+            is_success = ManageAuthService.update(id, params)
             if is_success:
                 return ''
         except Exception as e:
@@ -47,7 +47,7 @@ class ManageAdminUsersController:
     def destroy(self, request: Request, response: Response):
         try:
             id = request.param('id')
-            ManageAdminUsersService.destroy(id)
+            ManageAuthService.destroy(id)
             return ''
         except Exception as e:
             return response.json({'error': str(e)}, status=400)
