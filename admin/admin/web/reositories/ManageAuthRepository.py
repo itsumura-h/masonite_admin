@@ -1,5 +1,3 @@
-from masonite.helpers import password as bcrypt_password
-
 from config.auth import AUTH
 
 
@@ -11,7 +9,10 @@ class ManageAuthRepository:
     @staticmethod
     def index(offset, items):
         return AUTH['model'] \
-            .select('id', 'name', 'email', 'permission', 'created_at', 'updated_at') \
+            .select(
+                'id', 'name', 'email', 'permission', 'created_at',
+                'updated_at'
+            ) \
             .offset(offset) \
             .limit(items) \
             .get() \

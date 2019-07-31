@@ -1,6 +1,6 @@
 """Admin Routes."""
 
-from masonite.routes import Get, Post, RouteGroup
+from masonite.routes import Get, Post
 
 from admin.web.controllers.ResourceController import ResourceController
 from config.admin import MODELS
