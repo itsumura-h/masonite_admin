@@ -72,17 +72,6 @@ class MyapagePassword extends PureComponent {
                     <List/>Back
                   </Button>
                 </NavLink>
-                <Button variant="contained"
-                  className={classes.saveButton}
-                  onClick={this.save}
-                  disabled={
-                    this.state.params.password.length > 3 &&
-                    this.state.params.new_password.length > 3
-                    ? false: true
-                  }
-                >
-                  <Save/>save
-                </Button>
               </div>
             </div>
             <Divider />
@@ -120,6 +109,16 @@ class MyapagePassword extends PureComponent {
                 </TableBody>
               </Table>
             </div>
+            <Divider/>
+            <div className={classes.flex}>
+              <Button variant="contained"
+                className={classes.saveButton}
+                onClick={this.save}
+                disabled={Object.keys(this.state.params).length === 0? true: false}
+              >
+                <Save/>save
+              </Button>
+            </div>
           </CardContent>
         </Card>
         <PasswordDialog
@@ -152,6 +151,7 @@ const styles = {
     backgroundColor: '#ECF0F5',
   },
   saveButton: {
+    margin: '0 0 0 auto',
     color: 'white',
     backgroundColor: '#3C8DBC',
     '&:hover': {

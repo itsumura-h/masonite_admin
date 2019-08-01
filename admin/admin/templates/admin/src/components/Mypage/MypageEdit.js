@@ -61,6 +61,13 @@ class MypageEdit extends PureComponent{
     Util.putApi(url, this.state.params)
     .then(response=>{
       if(!response.data.error){
+        console.log(response.data);
+        window.localStorage.setItem(
+          'login_name', response.data.new_user.name,
+        );
+        window.localStorage.setItem(
+          'login_permission', response.data.new_user.permission
+        );
         this.props.history.push(`/admin/auth/mypage`);
       }else{
         this.setState({error: response.data.error});
@@ -138,13 +145,6 @@ class MypageEdit extends PureComponent{
                     <List/>list
                   </Button>
                 </NavLink>
-                <Button variant="contained"
-                  className={classes.saveButton}
-                  onClick={this.save}
-                  disabled={Object.keys(this.state.params).length === 0? true: false}
-                >
-                  <Save/>save
-                </Button>
                 <Button
                   onClick={this.openDialog}
                   variant="contained"
@@ -254,6 +254,16 @@ class MypageEdit extends PureComponent{
                 </TableBody>
               </Table>
             </div>
+            <Divider/>
+            <div className={classes.flex}>
+              <Button variant="contained"
+                className={classes.saveButton}
+                onClick={this.save}
+                disabled={Object.keys(this.state.params).length === 0? true: false}
+              >
+                <Save/>save
+              </Button>
+            </div>
           </CardContent>
         </Card>
         <DeleteConfirmDialog
@@ -292,6 +302,7 @@ const styles = {
     backgroundColor: '#ECF0F5',
   },
   saveButton: {
+    margin: '0 0 0 auto',
     color: 'white',
     backgroundColor: '#3C8DBC',
     '&:hover': {

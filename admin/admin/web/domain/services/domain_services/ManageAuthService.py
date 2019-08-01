@@ -36,7 +36,9 @@ class ManageAuthService:
     def update(id, params):
         params = ApplicationService.delete_login_params(params)
         is_success = ManageAuthRepository.update(id, params)
-        return is_success
+        new_user = ManageAuthRepository.show(id)
+        new_user = ManageAuthEntity(**new_user).get_show_dict()
+        return is_success, new_user
 
     @staticmethod
     def destroy(id):

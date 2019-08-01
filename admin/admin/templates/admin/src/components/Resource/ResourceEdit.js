@@ -167,14 +167,6 @@ class ResourceEdit extends PureComponent {
                   </Button>
                 </NavLink>
                 <Button variant="contained"
-                  className={classes.saveButton}
-                  data-id={this.props.match.params.id}
-                  onClick={this.save}
-                  disabled={Object.keys(this.state.params).length === 0 ? true : false}
-                >
-                  <Save />save
-                </Button>
-                <Button variant="contained"
                   onClick={this.openDialog}
                   data-id={this.props.match.params.id}
                   className={classes.deleteButton}
@@ -351,6 +343,17 @@ class ResourceEdit extends PureComponent {
                 </TableBody>
               </Table>
             </div>
+            <Divider/>
+            <div className={classes.flex}>
+              <Button variant="contained"
+                className={classes.saveButton}
+                data-id={this.props.match.params.id}
+                onClick={this.save}
+                disabled={Object.keys(this.state.params).length === 0 ? true : false}
+              >
+                <Save />save
+              </Button>
+            </div>
           </CardContent>
         </Card>
         <DeleteConfirmDialog
@@ -384,6 +387,7 @@ const styles = {
     backgroundColor: '#ECF0F5'
   },
   saveButton: {
+    margin: '0 0 0 auto',
     color: 'white',
     backgroundColor: '#3C8DBC',
     '&:hover': {

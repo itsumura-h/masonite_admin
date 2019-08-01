@@ -18,9 +18,9 @@ class MypageController:
         try:
             id = request.input('login_id')
             params = request.all()
-            is_success = ManageAuthService.update(id, params)
+            is_success, new_user = ManageAuthService.update(id, params)
             if is_success:
-                return ''
+                return {'new_user': new_user}
         except Exception as e:
             print(str(e))
             return response.json({'error': str(e)}, status=400)
