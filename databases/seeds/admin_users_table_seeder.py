@@ -1,9 +1,12 @@
-from orator.orm import Factory
-from orator.seeds import Seeder
+from pprint import pprint
+
 from faker import Faker
 from masonite.helpers import password as bcrypt_password
+from orator.orm import Factory
+from orator.seeds import Seeder
+
 from app.models.AdminUser import AdminUser
-from pprint import pprint
+
 
 class AdminUserTableSeeder(Seeder):
 
@@ -14,10 +17,11 @@ class AdminUserTableSeeder(Seeder):
         admin_users = [
             {
                 'name': f'user{str(i)}',
-                'email': f'test{str(i)}@gmail.com',
+                'email': f'user{str(i)}@gmail.com',
                 'password': bcrypt_password(f'Password{str(i)}'),
-                'permission': 2 if i % 2 == 0 else 3 #even→2(staff), odd→3(user)
-            } for i in range(100)
+                # even→2(staff), odd→3(user)
+                'permission': 2 if i % 2 == 0 else 3
+            } for i in range(1, 100)
         ]
         AdminUser.insert(admin_users)
 

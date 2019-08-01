@@ -56,13 +56,6 @@ class MypageShow extends PureComponent{
                     <Edit/>edit
                   </Button>
                 </NavLink>
-                <Button
-                  onClick={this.openDialog}
-                  variant="contained"
-                  className={classes.deleteButton}
-                >
-                  <Delete/>delete
-                </Button>
               </div>
             </div>
             <Divider />
@@ -96,11 +89,6 @@ class MypageShow extends PureComponent{
             </div>
           </CardContent>
         </Card>
-        <DeleteConfirmDialog
-          isOpen={this.state.isOpenDeleteConfirm}
-          openDialog={this.openDialog}
-          handleOkMethod={this.delete}
-        />
     </div>
     );
   }
@@ -130,13 +118,6 @@ const styles = {
       backgroundColor: '#2C7DAC',
     },
   },
-  deleteButton: {
-    color: 'white',
-    backgroundColor: '#DD4B39',
-    '&:hover': {
-      backgroundColor: '#CD3B29',
-    },
-  }
 }
 
 export default withStyles(styles)(withRouter(MypageShow));

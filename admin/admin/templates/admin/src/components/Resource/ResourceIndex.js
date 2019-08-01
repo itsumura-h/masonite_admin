@@ -40,17 +40,10 @@ class ResourceIndex extends PureComponent {
     Util.getApi('/admin/api/'+model, params)
     .then(response=>{
       self.setState({
-        indexData: response.data,
+        indexData: response.data.resource,
+        count: response.data.count
       });
     });
-  }
-
-  getPages=(model)=>{
-    const self = this;
-    Util.getApi('/admin/api/'+model+'/count')
-    .then(response=>{
-      self.setState({count: Number(response.data.count)});
-    })
   }
 
   //========================== Delete ==========================
@@ -73,7 +66,6 @@ class ResourceIndex extends PureComponent {
     Util.deleteApi(url)
     .then(response=>{
       this.setState({page: 0});
-      this.getPages(model);
       this.getIndex(model, 0);
     })
     .catch(err=>{
@@ -102,7 +94,6 @@ class ResourceIndex extends PureComponent {
 
     if(model){
       this.getIndex(model);
-      this.getPages(model);
       Util.setModelTitle();
     }
   }
@@ -115,7 +106,6 @@ class ResourceIndex extends PureComponent {
       this.props.store.get('rowsPerPage') !== nextProps.store.get('rowsPerPage')){
       this.setState({page: 0});
       this.getIndex(model, 0);
-      this.getPages(model);
     }
 
     if(this.props !== nextProps){

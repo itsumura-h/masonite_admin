@@ -1,5 +1,6 @@
 from masonite.request import Request
 from masonite.response import Response
+
 from ..domain.services.domain_services.ManageAuthService import \
     ManageAuthService
 

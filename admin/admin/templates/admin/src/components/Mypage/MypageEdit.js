@@ -75,29 +75,6 @@ class MypageEdit extends PureComponent{
     })
   }
 
-  //========================== Delete ==========================
-  openDeleteDialog=(event)=>{
-    if(event){
-      this.setState({targetId: event.currentTarget.dataset.id});
-    }
-
-    const newIsOpenDelete = this.state.isOpenDeleteConfirm? false: true;
-    this.setState({isOpenDeleteConfirm: newIsOpenDelete});
-  }
-
-  delete=(event)=>{
-    const id = this.state.targetId;
-    const url = `/admin/api/auth/${id}/delete`;
-
-    Util.deleteApi(url)
-    .then(response=>{
-      this.props.history.push('../');
-    })
-    .catch(err=>{
-      console.error(err);
-    })
-  }
-
   //========================== Password Reset ==========================
   openPasswordDialog=()=>{
     const newIsOpenPasswordDialog = this.state.isOpenPasswordDialog? false: true;
@@ -142,13 +119,6 @@ class MypageEdit extends PureComponent{
                     <KeyboardArrowLeft/>Back
                   </Button>
                 </NavLink>
-                <Button
-                  onClick={this.openDialog}
-                  variant="contained"
-                  className={classes.deleteButton}
-                >
-                  <Delete/>delete
-                </Button>
               </div>
             </div>
             <Divider />

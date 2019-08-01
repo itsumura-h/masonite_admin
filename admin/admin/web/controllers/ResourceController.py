@@ -10,8 +10,7 @@ from ..domain.services.domain_services.ResourceService import ResourceService
 
 
 class ResourceController(BaseHttpRoute, JSONSerializer):
-    methods = ['create', 'index', 'count',
-               'show', 'update', 'delete', 'options']
+    methods = ['create', 'index', 'show', 'update', 'delete', 'options']
     prefix = ''
 
     def __init__(self, model, url='', create_display=[], list_display=[],
@@ -48,6 +47,7 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
                     self.model, url=self.base_url, method_type=['POST']
                 )
             )
+
         if 'index' in self.methods:
             routes.append(
                 self.__class__(
@@ -57,15 +57,7 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
                     method_type=['GET']
                 )
             )
-        if 'count' in self.methods:
-            routes.append(
-                self.__class__(
-                    self.model,
-                    url=f'{self.base_url}/count',
-                    list_display=self.list_display,
-                    method_type=['GET']
-                )
-            )
+
         if 'show' in self.methods:
             routes.append(
                 self.__class__(
@@ -75,6 +67,7 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
                     method_type=['GET']
                 )
             )
+
         if 'update' in self.methods:
             routes.append(
                 self.__class__(
@@ -83,6 +76,7 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
                     method_type=['POST']
                 )
             )
+
         if 'delete' in self.methods:
             routes.append(
                 self.__class__(
@@ -91,9 +85,15 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
                     method_type=['POST']
                 )
             )
-        # if 'options' in self.methods:
-        #     routes.append(self.__class__(self.model, url=f'{self.base_url}/@id',
-        #                                 method_type=['OPTIONS']))
+
+        if 'options' in self.methods:
+            routes.append(
+                self.__class__(
+                    self.model,
+                    url=f'{self.base_url}/@id',
+                    method_type=['OPTIONS']
+                )
+            )
 
         return routes
 
@@ -148,10 +148,6 @@ class ResourceController(BaseHttpRoute, JSONSerializer):
             elif 'GET' in self.method_type and '@' in self.route_url:
                 response = self.request.app().resolve(
                     getattr(respurce_service, 'show')
-                )
-            elif 'GET' in self.method_type and 'count' in self.route_url:
-                response = self.request.app().resolve(
-                    getattr(respurce_service, 'count')
                 )
             elif 'GET' in self.method_type:
                 response = self.request.app().resolve(

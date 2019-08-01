@@ -1,10 +1,9 @@
 from masonite.request import Request
 from masonite.response import Response
 
-from ..domain.services.domain_services.ManageAuthService import (
-    ManageAuthService
-)
 from ..domain.services.ApplicationService import ApplicationService
+from ..domain.services.domain_services.ManageAuthService import \
+    ManageAuthService
 
 
 class ManageAuthController:

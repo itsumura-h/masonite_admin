@@ -64,7 +64,8 @@ class SchemaService:
         model = None
         for row in MODELS:
             # posts→Post
-            if row['model'].__doc__.split(' ')[0] == i.camelize(i.singularize(table_name)):
+            if row['model'].__doc__.split(' ')[0] == \
+                        i.camelize(i.singularize(table_name)):
                 model = row
                 break
 

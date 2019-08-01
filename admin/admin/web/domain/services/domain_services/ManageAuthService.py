@@ -47,7 +47,6 @@ class ManageAuthService:
     @staticmethod
     def reset_password(id):
         name = ManageAuthRepository.show(id)['name']
-        print(name)
         new_password = f"{name}_password"
         hash_password = make_password(new_password)
         ManageAuthRepository.password_update(id, hash_password)

@@ -44,14 +44,16 @@ class ResourceService:
         offset = items * (page - 1)
 
         results = ResourceRepository.index(
-            self.model, self.list_display, offset, items)
-        return ApplicationService().arr_iso_format(results)
+            self.model, self.list_display, offset, items
+        )
+        resource = ApplicationService().arr_iso_format(results)
 
-    def count(self, request: Request, response: Response):
-        if ApplicationService().before_crud_check(request, response) is False:
-            return response.json(None, status=403)
+        count = self.model.count()
 
-        return {'count': self.model.count()}
+        return {
+            'resource': resource,
+            'count': count
+        }
 
     def show(self, request: Request, response: Response):
         """Logic to read data from 1 model."""
@@ -105,5 +107,7 @@ class ResourceService:
 
     def options(self, request: Request, response: Response):
         headers = config('middleware.cors') or {}
-        request.header(headers)
+        # request.header(headers)
+        response.make_headers(**headers)
+        print(headers)
         return ''
