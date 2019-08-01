@@ -50,7 +50,7 @@ class AuthIndex extends PureComponent{
   }
 
   //========================== Delete ==========================
-  openDelete=(event)=>{
+  openDialog=(event)=>{
     if(event){
       this.setState({targetId: event.currentTarget.dataset.id})
     }
@@ -187,7 +187,7 @@ class AuthIndex extends PureComponent{
                             <Fab
                               aria-label="delete"
                               data-id={row.id}
-                              onClick={this.openDelete}
+                              onClick={this.openDialog}
                               className={classes.deleteButton}
                             >
                               <Delete />
@@ -205,7 +205,7 @@ class AuthIndex extends PureComponent{
         <DeleteConfirmDialog
           isOpen={this.state.isOpenDeleteConfirm}
           id={this.state.targetId}
-          openDelete={this.openDelete}
+          openDialog={this.openDialog}
           handleOkMethod={this.delete}
         />
       </div>

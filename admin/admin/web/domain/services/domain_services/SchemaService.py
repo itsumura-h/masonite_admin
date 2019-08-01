@@ -5,7 +5,7 @@ from masonite.request import Request
 from config.admin import MODELS
 from config.database import DB
 
-from ....reositories.SchemaRepositry import SchemaRepositry
+from ....repositories.SchemaRepositry import SchemaRepositry
 
 
 class SchemaService:

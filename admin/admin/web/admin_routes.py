@@ -8,10 +8,11 @@ from config.storage import STATICFILES
 
 from .controllers.DisplayStaticController import (ADMIN_STATIC_DIR_PATH,
                                                   DisplayStaticController)
-from .controllers.InfoController import InfoController
 from .controllers.LoginController import LoginController
-from .controllers.ManageAuthController import ManageAuthController
+from .controllers.InfoController import InfoController
 from .controllers.SchemaController import SchemaController
+from .controllers.ManageAuthController import ManageAuthController
+from .controllers.MypageController import MypageController
 
 STATICFILES[ADMIN_STATIC_DIR_PATH] = '/'
 
@@ -26,6 +27,16 @@ ADMIN_ROUTES_WITH_MIDDLEWARE = [
         '/api/schema/detail/@model',
         SchemaController.schema_in_detail
     ),
+    Get().route('/api/mypage', MypageController.show),
+    Post().route('/api/mypage/update', MypageController.update),
+    Post().route(
+        '/api/auth/mypage/reset_password',
+        MypageController.reset_password
+    ),
+    Post().route(
+        '/api/auth/mypage/update_password',
+        MypageController.update_password
+    )
 ]
 
 ADMIN_ROUTES_ONLY_ADMINISTRATOR = [
@@ -45,7 +56,11 @@ ADMIN_ROUTES_ONLY_ADMINISTRATOR = [
     Post().route(
         '/api/auth/@id/delete',
         ManageAuthController.destroy
-    )
+    ),
+    Post().route(
+        '/api/auth/@id/reset_password',
+        ManageAuthController.reset_password
+    ),
 ]
 
 MODEL_ROUTES = []

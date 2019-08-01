@@ -1,5 +1,7 @@
-from ....reositories.ManageAuthRepository import \
-    ManageAuthRepository
+from bcrypt import checkpw
+from masonite.helpers.password import password as make_password
+
+from ....repositories.ManageAuthRepository import ManageAuthRepository
 from ...domain_models.ManageAuthEntity import ManageAuthEntity
 from ..ApplicationService import ApplicationService
 
@@ -25,7 +27,7 @@ class ManageAuthService:
 
     @staticmethod
     def store(params):
-        params['password'] = f"{params['name']}_password"
+        params['password'] = make_password(f"{params['name']}_password")
         new_user = ManageAuthEntity(**params).get_store_dict()
         result = ManageAuthRepository.store(new_user)
         return result
@@ -39,3 +41,27 @@ class ManageAuthService:
     @staticmethod
     def destroy(id):
         return ManageAuthRepository.destroy(id)
+
+    @staticmethod
+    def reset_password(id):
+        name = ManageAuthRepository.show(id)['name']
+        print(name)
+        new_password = f"{name}_password"
+        hash_password = make_password(new_password)
+        ManageAuthRepository.password_update(id, hash_password)
+        return new_password
+
+    @staticmethod
+    def update_password(id, password, new_password):
+        # check Password
+        old_hash_password = ManageAuthRepository.show(id)['password']
+        is_success = checkpw(
+            bytes(password, 'utf-8'),
+            bytes(old_hash_password, 'utf-8')
+        )
+
+        if is_success:
+            new_password = make_password(new_password)
+            ManageAuthRepository.password_update(id, new_password)
+        else:
+            raise Exception('password invalid')

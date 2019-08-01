@@ -39,7 +39,7 @@ class AuthShow extends PureComponent{
   }
 
   //========================== Delete ==========================
-  openDelete=(event)=>{
+  openDialog=(event)=>{
     if(event){
       this.setState({targetId: event.currentTarget.dataset.id});
     }
@@ -89,7 +89,7 @@ class AuthShow extends PureComponent{
                   </Button>
                 </NavLink>
                 <Button
-                  onClick={this.openDelete}
+                  onClick={this.openDialog}
                   data-id={this.props.match.params.id}
                   variant="contained"
                   className={classes.deleteButton}
@@ -132,7 +132,7 @@ class AuthShow extends PureComponent{
         <DeleteConfirmDialog
           isOpen={this.state.isOpenDeleteConfirm}
           id={this.state.targetId}
-          openDelete={this.openDelete}
+          openDialog={this.openDialog}
           handleOkMethod={this.delete}
         />
     </div>

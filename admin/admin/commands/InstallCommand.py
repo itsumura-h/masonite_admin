@@ -144,7 +144,7 @@ import pickle
 from masonite.request import Request
 from masonite.response import Response
 
-from admin.web.reositories.LoginRepository import LoginRepository
+from admin.web.repositories.LoginRepository import LoginRepository
 from admin.web.domain.services.domain_services.LoginService import LoginService
 
 from config.admin import LOGIN_CONF

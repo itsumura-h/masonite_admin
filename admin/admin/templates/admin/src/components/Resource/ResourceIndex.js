@@ -54,7 +54,7 @@ class ResourceIndex extends PureComponent {
   }
 
   //========================== Delete ==========================
-  openDelete=(event)=>{
+  openDialog=(event)=>{
     if(event){
       this.props.store.set('targetId')(event.currentTarget.dataset.id);
     }
@@ -191,7 +191,7 @@ class ResourceIndex extends PureComponent {
               <Fab
                 aria-label="delete"
                 data-id={row.id}
-                onClick={this.openDelete}
+                onClick={this.openDialog}
                 className={classes.deleteButton}
               >
                 <Delete />
@@ -250,7 +250,7 @@ class ResourceIndex extends PureComponent {
         </Card>
         <DeleteConfirmDialog
           isOpen={this.state.isOpenDeleteConfirm}
-          openDelete={this.openDelete}
+          openDialog={this.openDialog}
           handleOkMethod={this.delete}
         />
       </div>

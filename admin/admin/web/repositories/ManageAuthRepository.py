@@ -37,3 +37,9 @@ class ManageAuthRepository:
     @staticmethod
     def destroy(id):
         return AUTH['model'].find(id).delete()
+
+    @staticmethod
+    def password_update(id, password):
+        return AUTH['model'] \
+            .where('id', id) \
+            .update({'password': password})

@@ -9,13 +9,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-const DeleteConfirmDialog=(props)=>{
+const PasswordDialog=(props)=>{
   const openDialog=()=>{
     props.openDialog();
   }
 
   const clickOK=()=>{
-    props.openDialog();
     props.handleOkMethod();
   }
 
@@ -26,18 +25,15 @@ const DeleteConfirmDialog=(props)=>{
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{"Do you want to delete?"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{"Succeed your password reset"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Are you sure you wish to delete? This action cannot be undone.
+          New Password: {props.new_password}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={openDialog}>
-          Cancel
-        </Button>
-        <Button onClick={clickOK} data-id={props.id} color="primary" autoFocus>
-          Delete
+        <Button onClick={clickOK} color="primary" autoFocus>
+          OK
         </Button>
       </DialogActions>
     </Dialog>
@@ -48,4 +44,4 @@ const styles = {
 
 }
 
-export default withStyles(styles)(withStore(DeleteConfirmDialog));
+export default withStyles(styles)(withStore(PasswordDialog));

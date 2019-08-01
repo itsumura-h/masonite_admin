@@ -51,3 +51,11 @@ class ManageAuthController:
             return ''
         except Exception as e:
             return response.json({'error': str(e)}, status=400)
+
+    def reset_password(self, request: Request, response: Response):
+        try:
+            id = request.param('id')
+            new_password = ManageAuthService.reset_password(id)
+            return {'new_password': new_password}
+        except Exception as e:
+            return response.json({'error': str(e)}, status=400)

@@ -13,6 +13,7 @@ import AuthShow from './Auth/AuthShow';
 import AuthEdit from './Auth/AuthEdit';
 import MypageShow from './Mypage/MypageShow';
 import MypageEdit from './Mypage/MypageEdit';
+import MypagePassword from './Mypage/MypagePassword';
 
 import NotFound from '../common/404';
 import CONST from '../common/const';
@@ -27,6 +28,7 @@ const Main=(props)=>{
         <Route exact path="/admin/auth" component={AuthIndex} />
         <Route exact path="/admin/auth/mypage" component={MypageShow} />
         <Route exact path="/admin/auth/mypage/edit" component={MypageEdit} />
+        <Route exact path="/admin/auth/mypage/password" component={MypagePassword} />
         <Route exact path="/admin/auth" component={AuthIndex} />
         <Route exact path="/admin/auth/create" component={AuthCreate} />
         <Route exact path="/admin/auth/:id" component={AuthShow} />

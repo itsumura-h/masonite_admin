@@ -60,7 +60,7 @@ class ResourceEdit extends PureComponent{
   }
 
   //========================== Delete ==========================
-  openDelete=(event)=>{
+  openDialog=(event)=>{
     if(event){
       const store = this.props.store;
       store.set('targetId')(event.currentTarget.dataset.id);
@@ -175,7 +175,7 @@ class ResourceEdit extends PureComponent{
                   <Save/>save
                 </Button>
                 <Button variant="contained"
-                  onClick={this.openDelete}
+                  onClick={this.openDialog}
                   data-id={this.props.match.params.id}
                   className={classes.deleteButton}
                 >
@@ -355,7 +355,7 @@ class ResourceEdit extends PureComponent{
         </Card>
         <DeleteConfirmDialog
           isOpen={this.state.isOpenDelete}
-          openDelete={this.openDelete}
+          openDialog={this.openDialog}
           handleOkMethod={this.delete}
         />
       </div>

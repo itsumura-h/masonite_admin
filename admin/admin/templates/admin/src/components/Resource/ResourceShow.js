@@ -51,7 +51,7 @@ class ResourceShow extends PureComponent{
   }
 
   //========================== Delete ==========================
-  openDelete=(event)=>{
+  openDialog=(event)=>{
     if(event){
       const store = this.props.store;
       store.set('targetId')(event.currentTarget.dataset.id);
@@ -115,7 +115,7 @@ class ResourceShow extends PureComponent{
             </Button>
           </NavLink>
           <Button
-            onClick={this.openDelete}
+            onClick={this.openDialog}
             data-id={this.props.match.params.id}
             variant="contained"
             className={classes.deleteButton}
@@ -250,7 +250,7 @@ class ResourceShow extends PureComponent{
         </Card>
         <DeleteConfirmDialog
           isOpen={this.state.isOpenDelete}
-          openDelete={this.openDelete}
+          openDialog={this.openDialog}
           handleOkMethod={this.delete}
         />
       </div>

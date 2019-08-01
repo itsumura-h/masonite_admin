@@ -3,7 +3,7 @@ from app.http.middleware.AdminMiddleware import AdminMiddleware
 from masonite.request import Request
 from masonite.response import Response
 from masonite import env
-from ....reositories.ResourceRepository import ResourceRepository
+from ....repositories.ResourceRepository import ResourceRepository
 from ..ApplicationService import ApplicationService
 
 from masonite.helpers import config  #

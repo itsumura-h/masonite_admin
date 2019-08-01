@@ -71,7 +71,7 @@ class AuthEdit extends PureComponent{
   }
 
   //========================== Delete ==========================
-  openDelete=(event)=>{
+  openDialog=(event)=>{
     if(event){
       this.setState({targetId: event.currentTarget.dataset.id});
     }
@@ -123,7 +123,7 @@ class AuthEdit extends PureComponent{
                   <Save/>save
                 </Button>
                 <Button
-                  onClick={this.openDelete}
+                  onClick={this.openDialog}
                   data-id={this.props.match.params.id}
                   variant="contained"
                   className={classes.deleteButton}
@@ -228,7 +228,7 @@ class AuthEdit extends PureComponent{
         <DeleteConfirmDialog
           isOpen={this.state.isOpenDeleteConfirm}
           id={this.state.targetId}
-          openDelete={this.openDelete}
+          openDialog={this.openDialog}
           handleOkMethod={this.delete}
         />
     </div>

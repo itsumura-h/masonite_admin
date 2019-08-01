@@ -3,7 +3,7 @@ from datetime import datetime
 
 # from config.admin import LOGIN_CONF
 
-from ....reositories.LoginRepository import LoginRepository
+from ....repositories.LoginRepository import LoginRepository
 from ...domain_models.LoginEntity import LoginUserEntity
 
 # token_path = 'databases/login.bin'
