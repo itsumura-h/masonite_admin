@@ -15,10 +15,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
-import List from '@material-ui/icons/List';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import Save from '@material-ui/icons/Save';
 import Delete from '@material-ui/icons/Delete';
 
@@ -142,7 +139,7 @@ class MypageEdit extends PureComponent{
               <div className={classes.buttons}>
                 <NavLink to='./'>
                   <Button variant="contained" className={classes.listButton}>
-                    <List/>list
+                    <KeyboardArrowLeft/>Back
                   </Button>
                 </NavLink>
                 <Button
@@ -209,30 +206,6 @@ class MypageEdit extends PureComponent{
                     </TableCell>
                   </TableRow>
                   <TableRow key={4}>
-                    <TableCell>
-                    permission
-                    </TableCell>
-                    <TableCell>
-                      <FormControl fullWidth className={classes.formControl}>
-                        {
-                          Object.keys(this.state.showData).length > 0 &&
-                          <Select
-                            defaultValue={this.state.showData.permission}
-                            onChange={this.setParam}
-                            name='permission'
-                            className='params'
-                            autoWidth
-                            native
-                          >
-                            <option key={0} value="administrator">administrator</option>
-                            <option key={1} value="member">member</option>
-                            <option key={2} value="user">user</option>
-                          </Select>
-                        }
-                      </FormControl>
-                    </TableCell>
-                  </TableRow>
-                  <TableRow key={5}>
                     <TableCell>
                       password
                     </TableCell>

@@ -15,7 +15,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 
-import List from '@material-ui/icons/List';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import Save from '@material-ui/icons/Save';
 
 import PasswordDialog from '../Dialogs/PasswordDialog';
@@ -69,7 +69,7 @@ class MyapagePassword extends PureComponent {
               <div className={classes.buttons}>
                 <NavLink to='./'>
                   <Button variant="contained" className={classes.listButton}>
-                    <List/>Back
+                    <KeyboardArrowLeft/>Back
                   </Button>
                 </NavLink>
               </div>
