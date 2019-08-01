@@ -100,13 +100,15 @@ class MypageEdit extends PureComponent{
     this.setState({isOpenPasswordDialog: newIsOpenPasswordDialog});
   }
 
+  passwordResetOK=()=>{
+    this.openPasswordDialog()
+  }
+
   passwordReset=(event)=>{
-    const id = this.state.targetId;
     const url = `/admin/api/auth/mypage/reset_password`;
 
     Util.postApi(url, {})
     .then(response=>{
-      // this.props.history.push('../');
       this.setState({new_password: response.data.new_password});
       this.openPasswordDialog()
     })
@@ -262,8 +264,7 @@ class MypageEdit extends PureComponent{
         <PasswordDialog
           isOpen={this.state.isOpenPasswordDialog}
           new_password={this.state.new_password}
-          openDialog={this.openPasswordDialog}
-          handleOkMethod={this.passwordReset}
+          handleOkMethod={this.passwordResetOK}
         />
     </div>
     );

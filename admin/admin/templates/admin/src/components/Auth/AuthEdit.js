@@ -24,6 +24,7 @@ import Delete from '@material-ui/icons/Delete';
 
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
+import PasswordDialog from '../Dialogs/PasswordDialog';
 
 class AuthEdit extends PureComponent{
   state = {
@@ -32,6 +33,8 @@ class AuthEdit extends PureComponent{
     error: '',
     isOpenDeleteConfirm: false,
     targetId: 0,
+    isOpenPasswordDialog: false,
+    new_password: '',
   }
 
   //========================== API Access ==========================
@@ -87,6 +90,32 @@ class AuthEdit extends PureComponent{
     Util.deleteApi(url)
     .then(response=>{
       this.props.history.push('../');
+    })
+    .catch(err=>{
+      console.error(err);
+    })
+  }
+
+  //========================== Password Reset ==========================
+  openPasswordDialog=()=>{
+    const newIsOpenPasswordDialog = this.state.isOpenPasswordDialog? false: true;
+    this.setState({isOpenPasswordDialog: newIsOpenPasswordDialog});
+  }
+
+  passwordResetOK=()=>{
+    this.openPasswordDialog()
+    const id = this.props.match.params.id;
+    this.props.history.push(`/admin/auth/${id}`);
+  }
+
+  passwordReset=(event)=>{
+    const id = this.state.showData.id
+    const url = `/admin/api/auth/${id}/reset_password`;
+
+    Util.postApi(url, {})
+    .then(response=>{
+      this.setState({new_password: response.data.new_password});
+      this.openPasswordDialog()
     })
     .catch(err=>{
       console.error(err);
@@ -215,7 +244,11 @@ class AuthEdit extends PureComponent{
                       password reset
                     </TableCell>
                     <TableCell>
-                      <Button variant="contained" className={classes.listButton}>
+                      <Button
+                        variant="contained"
+                        className={classes.listButton}
+                        onClick={this.passwordReset}
+                      >
                         Reset
                       </Button>
                     </TableCell>
@@ -230,6 +263,11 @@ class AuthEdit extends PureComponent{
           id={this.state.targetId}
           openDialog={this.openDialog}
           handleOkMethod={this.delete}
+        />
+        <PasswordDialog
+          isOpen={this.state.isOpenPasswordDialog}
+          new_password={this.state.new_password}
+          handleOkMethod={this.passwordResetOK}
         />
     </div>
     );

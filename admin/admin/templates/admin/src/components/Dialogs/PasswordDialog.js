@@ -10,10 +10,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 const PasswordDialog=(props)=>{
-  const openDialog=()=>{
-    props.openDialog();
-  }
-
   const clickOK=()=>{
     props.handleOkMethod();
   }
@@ -21,11 +17,11 @@ const PasswordDialog=(props)=>{
   return(
     <Dialog
       open={props.isOpen}
-      onClose={openDialog}
+      onClose={clickOK}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      <DialogTitle id="alert-dialog-title">{"Succeed your password reset"}</DialogTitle>
+      <DialogTitle id="alert-dialog-title">{"Succeed password reset"}</DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
           New Password: {props.new_password}
