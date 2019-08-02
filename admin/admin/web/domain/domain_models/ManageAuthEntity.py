@@ -1,6 +1,6 @@
 import re
 
-from masonite.helpers import password as bcrypt_password
+from masonite.helpers import password as make_password
 
 
 class EmailValueObject:
@@ -48,7 +48,7 @@ class PasswordValueObject:
         self.__value = value
 
     def get_hashed_value(self):
-        return bcrypt_password(self.__value)
+        return make_password(self.__value)
 
 
 class ManageAuthEntity:

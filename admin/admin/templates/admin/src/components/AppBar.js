@@ -50,7 +50,7 @@ const AppBar=(props)=>{
   const UserEditButton=(props)=>{
     const login_permission = localStorage.getItem('login_permission');
     if(login_permission === 'administrator'){
-      return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>user edit</Button>;
+      return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>Admin</Button>;
     }else{
       return <Button color="inherit" onClick={props.clickUserEditButton} className={props.classes.logoutButton}>My Page</Button>;
     }

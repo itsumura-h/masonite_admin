@@ -28,8 +28,8 @@ class ManageAuthController:
         try:
             params = request.all()
             params = ApplicationService.delete_login_params(params)
-            ManageAuthService.store(params)
-            return ''
+            password = ManageAuthService.store(params)
+            return {'password': password}
         except Exception as e:
             return response.json({'error': str(e)}, status=400)
 

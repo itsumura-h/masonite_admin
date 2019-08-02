@@ -76,15 +76,6 @@ class MypageEdit extends PureComponent{
   }
 
   //========================== Password Reset ==========================
-  openPasswordDialog=()=>{
-    const newIsOpenPasswordDialog = this.state.isOpenPasswordDialog? false: true;
-    this.setState({isOpenPasswordDialog: newIsOpenPasswordDialog});
-  }
-
-  passwordResetOK=()=>{
-    this.openPasswordDialog()
-  }
-
   passwordReset=(event)=>{
     const url = `/admin/api/auth/mypage/reset_password`;
 
@@ -96,6 +87,16 @@ class MypageEdit extends PureComponent{
     .catch(err=>{
       console.error(err);
     })
+  }
+
+  openPasswordDialog=()=>{
+    const newIsOpenPasswordDialog = this.state.isOpenPasswordDialog? false: true;
+    this.setState({isOpenPasswordDialog: newIsOpenPasswordDialog});
+  }
+
+  passwordResetOK=()=>{
+    this.openPasswordDialog()
+    this.props.history.push(`/admin/auth`);
   }
 
   //========================== React ==========================

@@ -22,6 +22,7 @@ import List from '@material-ui/icons/List';
 import Save from '@material-ui/icons/Save';
 
 import Util from '../../common/util';
+import CreateAdminDialog from '../Dialogs/CreateAdminDialog';
 
 
 class AuthCreate extends PureComponent {
@@ -29,7 +30,9 @@ class AuthCreate extends PureComponent {
     schema: [],
     foreignKeys: [],
     params: {'name': '', 'email': '', 'permission': 'administrator'},
-    error: ''
+    error: '',
+    isOpenCreateAdminDialog: false,
+    password: '',
   }
 
   //========================== Save ==========================
@@ -46,7 +49,8 @@ class AuthCreate extends PureComponent {
     Util.postApi(url, this.state.params)
     .then(response=>{
       if(!response.data.error){
-        this.props.history.push(`/admin/ManageAdminUser`);
+        this.setState({password: response.data.password});
+        this.OpenCreateAdminDialog()
       }else{
         this.setState({error: response.data.error});
       }
@@ -56,7 +60,18 @@ class AuthCreate extends PureComponent {
     })
   }
 
+  OpenCreateAdminDialog=()=>{
+    const newIsOpenCreateAdminDialog =
+      this.state.isOpenCreateAdminDialog? false: true;
+    this.setState({isOpenCreateAdminDialog: newIsOpenCreateAdminDialog});
+  }
 
+  createAdminOK=()=>{
+    this.OpenCreateAdminDialog()
+    this.props.history.push(`/admin/auth`);
+  }
+
+  //========================== React ==========================
   render(){
     const { classes, store } = this.props;
     return(
@@ -136,6 +151,11 @@ class AuthCreate extends PureComponent {
             </div>
           </CardContent>
         </Card>
+        <CreateAdminDialog
+          isOpen={this.state.isOpenCreateAdminDialog}
+          password={this.state.password}
+          handleOkMethod={this.createAdminOK}
+        />
       </div>
     );
   }

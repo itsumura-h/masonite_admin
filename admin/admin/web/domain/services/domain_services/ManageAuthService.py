@@ -1,5 +1,6 @@
 from bcrypt import checkpw
 from masonite.helpers.password import password as make_password
+from datetime import date
 
 from ....repositories.ManageAuthRepository import ManageAuthRepository
 from ...domain_models.ManageAuthEntity import ManageAuthEntity
@@ -27,10 +28,11 @@ class ManageAuthService:
 
     @staticmethod
     def store(params):
-        params['password'] = make_password(f"{params['name']}_password")
+        print(f"{params['name']}_password")
+        params['password'] = f"{params['name']}_Password{date.today().year}"
         new_user = ManageAuthEntity(**params).get_store_dict()
-        result = ManageAuthRepository.store(new_user)
-        return result
+        ManageAuthRepository.store(new_user)
+        return params['password']
 
     @staticmethod
     def update(id, params):
