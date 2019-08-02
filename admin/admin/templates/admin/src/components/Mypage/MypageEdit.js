@@ -17,11 +17,9 @@ import TextField from '@material-ui/core/TextField';
 
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import Save from '@material-ui/icons/Save';
-import Delete from '@material-ui/icons/Delete';
 
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog'
-import PasswordDialog from '../Dialogs/PasswordDialog';
 
 class MypageEdit extends PureComponent{
   state = {
@@ -73,30 +71,6 @@ class MypageEdit extends PureComponent{
     .catch(err=>{
       console.log(err);
     })
-  }
-
-  //========================== Password Reset ==========================
-  passwordReset=(event)=>{
-    const url = `/admin/api/auth/mypage/reset_password`;
-
-    Util.postApi(url, {})
-    .then(response=>{
-      this.setState({new_password: response.data.new_password});
-      this.openPasswordDialog()
-    })
-    .catch(err=>{
-      console.error(err);
-    })
-  }
-
-  openPasswordDialog=()=>{
-    const newIsOpenPasswordDialog = this.state.isOpenPasswordDialog? false: true;
-    this.setState({isOpenPasswordDialog: newIsOpenPasswordDialog});
-  }
-
-  passwordResetOK=()=>{
-    this.openPasswordDialog()
-    this.props.history.push(`/admin/auth`);
   }
 
   //========================== React ==========================
@@ -181,13 +155,6 @@ class MypageEdit extends PureComponent{
                       password
                     </TableCell>
                     <TableCell>
-                      <Button
-                        variant="contained"
-                        className={classes.passwordButton}
-                        onClick={this.passwordReset}
-                      >
-                        Reset
-                      </Button>
                       <NavLink to='/admin/auth/mypage/password'>
                         <Button variant="contained" className={classes.passwordButton}>
                           Change
@@ -214,11 +181,6 @@ class MypageEdit extends PureComponent{
           isOpen={this.state.isOpenDeleteConfirm}
           openDialog={this.openDeleteDialog}
           handleOkMethod={this.delete}
-        />
-        <PasswordDialog
-          isOpen={this.state.isOpenPasswordDialog}
-          new_password={this.state.new_password}
-          handleOkMethod={this.passwordResetOK}
         />
     </div>
     );
@@ -263,7 +225,7 @@ const styles = {
   passwordButton: {
     color: 'black',
     backgroundColor: '#ECF0F5',
-    margin: '10px'
+    // margin: '10px'
   },
 }
 

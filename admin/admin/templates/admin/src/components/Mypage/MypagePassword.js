@@ -23,7 +23,7 @@ import Util from '../../common/util';
 
 class MyapagePassword extends PureComponent {
   state = {
-    params: {'password': '', 'new_password': ''},
+    params: {password: '', new_password: ''},
     error: '',
     isOpenPasswordConfirm: false,
   }
@@ -67,7 +67,7 @@ class MyapagePassword extends PureComponent {
             <div className={classes.flex}>
               <p>Change Password</p>
               <div className={classes.buttons}>
-                <NavLink to='./'>
+                <NavLink to='/admin/auth/mypage/edit'>
                   <Button variant="contained" className={classes.listButton}>
                     <KeyboardArrowLeft/>Back
                   </Button>
@@ -114,7 +114,11 @@ class MyapagePassword extends PureComponent {
               <Button variant="contained"
                 className={classes.saveButton}
                 onClick={this.save}
-                disabled={Object.keys(this.state.params).length === 0? true: false}
+                disabled={
+                  this.state.params.password.length > 3 &&
+                  this.state.params.new_password.length > 3
+                  ? false: true
+                }
               >
                 <Save/>save
               </Button>

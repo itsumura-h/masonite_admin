@@ -1,5 +1,6 @@
 from datetime import date, datetime, time, timedelta
 from typing import Dict
+from datetime import date
 
 from app.http.middleware.AdminMiddleware import AdminMiddleware
 
@@ -54,3 +55,7 @@ class ApplicationService:
             del params['__token']
 
         return params
+
+    @staticmethod
+    def generate_password(name):
+        return f"{name}_Password{date.today().year}"

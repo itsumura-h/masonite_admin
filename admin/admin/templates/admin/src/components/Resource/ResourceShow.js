@@ -101,7 +101,7 @@ class ResourceShow extends PureComponent{
     const login_permission = localStorage.getItem('login_permission');
 
     let buttons = null;
-    if(login_permission === 'administrator' || performance === 'member'){
+    if(login_permission === 'administrator' || login_permission === 'member'){
       buttons = (
         <div className={classes.buttons}>
           <NavLink to='./'>
