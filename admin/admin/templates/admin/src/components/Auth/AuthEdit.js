@@ -25,6 +25,7 @@ import Delete from '@material-ui/icons/Delete';
 import Util from '../../common/util';
 import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 import PasswordDialog from '../Dialogs/PasswordDialog';
+import PasswordConfirmDialog from '../Dialogs/PasswordConfirmDialog';
 
 class AuthEdit extends PureComponent{
   state = {
@@ -32,6 +33,7 @@ class AuthEdit extends PureComponent{
     params: {},
     error: '',
     isOpenDeleteConfirm: false,
+    isOpenPasswordConfirmDialog: false,
     targetId: 0,
     isOpenPasswordDialog: false,
     new_password: '',
@@ -97,6 +99,20 @@ class AuthEdit extends PureComponent{
   }
 
   //========================== Password Reset ==========================
+  openPasswordConfirmDialog=()=>{
+    const newIsOpenPasswordConfirmDialog =
+      this.state.isOpenPasswordConfirmDialog? false: true;
+
+    this.setState({
+      isOpenPasswordConfirmDialog: newIsOpenPasswordConfirmDialog
+    });
+  }
+
+  okPasswordConfirmDialog=()=>{
+    this.openPasswordConfirmDialog();
+    this.passwordReset();
+  }
+
   passwordReset=(event)=>{
     const id = this.state.showData.id
     const url = `/admin/api/auth/${id}/reset_password`;
@@ -247,7 +263,7 @@ class AuthEdit extends PureComponent{
                       <Button
                         variant="contained"
                         className={classes.listButton}
-                        onClick={this.passwordReset}
+                        onClick={this.openPasswordConfirmDialog}
                       >
                         Reset
                       </Button>
@@ -263,6 +279,11 @@ class AuthEdit extends PureComponent{
           id={this.state.targetId}
           openDialog={this.openDialog}
           handleOkMethod={this.delete}
+        />
+        <PasswordConfirmDialog
+          isOpen={this.state.isOpenPasswordConfirmDialog}
+          openDialog={this.openPasswordConfirmDialog}
+          handleOkMethod={this.okPasswordConfirmDialog}
         />
         <PasswordDialog
           isOpen={this.state.isOpenPasswordDialog}

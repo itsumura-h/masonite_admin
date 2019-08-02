@@ -27,9 +27,6 @@ class MypageEdit extends PureComponent{
     params: {},
     error: '',
     isOpenDeleteConfirm: false,
-    targetId: 0,
-    isOpenPasswordDialog: false,
-    new_password: '',
   }
 
   //========================== API Access ==========================

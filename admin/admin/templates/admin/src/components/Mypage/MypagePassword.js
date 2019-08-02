@@ -76,38 +76,22 @@ class MyapagePassword extends PureComponent {
             </div>
             <Divider />
             <div className={classes.scroll}>
-              <Table>
-                <TableBody>
-                  <TableRow key={1}>
-                    <TableCell>
-                      Password
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        name='password'
-                        type='password'
-                        multiline
-                        onChange={this.setParam}
-                        className={classes.textarea + ' params'}
-                      />
-                    </TableCell>
-                  </TableRow>
-                  <TableRow key={2}>
-                  <TableCell>
-                      New Password
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        name='new_password'
-                        type='password'
-                        multiline
-                        onChange={this.setParam}
-                        className={classes.textarea + ' params'}
-                      />
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+              <TextField
+                name='password'
+                type='password'
+                label='current password'
+                multiline
+                onChange={this.setParam}
+                className={classes.textarea + ' params'}
+              />
+              <TextField
+                name='new_password'
+                type="password"
+                label='new password'
+                multiline
+                onChange={this.setParam}
+                className={classes.textarea + ' params'}
+              />
             </div>
             <Divider/>
             <div className={classes.flex}>
