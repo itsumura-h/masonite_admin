@@ -1,34 +1,34 @@
 import secrets
 from datetime import datetime
 
-# from config.admin import LOGIN_CONF
+from bcrypt import checkpw
 
 from ....repositories.LoginRepository import LoginRepository
 from ...domain_models.LoginEntity import LoginUserEntity
 
-# token_path = 'databases/login.bin'
-
 
 class LoginService:
-    # def __init__(self):
-    #     self.token_path = LOGIN_CONF['file_path'] \
-    #         if 'file_path' in LOGIN_CONF else token_path
-
-    def get_user(self, email):
+    def store(self, email, password):
         user = LoginRepository().get_user(email)
-        user = LoginUserEntity(**user)
-        return user
+        user = LoginUserEntity(**user).get_store_dict()
 
-    def login(self, login_id: int, permission: str):
-        hash = secrets.token_urlsafe()
-        data = LoginRepository().load()
-        data[login_id] = {
-            'token': hash,
-            'last_access': datetime.now(),
-            'permission': permission
-        }
-        LoginRepository().dump(data)
-        return hash
+        # login check
+        is_login = checkpw(
+            bytes(password, 'utf-8'),
+            bytes(user['password'], 'utf-8')
+        )
+        if is_login:
+            hash = secrets.token_urlsafe()
+            data = LoginRepository().load()
+            data[user['id']] = {
+                'token': hash,
+                'last_access': datetime.now(),
+                'permission': user['permission']
+            }
+            LoginRepository().dump(data)
+            return hash, user
+        else:
+            raise Exception("Password didn't match")
 
     def update_last_access(self, login_id: int):
         data = LoginRepository().load()

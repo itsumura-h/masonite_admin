@@ -11,22 +11,16 @@ class LoginController(Controller):
         email = request.input('email')
         password = request.input('password')
         try:
-            user = LoginService().get_user(email)
-            login = checkpw(bytes(password, 'utf-8'),
-                            bytes(user.password, 'utf-8'))
-
-            if login:
-                hash = LoginService().login(int(user.id), user.permission)
-                return {
-                    'login': True,
-                    'token': hash,
-                    'id': user.id,
-                    'name': user.name,
-                    'permission': user.permission
-                }
-            else:
-                raise Exception
-        except Exception:
+            hash, user = LoginService().store(email, password)
+            return {
+                'login': True,
+                'token': hash,
+                'id': user['id'],
+                'name': user['name'],
+                'permission': user['permission']
+            }
+        except Exception as e:
+            print(str(e))
             return response.json({'login': False}, status=403)
 
     def destroy(self, request: Request, response: Response):

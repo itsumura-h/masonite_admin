@@ -9,7 +9,8 @@ token_path = 'databases/login.bin'
 
 class LoginRepository:
     def __init__(self):
-        self.token_path = LOGIN_CONF['file_path'] if 'file_path' in LOGIN_CONF else token_path
+        self.token_path = LOGIN_CONF['file_path'] \
+            if 'file_path' in LOGIN_CONF else token_path
 
     def get_user(self, email):
         return AUTH['model'].where('email', email).first().serialize()

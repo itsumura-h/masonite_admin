@@ -1,5 +1,4 @@
 import datetime
-import pickle
 
 from masonite.request import Request
 from masonite.response import Response
@@ -18,7 +17,8 @@ class AdminMiddleware:
     def __init__(self, request: Request, response: Response):
         self.request = request
         self.response = response
-        self.timeout = LOGIN_CONF['timeout'] if 'timeout' in LOGIN_CONF else timeout
+        self.timeout = LOGIN_CONF['timeout'] \
+            if 'timeout' in LOGIN_CONF else timeout
         if not isinstance(self.timeout, datetime.timedelta):
             self.timeout = timeout
 
@@ -38,7 +38,6 @@ class AdminMiddleware:
             admin_user_id = self.request.input('login_id')
             input_token = self.request.input('login_token')
 
-            # db_token = LoginToken.where('admin_user_id', admin_user_id).first().token
             login_data = LoginRepository().load()[int(admin_user_id)]
 
             # check token is exists
@@ -59,8 +58,9 @@ class AdminMiddleware:
                 LoginService().logout(admin_user_id, db_token)
                 print('timeout')
                 return False
-            else:
-                LoginService().update_last_access(int(admin_user_id))
+
+            # all OK
+            LoginService().update_last_access(int(admin_user_id))
 
             return True
 
