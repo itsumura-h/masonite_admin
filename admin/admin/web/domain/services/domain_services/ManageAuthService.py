@@ -1,5 +1,3 @@
-from datetime import date
-
 from bcrypt import checkpw
 from masonite.helpers.password import password as make_password
 

@@ -68,7 +68,7 @@ class AuthShow extends PureComponent{
   }
 
   render(){
-    const { classes, store } = this.props;
+    const { classes } = this.props;
     const id = this.props.match.params.id;
     return (
       <div>

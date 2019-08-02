@@ -13,7 +13,7 @@ export default class Util extends React.Component{
   static getApi=(url, params={})=>{
     url = CONST.APIHOST + url;
     params = this.setLoginParamas(params);
-    const header = this.setCustomLoginHeader();
+    // const header = this.setCustomLoginHeader();
 
     // return axios.get(url, {params: params, headers: header})
     return axios.get(url, {params: params})

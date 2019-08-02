@@ -73,7 +73,7 @@ class AuthCreate extends PureComponent {
 
   //========================== React ==========================
   render(){
-    const { classes, store } = this.props;
+    const { classes } = this.props;
     return(
       <div>
         <h1>Admin Users</h1>

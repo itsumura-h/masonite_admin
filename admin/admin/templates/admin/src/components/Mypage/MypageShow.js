@@ -1,6 +1,5 @@
 import React, {PureComponent} from 'react';
 import { withStyles } from '@material-ui/core/styles';
-import { withStore } from '../../common/store';
 
 import { withRouter } from 'react-router';
 import { NavLink } from 'react-router-dom';
@@ -15,12 +14,9 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import TextField from '@material-ui/core/TextField';
 
-import List from '@material-ui/icons/List';
 import Edit from '@material-ui/icons/Edit';
-import Delete from '@material-ui/icons/Delete';
 
 import Util from '../../common/util';
-import DeleteConfirmDialog from '../Dialogs/DeleteConfirmDialog';
 
 class MypageShow extends PureComponent{
   state = {
@@ -42,7 +38,7 @@ class MypageShow extends PureComponent{
   }
 
   render(){
-    const { classes, store } = this.props;
+    const { classes } = this.props;
     return (
       <div>
         <h1>Mypage</h1>

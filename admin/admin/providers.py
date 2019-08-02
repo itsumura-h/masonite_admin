@@ -1,12 +1,17 @@
 """ A AdminProvider Service Provider """
 
 import os
+
 from masonite.provider import ServiceProvider
+
 from .commands.CreateSuperUserCommand import CreateSuperUser
 from .commands.InstallCommand import Install
-from databases.seeds.database_seeder import DatabaseSeeder
+
+# from databases.seeds.database_seeder import DatabaseSeeder
+
 
 package_directory = os.path.dirname(os.path.realpath(__file__))
+
 
 class AdminProvider(ServiceProvider):
     """Provides Services To The Service Container

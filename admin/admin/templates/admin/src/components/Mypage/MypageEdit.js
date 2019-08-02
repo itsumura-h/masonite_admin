@@ -76,7 +76,7 @@ class MypageEdit extends PureComponent{
   }
 
   render(){
-    const { classes, store } = this.props;
+    const { classes } = this.props;
     return(
       <div>
         <h1>Mypage</h1>
