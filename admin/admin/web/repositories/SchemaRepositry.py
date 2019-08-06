@@ -3,10 +3,10 @@ from masonite import env
 
 if env('DB_CONNECTION') == 'mysql':
     import pymysql
-    from .field_list import MYSQL_FIELD_TYPE
+    from ..field_list import MYSQL_FIELD_TYPE
 elif env('DB_CONNECTION') == 'postgres':
     import psycopg2
-    from .field_list import PGSQL_FIELD_TYPE
+    from ..field_list import PGSQL_FIELD_TYPE
 else:
     import sqlite3
 
