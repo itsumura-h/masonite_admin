@@ -12,3 +12,4 @@ venv
 databases/login.bin
 *.sqlite3
 htmlcov
+.venv
